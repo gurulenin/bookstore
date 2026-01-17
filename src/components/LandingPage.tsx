@@ -30,19 +30,42 @@ interface FeaturedBook {
 
 export default function LandingPage({ onNavigate, onViewBook }: LandingPageProps) {
   const { t, language } = useTranslation();
-  const [settings, setSettings] = useState<HomePageSettings | null>(null);
+  const [settings, setSettings] = useState<HomePageSettings>({
+    show_physical_books_card: true,
+    show_ebooks_card: true,
+    show_audiobooks_card: true,
+    show_featured_books: false,
+    featured_books_title_en: 'Featured Books',
+    featured_books_title_ta: 'சிறப்பு புத்தகங்கள்',
+    featured_books_limit: 3,
+  });
   const [featuredBooks, setFeaturedBooks] = useState<FeaturedBook[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    loadSettings();
-    loadFeaturedBooks();
+    loadData();
   }, []);
 
+  const loadData = async () => {
+    try {
+      await Promise.all([loadSettings(), loadFeaturedBooks()]);
+    } catch (error) {
+      console.error('Error loading home page data:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const loadSettings = async () => {
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from('homepage_settings')
       .select('*')
-      .single();
+      .maybeSingle();
+
+    if (error) {
+      console.error('Error loading homepage settings:', error);
+      return;
+    }
 
     if (data) {
       setSettings(data);
@@ -50,18 +73,15 @@ export default function LandingPage({ onNavigate, onViewBook }: LandingPageProps
   };
 
   const loadFeaturedBooks = async () => {
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from('featured_books')
-      .select(`
-        books:book_id (
-          id,
-          title,
-          author,
-          cover_image_url,
-          genre
-        )
-      `)
+      .select('book_id, books!inner(id, title, author, cover_image_url, genre)')
       .order('display_order');
+
+    if (error) {
+      console.error('Error loading featured books:', error);
+      return;
+    }
 
     if (data) {
       const books = data
@@ -85,7 +105,7 @@ export default function LandingPage({ onNavigate, onViewBook }: LandingPageProps
           </p>
         </div>
 
-        {settings && (settings.show_physical_books_card || settings.show_ebooks_card || settings.show_audiobooks_card) && (
+        {(settings.show_physical_books_card || settings.show_ebooks_card || settings.show_audiobooks_card) && (
           <div className={`grid gap-6 md:gap-8 max-w-6xl mx-auto ${
             [settings.show_physical_books_card, settings.show_ebooks_card, settings.show_audiobooks_card].filter(Boolean).length === 3
               ? 'sm:grid-cols-2 lg:grid-cols-3'
@@ -185,7 +205,7 @@ export default function LandingPage({ onNavigate, onViewBook }: LandingPageProps
           </div>
         )}
 
-        {settings?.show_featured_books && featuredBooks.length > 0 && (
+        {settings.show_featured_books && featuredBooks.length > 0 && (
           <div className="mt-12 md:mt-16 lg:mt-20">
             <h2 className="text-3xl md:text-4xl font-bold text-slate-800 text-center mb-8 md:mb-12">
               {language === 'en' ? settings.featured_books_title_en : settings.featured_books_title_ta}

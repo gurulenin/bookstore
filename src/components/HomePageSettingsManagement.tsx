@@ -54,20 +54,15 @@ export default function HomePageSettingsManagement() {
   };
 
   const loadFeaturedBooks = async () => {
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from('featured_books')
-      .select(`
-        id,
-        book_id,
-        display_order,
-        books:book_id (
-          id,
-          title,
-          author,
-          cover_image_url
-        )
-      `)
+      .select('id, book_id, display_order, books!inner(id, title, author, cover_image_url)')
       .order('display_order');
+
+    if (error) {
+      console.error('Error loading featured books:', error);
+      return;
+    }
 
     if (data) {
       setFeaturedBooks(data);
