@@ -13,7 +13,6 @@ interface CarouselSlide {
 export default function HeroCarousel() {
   const [slides, setSlides] = useState<CarouselSlide[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     loadSlides();
@@ -39,7 +38,6 @@ export default function HeroCarousel() {
     if (data && data.length > 0) {
       setSlides(data);
     }
-    setLoading(false);
   };
 
   const goToPrevious = () => {
@@ -53,16 +51,6 @@ export default function HeroCarousel() {
   const goToSlide = (index: number) => {
     setCurrentIndex(index);
   };
-
-  if (loading) {
-    return (
-      <div className="relative w-full h-[300px] sm:h-[400px] md:h-[500px] lg:h-[600px] overflow-hidden bg-slate-900">
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="animate-pulse text-white text-lg">Loading...</div>
-        </div>
-      </div>
-    );
-  }
 
   if (slides.length === 0) {
     return (
