@@ -18,6 +18,7 @@ type View = 'home' | 'books' | 'ebooks' | 'audiobooks' | 'featured' | 'contribut
 function App() {
   const [currentView, setCurrentView] = useState<View>('home');
   const [books, setBooks] = useState<BookWithFormats[]>([]);
+  const [featuredBooks, setFeaturedBooks] = useState<BookWithFormats[]>([]);
   const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(false);
   const [selectedBlogId, setSelectedBlogId] = useState<string | null>(null);
   const [checkoutBook, setCheckoutBook] = useState<BookWithFormats | null>(null);
@@ -26,6 +27,7 @@ function App() {
   useEffect(() => {
     checkAuth();
     loadBooks();
+    loadFeaturedBooks();
   }, []);
 
   const checkAuth = async () => {
@@ -60,6 +62,57 @@ function App() {
       }));
 
       setBooks(booksWithFormats);
+    }
+  };
+
+  const loadFeaturedBooks = async () => {
+    const { data: featuredData, error: featuredError } = await supabase
+      .from('featured_books')
+      .select('book_id')
+      .order('display_order');
+
+    if (featuredError) {
+      console.error('Error loading featured books:', featuredError);
+      return;
+    }
+
+    if (featuredData) {
+      const featuredBookIds = featuredData.map(f => f.book_id);
+
+      const { data: booksData, error: booksError } = await supabase
+        .from('books')
+        .select('*')
+        .in('id', featuredBookIds);
+
+      if (booksError) {
+        console.error('Error loading featured books data:', booksError);
+        return;
+      }
+
+      if (booksData) {
+        const { data: formatsData, error: formatsError } = await supabase
+          .from('book_formats')
+          .select('*')
+          .in('book_id', featuredBookIds);
+
+        if (formatsError) {
+          console.error('Error loading featured book formats:', formatsError);
+          return;
+        }
+
+        const booksWithFormats: BookWithFormats[] = featuredBookIds
+          .map(id => {
+            const book = booksData.find(b => b.id === id);
+            if (!book) return null;
+            return {
+              ...book,
+              formats: formatsData?.filter(f => f.book_id === book.id) || []
+            };
+          })
+          .filter((book): book is BookWithFormats => book !== null);
+
+        setFeaturedBooks(booksWithFormats);
+      }
     }
   };
 
@@ -129,6 +182,7 @@ function App() {
     }
 
     await loadBooks();
+    await loadFeaturedBooks();
   };
 
   const handleUpdateBook = async (id: string, bookData: Partial<BookWithFormats>) => {
@@ -169,6 +223,7 @@ function App() {
     }
 
     await loadBooks();
+    await loadFeaturedBooks();
   };
 
   const handleDeleteBook = async (id: string) => {
@@ -184,6 +239,7 @@ function App() {
     }
 
     await loadBooks();
+    await loadFeaturedBooks();
   };
 
   const handlePurchase = (bookId: string) => {
@@ -249,7 +305,7 @@ function App() {
 
         {currentView === 'featured' && (
           <BooksView
-            books={books}
+            books={featuredBooks}
             formatFilter="all"
             onPurchase={handlePurchase}
             onDownload={handleDownload}
