@@ -1,5 +1,6 @@
-import { useState } from 'react';
-import { LogIn, AlertCircle } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { LogIn, AlertCircle, UserPlus } from 'lucide-react';
+import { supabase } from '../lib/supabase';
 
 interface AdminLoginProps {
   onLogin: (email: string, password: string) => Promise<void>;
@@ -10,6 +11,23 @@ export default function AdminLogin({ onLogin }: AdminLoginProps) {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [isFirstAdmin, setIsFirstAdmin] = useState(false);
+  const [mode, setMode] = useState<'login' | 'signup'>('login');
+
+  useEffect(() => {
+    checkIfFirstAdmin();
+  }, []);
+
+  const checkIfFirstAdmin = async () => {
+    const { count } = await supabase
+      .from('admin_users')
+      .select('*', { count: 'exact', head: true });
+
+    if (count === 0) {
+      setIsFirstAdmin(true);
+      setMode('signup');
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -17,9 +35,31 @@ export default function AdminLogin({ onLogin }: AdminLoginProps) {
     setLoading(true);
 
     try {
-      await onLogin(email, password);
+      if (mode === 'signup') {
+        const { data: authData, error: authError } = await supabase.auth.signUp({
+          email,
+          password,
+        });
+
+        if (authError) throw authError;
+
+        if (authData.user) {
+          const { error: adminError } = await supabase
+            .from('admin_users')
+            .insert({
+              id: authData.user.id,
+              email: email,
+            });
+
+          if (adminError) throw adminError;
+
+          await onLogin(email, password);
+        }
+      } else {
+        await onLogin(email, password);
+      }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to login');
+      setError(err instanceof Error ? err.message : 'Failed to ' + (mode === 'signup' ? 'create account' : 'login'));
     } finally {
       setLoading(false);
     }
@@ -31,10 +71,20 @@ export default function AdminLogin({ onLogin }: AdminLoginProps) {
         <div className="bg-white rounded-2xl shadow-xl p-8">
           <div className="text-center mb-8">
             <div className="inline-flex items-center justify-center w-16 h-16 bg-slate-800 rounded-full mb-4">
-              <LogIn className="h-8 w-8 text-white" />
+              {mode === 'signup' ? (
+                <UserPlus className="h-8 w-8 text-white" />
+              ) : (
+                <LogIn className="h-8 w-8 text-white" />
+              )}
             </div>
-            <h2 className="text-3xl font-bold text-slate-800">Admin Login</h2>
-            <p className="text-slate-600 mt-2">Sign in to manage your bookstore</p>
+            <h2 className="text-3xl font-bold text-slate-800">
+              {mode === 'signup' ? 'Create First Admin' : 'Admin Login'}
+            </h2>
+            <p className="text-slate-600 mt-2">
+              {mode === 'signup'
+                ? 'Set up your administrator account'
+                : 'Sign in to manage your bookstore'}
+            </p>
           </div>
 
           {error && (
@@ -83,15 +133,32 @@ export default function AdminLogin({ onLogin }: AdminLoginProps) {
               {loading ? (
                 <>
                   <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-                  <span>Signing in...</span>
+                  <span>{mode === 'signup' ? 'Creating Account...' : 'Signing in...'}</span>
                 </>
               ) : (
                 <>
-                  <LogIn className="h-5 w-5" />
-                  <span>Sign In</span>
+                  {mode === 'signup' ? (
+                    <UserPlus className="h-5 w-5" />
+                  ) : (
+                    <LogIn className="h-5 w-5" />
+                  )}
+                  <span>{mode === 'signup' ? 'Create Admin Account' : 'Sign In'}</span>
                 </>
               )}
             </button>
+
+            {!isFirstAdmin && mode === 'login' && (
+              <p className="text-center text-sm text-slate-600 mt-4">
+                First time here?{' '}
+                <button
+                  type="button"
+                  onClick={() => setMode('signup')}
+                  className="text-slate-800 font-semibold hover:underline"
+                >
+                  Create first admin account
+                </button>
+              </p>
+            )}
           </form>
         </div>
       </div>
