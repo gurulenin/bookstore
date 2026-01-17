@@ -19,7 +19,6 @@ function App() {
   const [currentView, setCurrentView] = useState<View>('home');
   const [books, setBooks] = useState<BookWithFormats[]>([]);
   const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(false);
-  const [loading, setLoading] = useState(true);
   const [selectedBlogId, setSelectedBlogId] = useState<string | null>(null);
   const [checkoutBook, setCheckoutBook] = useState<BookWithFormats | null>(null);
   const [selectedBookId, setSelectedBookId] = useState<string | null>(null);
@@ -32,7 +31,6 @@ function App() {
   const checkAuth = async () => {
     const { data: { session } } = await supabase.auth.getSession();
     setIsAdminAuthenticated(!!session);
-    setLoading(false);
   };
 
   const loadBooks = async () => {
@@ -209,17 +207,6 @@ function App() {
       window.open(url, '_blank');
     }
   };
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-slate-800 mx-auto mb-4"></div>
-          <p className="text-xl text-slate-600">Loading...</p>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col">
