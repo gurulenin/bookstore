@@ -13,7 +13,7 @@ import CheckoutFlow from './components/CheckoutFlow';
 import ContentPage from './components/ContentPage';
 import BookDetailModal from './components/BookDetailModal';
 
-type View = 'home' | 'books' | 'ebooks' | 'audiobooks' | 'contribute' | 'blog' | 'about' | 'contact' | 'admin';
+type View = 'home' | 'books' | 'ebooks' | 'audiobooks' | 'featured' | 'contribute' | 'blog' | 'about' | 'contact' | 'admin';
 
 function App() {
   const [currentView, setCurrentView] = useState<View>('home');
@@ -242,6 +242,15 @@ function App() {
           <BooksView
             books={books}
             formatFilter="audiobook"
+            onPurchase={handlePurchase}
+            onDownload={handleDownload}
+          />
+        )}
+
+        {currentView === 'featured' && (
+          <BooksView
+            books={books}
+            formatFilter="all"
             onPurchase={handlePurchase}
             onDownload={handleDownload}
           />

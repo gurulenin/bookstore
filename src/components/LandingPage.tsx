@@ -1,12 +1,11 @@
 import { useState, useEffect } from 'react';
-import { BookOpen, Headphones, ShoppingBag, Download, DollarSign } from 'lucide-react';
+import { BookOpen, Headphones, ShoppingBag, Download, DollarSign, Star } from 'lucide-react';
 import HeroCarousel from './HeroCarousel';
-import BookCard from './BookCard';
 import { useTranslation } from '../lib/translations';
 import { supabase } from '../lib/supabase';
 
 interface LandingPageProps {
-  onNavigate: (view: 'books' | 'ebooks' | 'audiobooks') => void;
+  onNavigate: (view: 'books' | 'ebooks' | 'audiobooks' | 'featured') => void;
   onViewBook: (bookId: string) => void;
 }
 
@@ -14,10 +13,7 @@ interface HomePageSettings {
   show_physical_books_card: boolean;
   show_ebooks_card: boolean;
   show_audiobooks_card: boolean;
-  show_featured_books: boolean;
-  featured_books_title_en: string;
-  featured_books_title_ta: string;
-  featured_books_limit: number;
+  show_featured_books_card: boolean;
   physical_books_title_en: string;
   physical_books_title_ta: string;
   physical_books_desc_en: string;
@@ -30,24 +26,18 @@ interface HomePageSettings {
   audiobooks_title_ta: string;
   audiobooks_desc_en: string;
   audiobooks_desc_ta: string;
-}
-
-interface FeaturedBook {
-  id: string;
-  title: string;
-  author: string;
-  cover_image_url: string;
-  genre: string;
+  featured_books_card_title_en: string;
+  featured_books_card_title_ta: string;
+  featured_books_card_desc_en: string;
+  featured_books_card_desc_ta: string;
 }
 
 export default function LandingPage({ onNavigate, onViewBook }: LandingPageProps) {
   const { t, language } = useTranslation();
   const [settings, setSettings] = useState<HomePageSettings | null>(null);
-  const [featuredBooks, setFeaturedBooks] = useState<FeaturedBook[]>([]);
 
   useEffect(() => {
     loadSettings();
-    loadFeaturedBooks();
   }, []);
 
   const loadSettings = async () => {
@@ -66,29 +56,10 @@ export default function LandingPage({ onNavigate, onViewBook }: LandingPageProps
     }
   };
 
-  const loadFeaturedBooks = async () => {
-    const { data, error } = await supabase
-      .from('featured_books')
-      .select('book_id, books!inner(id, title, author, cover_image_url, genre)')
-      .order('display_order');
-
-    if (error) {
-      console.error('Error loading featured books:', error);
-      return;
-    }
-
-    if (data) {
-      const books = data
-        .map((item: any) => item.books)
-        .filter((book: any) => book !== null);
-      setFeaturedBooks(books);
-    }
-  };
-
   const showPhysicalBooks = settings?.show_physical_books_card ?? true;
   const showEbooks = settings?.show_ebooks_card ?? true;
   const showAudiobooks = settings?.show_audiobooks_card ?? true;
-  const showFeaturedBooks = settings?.show_featured_books ?? false;
+  const showFeaturedBooksCard = settings?.show_featured_books_card ?? true;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
@@ -104,11 +75,13 @@ export default function LandingPage({ onNavigate, onViewBook }: LandingPageProps
           </p>
         </div>
 
-        {(showPhysicalBooks || showEbooks || showAudiobooks) && (
+        {(showPhysicalBooks || showEbooks || showAudiobooks || showFeaturedBooksCard) && (
           <div className={`grid gap-6 md:gap-8 max-w-6xl mx-auto ${
-            [showPhysicalBooks, showEbooks, showAudiobooks].filter(Boolean).length === 3
+            [showPhysicalBooks, showEbooks, showAudiobooks, showFeaturedBooksCard].filter(Boolean).length === 4
+              ? 'sm:grid-cols-2 lg:grid-cols-4'
+              : [showPhysicalBooks, showEbooks, showAudiobooks, showFeaturedBooksCard].filter(Boolean).length === 3
               ? 'sm:grid-cols-2 lg:grid-cols-3'
-              : [showPhysicalBooks, showEbooks, showAudiobooks].filter(Boolean).length === 2
+              : [showPhysicalBooks, showEbooks, showAudiobooks, showFeaturedBooksCard].filter(Boolean).length === 2
               ? 'sm:grid-cols-2'
               : 'grid-cols-1 max-w-md'
           }`}>
@@ -207,33 +180,38 @@ export default function LandingPage({ onNavigate, onViewBook }: LandingPageProps
                 </div>
               </div>
             )}
-          </div>
-        )}
 
-        {showFeaturedBooks && settings && featuredBooks.length > 0 && (
-          <div className="mt-12 md:mt-16 lg:mt-20">
-            <h2 className="text-3xl md:text-4xl font-bold text-slate-800 text-center mb-8 md:mb-12">
-              {language === 'en' ? settings.featured_books_title_en : settings.featured_books_title_ta}
-            </h2>
-            <div className={`grid gap-6 md:gap-8 max-w-6xl mx-auto ${
-              settings.featured_books_limit === 3
-                ? 'sm:grid-cols-2 lg:grid-cols-3'
-                : settings.featured_books_limit === 5
-                ? 'grid-cols-2 md:grid-cols-3 lg:grid-cols-5'
-                : 'grid-cols-2 md:grid-cols-3 lg:grid-cols-6'
-            }`}>
-              {featuredBooks.slice(0, settings.featured_books_limit).map((book) => (
-                <BookCard
-                  key={book.id}
-                  id={book.id}
-                  title={book.title}
-                  author={book.author}
-                  coverImage={book.cover_image_url}
-                  genre={book.genre}
-                  onClick={() => onViewBook(book.id)}
-                />
-              ))}
-            </div>
+            {showFeaturedBooksCard && settings && (
+              <div
+                onClick={() => onNavigate('featured')}
+                className="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 cursor-pointer overflow-hidden"
+              >
+                <div className="bg-gradient-to-br from-purple-500 to-purple-600 p-6 md:p-8 text-white">
+                  <Star className="h-12 w-12 md:h-16 md:w-16 mb-3 md:mb-4" />
+                  <h2 className="text-2xl md:text-3xl font-bold mb-2">
+                    {language === 'en' ? settings.featured_books_card_title_en : settings.featured_books_card_title_ta}
+                  </h2>
+                </div>
+                <div className="p-6 md:p-8">
+                  <p className="text-slate-600 mb-4 md:mb-6 text-base md:text-lg leading-relaxed">
+                    {language === 'en' ? settings.featured_books_card_desc_en : settings.featured_books_card_desc_ta}
+                  </p>
+                  <ul className="space-y-2 md:space-y-3 mb-6 md:mb-8">
+                    <li className="flex items-center text-slate-700 text-sm md:text-base">
+                      <Star className="h-4 w-4 md:h-5 md:w-5 mr-2 text-purple-500 flex-shrink-0" />
+                      <span>{t('landing.featured.curated')}</span>
+                    </li>
+                    <li className="flex items-center text-slate-700 text-sm md:text-base">
+                      <Star className="h-4 w-4 md:h-5 md:w-5 mr-2 text-purple-500 flex-shrink-0" />
+                      <span>{t('landing.featured.popular')}</span>
+                    </li>
+                  </ul>
+                  <button className="w-full bg-purple-500 text-white py-2.5 md:py-3 rounded-lg font-semibold hover:bg-purple-600 transition text-sm md:text-base">
+                    {t('landing.featured.browse')}
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         )}
 
