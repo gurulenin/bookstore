@@ -7,7 +7,7 @@ import { useTranslation } from '../lib/translations';
 
 interface BooksViewProps {
   books: BookWithFormats[];
-  formatFilter: 'physical' | 'ebook' | 'audiobook';
+  formatFilter: 'physical' | 'ebook' | 'audiobook' | 'all';
   onPurchase?: (bookId: string) => void;
   onDownload?: (formatId: string, url: string, fileFormat?: string) => void;
 }
@@ -32,7 +32,7 @@ export default function BooksView({ books, formatFilter, onPurchase, onDownload 
   const uniqueAuthors = Array.from(new Set(books.map(b => b.author))).sort();
 
   const filteredBooks = books
-    .filter(book => book.formats.some(f => f.format_type === formatFilter))
+    .filter(book => formatFilter === 'all' || book.formats.some(f => f.format_type === formatFilter))
     .filter(book => {
       const query = searchQuery.toLowerCase();
       return (
@@ -52,6 +52,8 @@ export default function BooksView({ books, formatFilter, onPurchase, onDownload 
         return 'Free Ebooks';
       case 'audiobook':
         return 'Free Audiobooks';
+      case 'all':
+        return 'Featured Books';
     }
   };
 
@@ -63,6 +65,8 @@ export default function BooksView({ books, formatFilter, onPurchase, onDownload 
         return 'Download free ebooks in PDF, EPUB, and HTML formats';
       case 'audiobook':
         return 'Download free audiobooks in MP3 format';
+      case 'all':
+        return 'Discover our hand-picked collection of featured books';
     }
   };
 

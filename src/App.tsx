@@ -76,43 +76,46 @@ function App() {
       return;
     }
 
-    if (featuredData) {
-      const featuredBookIds = featuredData.map(f => f.book_id);
+    if (!featuredData || featuredData.length === 0) {
+      setFeaturedBooks([]);
+      return;
+    }
 
-      const { data: booksData, error: booksError } = await supabase
-        .from('books')
+    const featuredBookIds = featuredData.map(f => f.book_id);
+
+    const { data: booksData, error: booksError } = await supabase
+      .from('books')
+      .select('*')
+      .in('id', featuredBookIds);
+
+    if (booksError) {
+      console.error('Error loading featured books data:', booksError);
+      return;
+    }
+
+    if (booksData) {
+      const { data: formatsData, error: formatsError } = await supabase
+        .from('book_formats')
         .select('*')
-        .in('id', featuredBookIds);
+        .in('book_id', featuredBookIds);
 
-      if (booksError) {
-        console.error('Error loading featured books data:', booksError);
+      if (formatsError) {
+        console.error('Error loading featured book formats:', formatsError);
         return;
       }
 
-      if (booksData) {
-        const { data: formatsData, error: formatsError } = await supabase
-          .from('book_formats')
-          .select('*')
-          .in('book_id', featuredBookIds);
+      const booksWithFormats: BookWithFormats[] = featuredBookIds
+        .map(id => {
+          const book = booksData.find(b => b.id === id);
+          if (!book) return null;
+          return {
+            ...book,
+            formats: formatsData?.filter(f => f.book_id === book.id) || []
+          };
+        })
+        .filter((book): book is BookWithFormats => book !== null);
 
-        if (formatsError) {
-          console.error('Error loading featured book formats:', formatsError);
-          return;
-        }
-
-        const booksWithFormats: BookWithFormats[] = featuredBookIds
-          .map(id => {
-            const book = booksData.find(b => b.id === id);
-            if (!book) return null;
-            return {
-              ...book,
-              formats: formatsData?.filter(f => f.book_id === book.id) || []
-            };
-          })
-          .filter((book): book is BookWithFormats => book !== null);
-
-        setFeaturedBooks(booksWithFormats);
-      }
+      setFeaturedBooks(booksWithFormats);
     }
   };
 
