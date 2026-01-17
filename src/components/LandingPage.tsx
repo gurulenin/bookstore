@@ -40,21 +40,11 @@ export default function LandingPage({ onNavigate, onViewBook }: LandingPageProps
     featured_books_limit: 3,
   });
   const [featuredBooks, setFeaturedBooks] = useState<FeaturedBook[]>([]);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    loadData();
+    loadSettings();
+    loadFeaturedBooks();
   }, []);
-
-  const loadData = async () => {
-    try {
-      await Promise.all([loadSettings(), loadFeaturedBooks()]);
-    } catch (error) {
-      console.error('Error loading home page data:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const loadSettings = async () => {
     const { data, error } = await supabase

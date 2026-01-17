@@ -54,8 +54,22 @@ export default function HeroCarousel() {
     setCurrentIndex(index);
   };
 
-  if (loading || slides.length === 0) {
-    return null;
+  if (loading) {
+    return (
+      <div className="relative w-full h-[300px] sm:h-[400px] md:h-[500px] lg:h-[600px] overflow-hidden bg-slate-900">
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="animate-pulse text-white text-lg">Loading...</div>
+        </div>
+      </div>
+    );
+  }
+
+  if (slides.length === 0) {
+    return (
+      <div className="relative w-full h-[300px] sm:h-[400px] md:h-[500px] lg:h-[600px] overflow-hidden bg-slate-900">
+        <div className="absolute inset-0 bg-gradient-to-br from-slate-800 to-slate-900"></div>
+      </div>
+    );
   }
 
   return (
