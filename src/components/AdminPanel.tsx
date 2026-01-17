@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Plus, Edit, Trash2, LogOut, Save, X, BookOpen, FileText, Package, Settings, Image, Languages, Database, Music, Layout, Menu as MenuIcon } from 'lucide-react';
+import { Plus, Edit, Trash2, LogOut, Save, X, BookOpen, FileText, Package, Settings, Image, Languages, Database, Music, Layout, Menu as MenuIcon, Home } from 'lucide-react';
 import { BookWithFormats, BookFormat, supabase } from '../lib/supabase';
 import BlogManagement from './BlogManagement';
 import OrderManagement from './OrderManagement';
@@ -10,6 +10,7 @@ import BackupRestore from './BackupRestore';
 import ChapterManagement from './ChapterManagement';
 import PageContentManagement from './PageContentManagement';
 import MenuSettingsManagement from './MenuSettingsManagement';
+import HomePageSettingsManagement from './HomePageSettingsManagement';
 
 interface AdminPanelProps {
   books: BookWithFormats[];
@@ -19,7 +20,7 @@ interface AdminPanelProps {
   onDeleteBook: (id: string) => void;
 }
 
-type AdminTab = 'books' | 'blogs' | 'pages' | 'menus' | 'orders' | 'carousel' | 'translations' | 'backup' | 'settings';
+type AdminTab = 'books' | 'blogs' | 'pages' | 'menus' | 'orders' | 'carousel' | 'homepage' | 'translations' | 'backup' | 'settings';
 
 interface BookFormData {
   title: string;
@@ -261,6 +262,17 @@ export default function AdminPanel({ books, onLogout, onAddBook, onUpdateBook, o
             >
               <Image className="h-5 w-5" />
               <span>Carousel</span>
+            </button>
+            <button
+              onClick={() => setActiveTab('homepage')}
+              className={`flex items-center space-x-2 px-6 py-4 font-semibold transition ${
+                activeTab === 'homepage'
+                  ? 'text-slate-800 border-b-2 border-slate-800'
+                  : 'text-slate-500 hover:text-slate-700'
+              }`}
+            >
+              <Home className="h-5 w-5" />
+              <span>Homepage</span>
             </button>
             <button
               onClick={() => setActiveTab('translations')}
@@ -646,6 +658,7 @@ export default function AdminPanel({ books, onLogout, onAddBook, onUpdateBook, o
         {activeTab === 'menus' && <MenuSettingsManagement />}
         {activeTab === 'orders' && <OrderManagement />}
         {activeTab === 'carousel' && <CarouselManagement />}
+        {activeTab === 'homepage' && <HomePageSettingsManagement />}
         {activeTab === 'translations' && <TranslationManagement />}
         {activeTab === 'backup' && <BackupRestore />}
         {activeTab === 'settings' && <SiteSettingsManagement />}

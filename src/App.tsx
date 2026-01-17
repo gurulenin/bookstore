@@ -11,6 +11,7 @@ import BlogDetail from './components/BlogDetail';
 import ContactPage from './components/ContactPage';
 import CheckoutFlow from './components/CheckoutFlow';
 import ContentPage from './components/ContentPage';
+import BookDetailModal from './components/BookDetailModal';
 
 type View = 'home' | 'books' | 'ebooks' | 'audiobooks' | 'contribute' | 'blog' | 'about' | 'contact' | 'admin';
 
@@ -21,6 +22,7 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [selectedBlogId, setSelectedBlogId] = useState<string | null>(null);
   const [checkoutBook, setCheckoutBook] = useState<BookWithFormats | null>(null);
+  const [selectedBookId, setSelectedBookId] = useState<string | null>(null);
 
   useEffect(() => {
     checkAuth();
@@ -225,7 +227,10 @@ function App() {
 
       <main className="flex-1">
         {currentView === 'home' && (
-          <LandingPage onNavigate={setCurrentView} />
+          <LandingPage
+            onNavigate={setCurrentView}
+            onViewBook={setSelectedBookId}
+          />
         )}
 
         {currentView === 'books' && (
@@ -287,6 +292,15 @@ function App() {
           <CheckoutFlow
             book={checkoutBook}
             onClose={() => setCheckoutBook(null)}
+          />
+        )}
+
+        {selectedBookId && (
+          <BookDetailModal
+            bookId={selectedBookId}
+            onClose={() => setSelectedBookId(null)}
+            onPurchase={handlePurchase}
+            onDownload={handleDownload}
           />
         )}
       </main>
