@@ -18,6 +18,18 @@ interface HomePageSettings {
   featured_books_title_en: string;
   featured_books_title_ta: string;
   featured_books_limit: number;
+  physical_books_title_en: string;
+  physical_books_title_ta: string;
+  physical_books_desc_en: string;
+  physical_books_desc_ta: string;
+  ebooks_title_en: string;
+  ebooks_title_ta: string;
+  ebooks_desc_en: string;
+  ebooks_desc_ta: string;
+  audiobooks_title_en: string;
+  audiobooks_title_ta: string;
+  audiobooks_desc_en: string;
+  audiobooks_desc_ta: string;
 }
 
 interface FeaturedBook {
@@ -30,15 +42,7 @@ interface FeaturedBook {
 
 export default function LandingPage({ onNavigate, onViewBook }: LandingPageProps) {
   const { t, language } = useTranslation();
-  const [settings, setSettings] = useState<HomePageSettings>({
-    show_physical_books_card: true,
-    show_ebooks_card: true,
-    show_audiobooks_card: true,
-    show_featured_books: false,
-    featured_books_title_en: 'Featured Books',
-    featured_books_title_ta: 'சிறப்பு புத்தகங்கள்',
-    featured_books_limit: 3,
-  });
+  const [settings, setSettings] = useState<HomePageSettings | null>(null);
   const [featuredBooks, setFeaturedBooks] = useState<FeaturedBook[]>([]);
 
   useEffect(() => {
@@ -81,6 +85,11 @@ export default function LandingPage({ onNavigate, onViewBook }: LandingPageProps
     }
   };
 
+  const showPhysicalBooks = settings?.show_physical_books_card ?? true;
+  const showEbooks = settings?.show_ebooks_card ?? true;
+  const showAudiobooks = settings?.show_audiobooks_card ?? true;
+  const showFeaturedBooks = settings?.show_featured_books ?? false;
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
       <HeroCarousel />
@@ -95,26 +104,28 @@ export default function LandingPage({ onNavigate, onViewBook }: LandingPageProps
           </p>
         </div>
 
-        {(settings.show_physical_books_card || settings.show_ebooks_card || settings.show_audiobooks_card) && (
+        {(showPhysicalBooks || showEbooks || showAudiobooks) && (
           <div className={`grid gap-6 md:gap-8 max-w-6xl mx-auto ${
-            [settings.show_physical_books_card, settings.show_ebooks_card, settings.show_audiobooks_card].filter(Boolean).length === 3
+            [showPhysicalBooks, showEbooks, showAudiobooks].filter(Boolean).length === 3
               ? 'sm:grid-cols-2 lg:grid-cols-3'
-              : [settings.show_physical_books_card, settings.show_ebooks_card, settings.show_audiobooks_card].filter(Boolean).length === 2
+              : [showPhysicalBooks, showEbooks, showAudiobooks].filter(Boolean).length === 2
               ? 'sm:grid-cols-2'
               : 'grid-cols-1 max-w-md'
           }`}>
-            {settings.show_physical_books_card && (
+            {showPhysicalBooks && settings && (
               <div
                 onClick={() => onNavigate('books')}
                 className="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 cursor-pointer overflow-hidden"
               >
                 <div className="bg-gradient-to-br from-blue-500 to-blue-600 p-6 md:p-8 text-white">
                   <ShoppingBag className="h-12 w-12 md:h-16 md:w-16 mb-3 md:mb-4" />
-                  <h2 className="text-2xl md:text-3xl font-bold mb-2">{t('landing.printed.title')}</h2>
+                  <h2 className="text-2xl md:text-3xl font-bold mb-2">
+                    {language === 'en' ? settings.physical_books_title_en : settings.physical_books_title_ta}
+                  </h2>
                 </div>
                 <div className="p-6 md:p-8">
                   <p className="text-slate-600 mb-4 md:mb-6 text-base md:text-lg leading-relaxed">
-                    {t('landing.printed.desc')}
+                    {language === 'en' ? settings.physical_books_desc_en : settings.physical_books_desc_ta}
                   </p>
                   <ul className="space-y-2 md:space-y-3 mb-6 md:mb-8">
                     <li className="flex items-center text-slate-700 text-sm md:text-base">
@@ -133,18 +144,20 @@ export default function LandingPage({ onNavigate, onViewBook }: LandingPageProps
               </div>
             )}
 
-            {settings.show_ebooks_card && (
+            {showEbooks && settings && (
               <div
                 onClick={() => onNavigate('ebooks')}
                 className="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 cursor-pointer overflow-hidden"
               >
                 <div className="bg-gradient-to-br from-green-500 to-green-600 p-6 md:p-8 text-white">
                   <BookOpen className="h-12 w-12 md:h-16 md:w-16 mb-3 md:mb-4" />
-                  <h2 className="text-2xl md:text-3xl font-bold mb-2">{t('landing.ebooks.title')}</h2>
+                  <h2 className="text-2xl md:text-3xl font-bold mb-2">
+                    {language === 'en' ? settings.ebooks_title_en : settings.ebooks_title_ta}
+                  </h2>
                 </div>
                 <div className="p-6 md:p-8">
                   <p className="text-slate-600 mb-4 md:mb-6 text-base md:text-lg leading-relaxed">
-                    {t('landing.ebooks.desc')}
+                    {language === 'en' ? settings.ebooks_desc_en : settings.ebooks_desc_ta}
                   </p>
                   <ul className="space-y-2 md:space-y-3 mb-6 md:mb-8">
                     <li className="flex items-center text-slate-700 text-sm md:text-base">
@@ -163,18 +176,20 @@ export default function LandingPage({ onNavigate, onViewBook }: LandingPageProps
               </div>
             )}
 
-            {settings.show_audiobooks_card && (
+            {showAudiobooks && settings && (
               <div
                 onClick={() => onNavigate('audiobooks')}
                 className="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 cursor-pointer overflow-hidden"
               >
                 <div className="bg-gradient-to-br from-orange-500 to-orange-600 p-6 md:p-8 text-white">
                   <Headphones className="h-12 w-12 md:h-16 md:w-16 mb-3 md:mb-4" />
-                  <h2 className="text-2xl md:text-3xl font-bold mb-2">{t('landing.audiobooks.title')}</h2>
+                  <h2 className="text-2xl md:text-3xl font-bold mb-2">
+                    {language === 'en' ? settings.audiobooks_title_en : settings.audiobooks_title_ta}
+                  </h2>
                 </div>
                 <div className="p-6 md:p-8">
                   <p className="text-slate-600 mb-4 md:mb-6 text-base md:text-lg leading-relaxed">
-                    {t('landing.audiobooks.desc')}
+                    {language === 'en' ? settings.audiobooks_desc_en : settings.audiobooks_desc_ta}
                   </p>
                   <ul className="space-y-2 md:space-y-3 mb-6 md:mb-8">
                     <li className="flex items-center text-slate-700 text-sm md:text-base">
@@ -195,7 +210,7 @@ export default function LandingPage({ onNavigate, onViewBook }: LandingPageProps
           </div>
         )}
 
-        {settings.show_featured_books && featuredBooks.length > 0 && (
+        {showFeaturedBooks && settings && featuredBooks.length > 0 && (
           <div className="mt-12 md:mt-16 lg:mt-20">
             <h2 className="text-3xl md:text-4xl font-bold text-slate-800 text-center mb-8 md:mb-12">
               {language === 'en' ? settings.featured_books_title_en : settings.featured_books_title_ta}
