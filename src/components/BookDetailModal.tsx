@@ -90,10 +90,7 @@ export default function BookDetailModal({ book, onClose, onPurchase, onDownload 
             </div>
 
             <div className="flex flex-col">
-              <div className="flex items-start justify-between gap-3 mb-2">
-                <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-slate-800 dark:text-slate-100 flex-1">{book.title}</h1>
-                <ShareButton bookId={book.id} bookTitle={book.title} bookAuthor={book.author} />
-              </div>
+              <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-slate-800 dark:text-slate-100 mb-2">{book.title}</h1>
               <p className="text-base sm:text-lg md:text-xl text-slate-600 dark:text-slate-300 mb-3 sm:mb-4">{book.author}</p>
 
               {book.publisher && (
@@ -109,10 +106,14 @@ export default function BookDetailModal({ book, onClose, onPurchase, onDownload 
               )}
 
               {book.isbn && (
-                <p className="text-slate-500 dark:text-slate-400 mb-3 sm:mb-4 text-sm sm:text-base">
+                <p className="text-slate-500 dark:text-slate-400 mb-1.5 sm:mb-2 text-sm sm:text-base">
                   <span className="font-medium">ISBN:</span> {book.isbn}
                 </p>
               )}
+
+              <div className="mb-3 sm:mb-4">
+                <ShareButton bookId={book.id} bookTitle={book.title} bookAuthor={book.author} />
+              </div>
 
               {book.description && (
                 <div className="mb-4 sm:mb-6">
