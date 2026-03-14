@@ -75,7 +75,7 @@ export default function BookDetailModal({ book, onClose, onPurchase, onDownload 
           </button>
 
           <div className="grid md:grid-cols-2 gap-4 sm:gap-6 md:gap-8 p-4 sm:p-6 md:p-8">
-            <div>
+            <div className="relative">
               {book.cover_image_url ? (
                 <img
                   src={book.cover_image_url}
@@ -87,6 +87,9 @@ export default function BookDetailModal({ book, onClose, onPurchase, onDownload 
                   <BookOpen className="h-24 w-24 sm:h-32 sm:w-32 text-slate-400 dark:text-slate-500" />
                 </div>
               )}
+              <div className="absolute top-2 right-2">
+                <ShareButton bookId={book.id} bookTitle={book.title} bookAuthor={book.author} />
+              </div>
             </div>
 
             <div className="flex flex-col">
@@ -106,14 +109,10 @@ export default function BookDetailModal({ book, onClose, onPurchase, onDownload 
               )}
 
               {book.isbn && (
-                <p className="text-slate-500 dark:text-slate-400 mb-1.5 sm:mb-2 text-sm sm:text-base">
+                <p className="text-slate-500 dark:text-slate-400 mb-3 sm:mb-4 text-sm sm:text-base">
                   <span className="font-medium">ISBN:</span> {book.isbn}
                 </p>
               )}
-
-              <div className="mb-3 sm:mb-4">
-                <ShareButton bookId={book.id} bookTitle={book.title} bookAuthor={book.author} />
-              </div>
 
               {book.description && (
                 <div className="mb-4 sm:mb-6">
