@@ -41,25 +41,25 @@ export default function BlogList({ onSelectBlog }: BlogListProps) {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 py-12">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 py-12">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
-          <h1 className="text-5xl font-bold text-slate-800 mb-4">Our Blog</h1>
-          <p className="text-xl text-slate-600">
+          <h1 className="text-5xl font-bold text-slate-800 dark:text-slate-100 mb-4">Our Blog</h1>
+          <p className="text-xl text-slate-600 dark:text-slate-300">
             Discover the latest news, updates, and insights
           </p>
         </div>
 
         {blogs.length === 0 ? (
           <div className="text-center py-20">
-            <p className="text-2xl text-slate-500">No blog posts yet</p>
+            <p className="text-2xl text-slate-500 dark:text-slate-400">No blog posts yet</p>
           </div>
         ) : (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {blogs.map((blog) => (
               <div
                 key={blog.id}
-                className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 cursor-pointer"
+                className="bg-white dark:bg-slate-800 rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 cursor-pointer"
                 onClick={() => onSelectBlog(blog.id)}
               >
                 {blog.cover_image_url && (
@@ -70,13 +70,13 @@ export default function BlogList({ onSelectBlog }: BlogListProps) {
                   />
                 )}
                 <div className="p-6">
-                  <h2 className="text-2xl font-bold text-slate-800 mb-3 line-clamp-2">
+                  <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100 mb-3 line-clamp-2">
                     {blog.title}
                   </h2>
                   {blog.excerpt && (
-                    <p className="text-slate-600 mb-4 line-clamp-3">{blog.excerpt}</p>
+                    <p className="text-slate-600 dark:text-slate-300 mb-4 line-clamp-3">{blog.excerpt}</p>
                   )}
-                  <div className="flex items-center justify-between text-sm text-slate-500 mb-4">
+                  <div className="flex items-center justify-between text-sm text-slate-500 dark:text-slate-400 mb-4">
                     <div className="flex items-center space-x-2">
                       <User className="h-4 w-4" />
                       <span>{blog.author_name}</span>
@@ -86,7 +86,7 @@ export default function BlogList({ onSelectBlog }: BlogListProps) {
                       <span>{new Date(blog.published_at).toLocaleDateString()}</span>
                     </div>
                   </div>
-                  <button className="flex items-center space-x-2 text-blue-600 hover:text-blue-700 font-semibold">
+                  <button className="flex items-center space-x-2 text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-semibold">
                     <span>Read More</span>
                     <ArrowRight className="h-4 w-4" />
                   </button>

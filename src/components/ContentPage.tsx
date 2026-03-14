@@ -37,15 +37,15 @@ export default function ContentPage({ pageKey }: ContentPageProps) {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 py-12">
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 py-12">
         <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-lg p-8">
+          <div className="max-w-4xl mx-auto bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8">
             <div className="animate-pulse">
-              <div className="h-8 bg-slate-200 rounded w-1/3 mb-4"></div>
+              <div className="h-8 bg-slate-200 dark:bg-slate-700 rounded w-1/3 mb-4"></div>
               <div className="space-y-3">
-                <div className="h-4 bg-slate-200 rounded"></div>
-                <div className="h-4 bg-slate-200 rounded"></div>
-                <div className="h-4 bg-slate-200 rounded w-5/6"></div>
+                <div className="h-4 bg-slate-200 dark:bg-slate-700 rounded"></div>
+                <div className="h-4 bg-slate-200 dark:bg-slate-700 rounded"></div>
+                <div className="h-4 bg-slate-200 dark:bg-slate-700 rounded w-5/6"></div>
               </div>
             </div>
           </div>
@@ -56,11 +56,11 @@ export default function ContentPage({ pageKey }: ContentPageProps) {
 
   if (!pageContent || !pageContent.is_published) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 py-12">
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 py-12">
         <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-lg p-8 text-center">
-            <h1 className="text-3xl font-bold text-slate-800 mb-4">Page Not Found</h1>
-            <p className="text-slate-600">This page is currently unavailable.</p>
+          <div className="max-w-4xl mx-auto bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 text-center">
+            <h1 className="text-3xl font-bold text-slate-800 dark:text-slate-100 mb-4">Page Not Found</h1>
+            <p className="text-slate-600 dark:text-slate-300">This page is currently unavailable.</p>
           </div>
         </div>
       </div>
@@ -68,13 +68,13 @@ export default function ContentPage({ pageKey }: ContentPageProps) {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 py-8 md:py-12">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 py-8 md:py-12">
       <div className="container mx-auto px-4">
-        <div className="max-w-4xl mx-auto bg-white rounded-xl md:rounded-2xl shadow-lg p-6 md:p-8 lg:p-12">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-800 mb-6 md:mb-8">
+        <div className="max-w-4xl mx-auto bg-white dark:bg-slate-800 rounded-xl md:rounded-2xl shadow-lg p-6 md:p-8 lg:p-12">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-800 dark:text-slate-100 mb-6 md:mb-8">
             {pageContent.title}
           </h1>
-          <div className="prose prose-sm sm:prose md:prose-lg max-w-none prose-slate prose-headings:text-slate-800 prose-p:text-slate-600 prose-a:text-blue-600 prose-strong:text-slate-800 prose-ul:text-slate-600 prose-ol:text-slate-600">
+          <div className="prose prose-sm sm:prose md:prose-lg max-w-none prose-slate prose-headings:text-slate-800 dark:prose-headings:text-slate-100 prose-p:text-slate-600 dark:prose-p:text-slate-300 prose-a:text-blue-600 dark:prose-a:text-blue-400 prose-strong:text-slate-800 dark:prose-strong:text-slate-100 prose-ul:text-slate-600 dark:prose-ul:text-slate-300 prose-ol:text-slate-600 dark:prose-ol:text-slate-300">
             <ReactMarkdown remarkPlugins={[remarkGfm]}>
               {pageContent.content}
             </ReactMarkdown>

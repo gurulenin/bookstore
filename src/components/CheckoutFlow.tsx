@@ -98,11 +98,11 @@ export default function CheckoutFlow({ book, onClose }: CheckoutFlowProps) {
   if (!physicalFormat) {
     return (
       <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-        <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6">
-          <p className="text-center text-slate-700">This book is not available for purchase.</p>
+        <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl max-w-md w-full p-6">
+          <p className="text-center text-slate-700 dark:text-slate-300">This book is not available for purchase.</p>
           <button
             onClick={onClose}
-            className="mt-4 w-full bg-slate-800 text-white py-3 rounded-lg font-semibold"
+            className="mt-4 w-full bg-slate-800 dark:bg-slate-700 text-white py-3 rounded-lg font-semibold"
           >
             Close
           </button>
@@ -113,14 +113,14 @@ export default function CheckoutFlow({ book, onClose }: CheckoutFlowProps) {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-2 sm:p-4 overflow-y-auto">
-      <div className="bg-white rounded-xl sm:rounded-2xl shadow-2xl max-w-2xl w-full my-4 sm:my-8">
-        <div className="p-4 sm:p-6 border-b border-slate-200 flex items-center justify-between">
-          <h2 className="text-xl sm:text-2xl font-bold text-slate-800">
+      <div className="bg-white dark:bg-slate-800 rounded-xl sm:rounded-2xl shadow-2xl max-w-2xl w-full my-4 sm:my-8">
+        <div className="p-4 sm:p-6 border-b border-slate-200 dark:border-slate-700 flex items-center justify-between">
+          <h2 className="text-xl sm:text-2xl font-bold text-slate-800 dark:text-slate-100">
             {step === 1 && 'Shipping Details'}
             {step === 2 && 'Review Order'}
             {step === 3 && 'Payment'}
           </h2>
-          <button onClick={onClose} className="text-slate-400 hover:text-slate-600">
+          <button onClick={onClose} className="text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300">
             <X className="h-5 w-5 sm:h-6 sm:w-6" />
           </button>
         </div>
@@ -130,45 +130,45 @@ export default function CheckoutFlow({ book, onClose }: CheckoutFlowProps) {
             <form onSubmit={(e) => { e.preventDefault(); setStep(2); }} className="space-y-3 sm:space-y-4">
               <div className="grid sm:grid-cols-2 gap-3 sm:gap-4">
                 <div>
-                  <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5 sm:mb-2">Full Name *</label>
+                  <label className="block text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5 sm:mb-2">Full Name *</label>
                   <input
                     type="text"
                     value={formData.customer_name}
                     onChange={(e) => setFormData({ ...formData, customer_name: e.target.value })}
                     required
-                    className="w-full px-3 sm:px-4 py-2 rounded-lg border border-slate-300 focus:border-slate-500 focus:outline-none text-sm sm:text-base"
+                    className="w-full px-3 sm:px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-700 focus:border-slate-500 focus:outline-none text-sm sm:text-base bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5 sm:mb-2">Email</label>
+                  <label className="block text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5 sm:mb-2">Email</label>
                   <input
                     type="email"
                     value={formData.customer_email}
                     onChange={(e) => setFormData({ ...formData, customer_email: e.target.value })}
-                    className="w-full px-3 sm:px-4 py-2 rounded-lg border border-slate-300 focus:border-slate-500 focus:outline-none text-sm sm:text-base"
+                    className="w-full px-3 sm:px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-700 focus:border-slate-500 focus:outline-none text-sm sm:text-base bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5 sm:mb-2">Phone Number *</label>
+                  <label className="block text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5 sm:mb-2">Phone Number *</label>
                   <input
                     type="tel"
                     value={formData.customer_phone}
                     onChange={(e) => setFormData({ ...formData, customer_phone: e.target.value })}
                     required
-                    className="w-full px-3 sm:px-4 py-2 rounded-lg border border-slate-300 focus:border-slate-500 focus:outline-none text-sm sm:text-base"
+                    className="w-full px-3 sm:px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-700 focus:border-slate-500 focus:outline-none text-sm sm:text-base bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5 sm:mb-2">WhatsApp Number *</label>
+                  <label className="block text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5 sm:mb-2">WhatsApp Number *</label>
                   <input
                     type="tel"
                     value={formData.customer_whatsapp}
                     onChange={(e) => setFormData({ ...formData, customer_whatsapp: e.target.value })}
                     required
-                    className="w-full px-3 sm:px-4 py-2 rounded-lg border border-slate-300 focus:border-slate-500 focus:outline-none text-sm sm:text-base"
+                    className="w-full px-3 sm:px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-700 focus:border-slate-500 focus:outline-none text-sm sm:text-base bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100"
                   />
                 </div>
               </div>
@@ -186,18 +186,18 @@ export default function CheckoutFlow({ book, onClose }: CheckoutFlowProps) {
 
               <div className="grid sm:grid-cols-2 gap-3 sm:gap-4">
                 <div>
-                  <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5 sm:mb-2">Pincode *</label>
+                  <label className="block text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5 sm:mb-2">Pincode *</label>
                   <input
                     type="text"
                     value={formData.shipping_pincode}
                     onChange={(e) => setFormData({ ...formData, shipping_pincode: e.target.value })}
                     required
-                    className="w-full px-3 sm:px-4 py-2 rounded-lg border border-slate-300 focus:border-slate-500 focus:outline-none text-sm sm:text-base"
+                    className="w-full px-3 sm:px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-700 focus:border-slate-500 focus:outline-none text-sm sm:text-base bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5 sm:mb-2">State *</label>
+                  <label className="block text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5 sm:mb-2">State *</label>
                   <input
                     type="text"
                     value={formData.shipping_state}
@@ -210,7 +210,7 @@ export default function CheckoutFlow({ book, onClose }: CheckoutFlowProps) {
                       });
                     }}
                     required
-                    className="w-full px-3 sm:px-4 py-2 rounded-lg border border-slate-300 focus:border-slate-500 focus:outline-none text-sm sm:text-base"
+                    className="w-full px-3 sm:px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-700 focus:border-slate-500 focus:outline-none text-sm sm:text-base bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100"
                   />
                 </div>
               </div>
@@ -226,36 +226,36 @@ export default function CheckoutFlow({ book, onClose }: CheckoutFlowProps) {
 
           {step === 2 && (
             <div className="space-y-4 sm:space-y-6">
-              <div className="bg-slate-50 rounded-lg p-4 sm:p-6 space-y-2 sm:space-y-3">
-                <h3 className="font-semibold text-slate-800 mb-3 sm:mb-4 text-sm sm:text-base">Order Summary</h3>
+              <div className="bg-slate-50 dark:bg-slate-700 rounded-lg p-4 sm:p-6 space-y-2 sm:space-y-3">
+                <h3 className="font-semibold text-slate-800 dark:text-slate-100 mb-3 sm:mb-4 text-sm sm:text-base">Order Summary</h3>
                 <div className="flex justify-between text-xs sm:text-sm">
-                  <span className="text-slate-600">Book:</span>
-                  <span className="font-medium text-right ml-2">{book.title}</span>
+                  <span className="text-slate-600 dark:text-slate-300">Book:</span>
+                  <span className="font-medium text-right ml-2 text-slate-800 dark:text-slate-100">{book.title}</span>
                 </div>
                 <div className="flex justify-between text-xs sm:text-sm">
-                  <span className="text-slate-600">Author:</span>
-                  <span className="text-right ml-2">{book.author}</span>
+                  <span className="text-slate-600 dark:text-slate-300">Author:</span>
+                  <span className="text-right ml-2 text-slate-800 dark:text-slate-100">{book.author}</span>
                 </div>
                 <div className="flex justify-between text-xs sm:text-sm">
-                  <span className="text-slate-600">Price:</span>
-                  <span>Rs.{bookPrice.toFixed(2)}</span>
+                  <span className="text-slate-600 dark:text-slate-300">Price:</span>
+                  <span className="text-slate-800 dark:text-slate-100">Rs.{bookPrice.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between text-xs sm:text-sm">
-                  <span className="text-slate-600">Shipping ({formData.is_tamil_nadu ? 'TN' : 'Other'}):</span>
-                  <span>Rs.{shippingCost.toFixed(2)}</span>
+                  <span className="text-slate-600 dark:text-slate-300">Shipping ({formData.is_tamil_nadu ? 'TN' : 'Other'}):</span>
+                  <span className="text-slate-800 dark:text-slate-100">Rs.{shippingCost.toFixed(2)}</span>
                 </div>
-                <div className="flex justify-between font-bold text-base sm:text-lg border-t pt-2 sm:pt-3">
-                  <span>Total:</span>
-                  <span>Rs.{totalAmount.toFixed(2)}</span>
+                <div className="flex justify-between font-bold text-base sm:text-lg border-t dark:border-slate-600 pt-2 sm:pt-3">
+                  <span className="text-slate-800 dark:text-slate-100">Total:</span>
+                  <span className="text-slate-800 dark:text-slate-100">Rs.{totalAmount.toFixed(2)}</span>
                 </div>
               </div>
 
-              <div className="bg-slate-50 rounded-lg p-4 sm:p-6">
-                <h3 className="font-semibold text-slate-800 mb-2 sm:mb-3 text-sm sm:text-base">Shipping Address</h3>
-                <p className="text-slate-700 text-xs sm:text-sm">{formData.customer_name}</p>
-                <p className="text-slate-700 text-xs sm:text-sm">{formData.customer_phone}</p>
-                <p className="text-slate-700 mt-1.5 sm:mt-2 text-xs sm:text-sm">{formData.shipping_address}</p>
-                <p className="text-slate-700 text-xs sm:text-sm">{formData.shipping_state} - {formData.shipping_pincode}</p>
+              <div className="bg-slate-50 dark:bg-slate-700 rounded-lg p-4 sm:p-6">
+                <h3 className="font-semibold text-slate-800 dark:text-slate-100 mb-2 sm:mb-3 text-sm sm:text-base">Shipping Address</h3>
+                <p className="text-slate-700 dark:text-slate-300 text-xs sm:text-sm">{formData.customer_name}</p>
+                <p className="text-slate-700 dark:text-slate-300 text-xs sm:text-sm">{formData.customer_phone}</p>
+                <p className="text-slate-700 dark:text-slate-300 mt-1.5 sm:mt-2 text-xs sm:text-sm">{formData.shipping_address}</p>
+                <p className="text-slate-700 dark:text-slate-300 text-xs sm:text-sm">{formData.shipping_state} - {formData.shipping_pincode}</p>
               </div>
 
               <div className="flex space-x-3 sm:space-x-4">
@@ -278,12 +278,12 @@ export default function CheckoutFlow({ book, onClose }: CheckoutFlowProps) {
           {step === 3 && (
             <div className="space-y-4 sm:space-y-6 text-center">
               <CheckCircle className="h-12 w-12 sm:h-16 sm:w-16 text-green-500 mx-auto" />
-              <h3 className="text-xl sm:text-2xl font-bold text-slate-800">Order Placed Successfully!</h3>
+              <h3 className="text-xl sm:text-2xl font-bold text-slate-800 dark:text-slate-100">Order Placed Successfully!</h3>
 
-              <div className="bg-blue-50 rounded-lg p-4 sm:p-6">
-                <h4 className="font-semibold text-slate-800 mb-3 sm:mb-4 text-sm sm:text-base">Complete Your Payment</h4>
+              <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4 sm:p-6">
+                <h4 className="font-semibold text-slate-800 dark:text-slate-100 mb-3 sm:mb-4 text-sm sm:text-base">Complete Your Payment</h4>
                 {settings?.payment_instructions && (
-                  <p className="text-slate-700 mb-3 sm:mb-4 text-xs sm:text-sm">{settings.payment_instructions}</p>
+                  <p className="text-slate-700 dark:text-slate-300 mb-3 sm:mb-4 text-xs sm:text-sm">{settings.payment_instructions}</p>
                 )}
 
                 {settings?.payment_qr_code_url && (
@@ -291,13 +291,13 @@ export default function CheckoutFlow({ book, onClose }: CheckoutFlowProps) {
                     <img
                       src={settings.payment_qr_code_url}
                       alt="Payment QR Code"
-                      className="w-48 h-48 sm:w-64 sm:h-64 mx-auto border rounded-lg"
+                      className="w-48 h-48 sm:w-64 sm:h-64 mx-auto border dark:border-slate-700 rounded-lg"
                     />
                   </div>
                 )}
 
-                <p className="text-xs sm:text-sm text-slate-600 mb-3 sm:mb-4">
-                  Total Amount: <span className="font-bold text-base sm:text-lg">Rs.{totalAmount.toFixed(2)}</span>
+                <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 mb-3 sm:mb-4">
+                  Total Amount: <span className="font-bold text-base sm:text-lg text-slate-800 dark:text-slate-100">Rs.{totalAmount.toFixed(2)}</span>
                 </p>
               </div>
 
@@ -309,7 +309,7 @@ export default function CheckoutFlow({ book, onClose }: CheckoutFlowProps) {
                 <span>Send Order Details via WhatsApp</span>
               </button>
 
-              <p className="text-xs sm:text-sm text-slate-600">
+              <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400">
                 After making the payment, please share the payment proof via WhatsApp
               </p>
             </div>

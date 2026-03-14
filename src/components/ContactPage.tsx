@@ -37,14 +37,14 @@ export default function ContactPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 py-12">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 py-12">
       <div className="container mx-auto px-4 max-w-4xl">
-        <div className="bg-white rounded-xl shadow-lg p-8">
-          <h1 className="text-4xl font-bold text-slate-800 mb-8">{content.title}</h1>
+        <div className="bg-white dark:bg-slate-800 rounded-xl shadow-lg p-8">
+          <h1 className="text-4xl font-bold text-slate-800 dark:text-slate-100 mb-8">{content.title}</h1>
 
           <div className="prose prose-slate max-w-none mb-8">
             {content.content.split('\n').map((paragraph, index) => (
-              <p key={index} className="mb-4 text-slate-700 leading-relaxed">
+              <p key={index} className="mb-4 text-slate-700 dark:text-slate-300 leading-relaxed">
                 {paragraph}
               </p>
             ))}
@@ -52,13 +52,13 @@ export default function ContactPage() {
 
           <div className="grid md:grid-cols-2 gap-6 mt-8">
             {content.email && (
-              <div className="flex items-center space-x-4 p-6 bg-slate-50 rounded-lg">
+              <div className="flex items-center space-x-4 p-6 bg-slate-50 dark:bg-slate-700 rounded-lg">
                 <Mail className="h-8 w-8 text-blue-500" />
                 <div>
-                  <h3 className="font-semibold text-slate-800 mb-1">Email</h3>
+                  <h3 className="font-semibold text-slate-800 dark:text-slate-100 mb-1">Email</h3>
                   <a
                     href={`mailto:${content.email}`}
-                    className="text-blue-600 hover:underline"
+                    className="text-blue-600 dark:text-blue-400 hover:underline"
                   >
                     {content.email}
                   </a>
@@ -67,13 +67,13 @@ export default function ContactPage() {
             )}
 
             {content.phone && (
-              <div className="flex items-center space-x-4 p-6 bg-slate-50 rounded-lg">
+              <div className="flex items-center space-x-4 p-6 bg-slate-50 dark:bg-slate-700 rounded-lg">
                 <Phone className="h-8 w-8 text-green-500" />
                 <div>
-                  <h3 className="font-semibold text-slate-800 mb-1">Phone</h3>
+                  <h3 className="font-semibold text-slate-800 dark:text-slate-100 mb-1">Phone</h3>
                   <a
                     href={`tel:${content.phone}`}
-                    className="text-green-600 hover:underline"
+                    className="text-green-600 dark:text-green-400 hover:underline"
                   >
                     {content.phone}
                   </a>

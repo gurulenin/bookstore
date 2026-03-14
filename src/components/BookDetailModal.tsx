@@ -64,13 +64,13 @@ export default function BookDetailModal({ book, onClose, onPurchase, onDownload 
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 p-2 sm:p-4 overflow-y-auto">
-      <div className="bg-white rounded-xl sm:rounded-2xl shadow-2xl max-w-4xl w-full my-4 sm:my-8">
+      <div className="bg-white dark:bg-slate-800 rounded-xl sm:rounded-2xl shadow-2xl max-w-4xl w-full my-4 sm:my-8">
         <div className="relative">
           <button
             onClick={onClose}
-            className="absolute top-3 right-3 sm:top-4 sm:right-4 z-10 bg-white rounded-full p-1.5 sm:p-2 shadow-lg hover:bg-slate-100 transition"
+            className="absolute top-3 right-3 sm:top-4 sm:right-4 z-10 bg-white dark:bg-slate-700 rounded-full p-1.5 sm:p-2 shadow-lg hover:bg-slate-100 dark:hover:bg-slate-600 transition"
           >
-            <X className="h-5 w-5 sm:h-6 sm:w-6 text-slate-700" />
+            <X className="h-5 w-5 sm:h-6 sm:w-6 text-slate-700 dark:text-slate-200" />
           </button>
 
           <div className="grid md:grid-cols-2 gap-4 sm:gap-6 md:gap-8 p-4 sm:p-6 md:p-8">
@@ -79,51 +79,51 @@ export default function BookDetailModal({ book, onClose, onPurchase, onDownload 
                 <img
                   src={book.cover_image_url}
                   alt={book.title}
-                  className="w-full rounded-lg shadow-lg object-contain bg-gradient-to-br from-slate-50 to-slate-100"
+                  className="w-full rounded-lg shadow-lg object-contain bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-700 dark:to-slate-800"
                 />
               ) : (
-                <div className="w-full aspect-[3/4] bg-gradient-to-br from-slate-200 to-slate-300 rounded-lg flex items-center justify-center">
-                  <BookOpen className="h-24 w-24 sm:h-32 sm:w-32 text-slate-400" />
+                <div className="w-full aspect-[3/4] bg-gradient-to-br from-slate-200 to-slate-300 dark:from-slate-700 dark:to-slate-800 rounded-lg flex items-center justify-center">
+                  <BookOpen className="h-24 w-24 sm:h-32 sm:w-32 text-slate-400 dark:text-slate-500" />
                 </div>
               )}
             </div>
 
             <div className="flex flex-col">
-              <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-slate-800 mb-2">{book.title}</h1>
-              <p className="text-base sm:text-lg md:text-xl text-slate-600 mb-3 sm:mb-4">{book.author}</p>
+              <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-slate-800 dark:text-slate-100 mb-2">{book.title}</h1>
+              <p className="text-base sm:text-lg md:text-xl text-slate-600 dark:text-slate-300 mb-3 sm:mb-4">{book.author}</p>
 
               {book.publisher && (
-                <p className="text-slate-500 mb-1.5 sm:mb-2 text-sm sm:text-base">
+                <p className="text-slate-500 dark:text-slate-400 mb-1.5 sm:mb-2 text-sm sm:text-base">
                   <span className="font-medium">Publisher:</span> {book.publisher}
                 </p>
               )}
 
               {book.published_date && (
-                <p className="text-slate-500 mb-1.5 sm:mb-2 text-sm sm:text-base">
+                <p className="text-slate-500 dark:text-slate-400 mb-1.5 sm:mb-2 text-sm sm:text-base">
                   <span className="font-medium">Published:</span> {book.published_date}
                 </p>
               )}
 
               {book.isbn && (
-                <p className="text-slate-500 mb-3 sm:mb-4 text-sm sm:text-base">
+                <p className="text-slate-500 dark:text-slate-400 mb-3 sm:mb-4 text-sm sm:text-base">
                   <span className="font-medium">ISBN:</span> {book.isbn}
                 </p>
               )}
 
               {book.description && (
                 <div className="mb-4 sm:mb-6">
-                  <h3 className="text-base sm:text-lg font-semibold text-slate-800 mb-2">Description</h3>
-                  <p className="text-slate-600 leading-relaxed text-sm sm:text-base">{book.description}</p>
+                  <h3 className="text-base sm:text-lg font-semibold text-slate-800 dark:text-slate-100 mb-2">Description</h3>
+                  <p className="text-slate-600 dark:text-slate-300 leading-relaxed text-sm sm:text-base">{book.description}</p>
                 </div>
               )}
 
               <div className="mt-auto space-y-3 sm:space-y-4">
                 {physicalFormat && (
-                  <div className="border-t pt-3 sm:pt-4">
+                  <div className="border-t dark:border-slate-700 pt-3 sm:pt-4">
                     <div className="flex items-center justify-between mb-2 sm:mb-3">
                       <div className="flex items-center space-x-2">
                         <ShoppingCart className="h-5 w-5 sm:h-6 sm:w-6 text-blue-500" />
-                        <span className="text-base sm:text-lg font-semibold text-slate-700">Printed Book</span>
+                        <span className="text-base sm:text-lg font-semibold text-slate-700 dark:text-slate-300">Printed Book</span>
                       </div>
                       <span className="text-xl sm:text-2xl font-bold text-blue-600">
                         ${physicalFormat.price.toFixed(2)}

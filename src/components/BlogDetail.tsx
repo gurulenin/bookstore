@@ -84,17 +84,17 @@ export default function BlogDetail({ blogId, onBack }: BlogDetailProps) {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 py-12">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 py-12">
       <div className="container mx-auto px-4 max-w-4xl">
         <button
           onClick={onBack}
-          className="flex items-center space-x-2 text-slate-600 hover:text-slate-800 mb-8"
+          className="flex items-center space-x-2 text-slate-600 dark:text-slate-300 hover:text-slate-800 dark:hover:text-slate-100 mb-8"
         >
           <ArrowLeft className="h-5 w-5" />
           <span>Back to Blogs</span>
         </button>
 
-        <article className="bg-white rounded-xl shadow-lg overflow-hidden mb-8">
+        <article className="bg-white dark:bg-slate-800 rounded-xl shadow-lg overflow-hidden mb-8">
           {blog.cover_image_url && (
             <img
               src={blog.cover_image_url}
@@ -104,9 +104,9 @@ export default function BlogDetail({ blogId, onBack }: BlogDetailProps) {
           )}
 
           <div className="p-8">
-            <h1 className="text-4xl font-bold text-slate-800 mb-4">{blog.title}</h1>
+            <h1 className="text-4xl font-bold text-slate-800 dark:text-slate-100 mb-4">{blog.title}</h1>
 
-            <div className="flex items-center space-x-6 text-slate-600 mb-8 pb-6 border-b">
+            <div className="flex items-center space-x-6 text-slate-600 dark:text-slate-400 mb-8 pb-6 border-b dark:border-slate-700">
               <div className="flex items-center space-x-2">
                 <User className="h-5 w-5" />
                 <span>{blog.author_name}</span>
@@ -119,7 +119,7 @@ export default function BlogDetail({ blogId, onBack }: BlogDetailProps) {
 
             <div className="prose prose-slate max-w-none">
               {blog.content.split('\n').map((paragraph, index) => (
-                <p key={index} className="mb-4 text-slate-700 leading-relaxed">
+                <p key={index} className="mb-4 text-slate-700 dark:text-slate-300 leading-relaxed">
                   {paragraph}
                 </p>
               ))}
@@ -127,66 +127,66 @@ export default function BlogDetail({ blogId, onBack }: BlogDetailProps) {
           </div>
         </article>
 
-        <div className="bg-white rounded-xl shadow-lg p-8">
-          <h2 className="text-2xl font-bold text-slate-800 mb-6">Comments ({comments.length})</h2>
+        <div className="bg-white dark:bg-slate-800 rounded-xl shadow-lg p-8">
+          <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100 mb-6">Comments ({comments.length})</h2>
 
           <div className="space-y-6 mb-8">
             {comments.map((comment) => (
-              <div key={comment.id} className="border-b pb-6 last:border-0">
+              <div key={comment.id} className="border-b dark:border-slate-700 pb-6 last:border-0">
                 <div className="flex items-center justify-between mb-2">
-                  <span className="font-semibold text-slate-800">{comment.user_name}</span>
-                  <span className="text-sm text-slate-500">
+                  <span className="font-semibold text-slate-800 dark:text-slate-100">{comment.user_name}</span>
+                  <span className="text-sm text-slate-500 dark:text-slate-400">
                     {new Date(comment.created_at).toLocaleDateString()}
                   </span>
                 </div>
-                <p className="text-slate-700">{comment.comment}</p>
+                <p className="text-slate-700 dark:text-slate-300">{comment.comment}</p>
               </div>
             ))}
           </div>
 
-          <div className="border-t pt-8">
-            <h3 className="text-xl font-bold text-slate-800 mb-4">Leave a Comment</h3>
+          <div className="border-t dark:border-slate-700 pt-8">
+            <h3 className="text-xl font-bold text-slate-800 dark:text-slate-100 mb-4">Leave a Comment</h3>
             <form onSubmit={handleSubmitComment} className="space-y-4">
               <div className="grid md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-2">Name *</label>
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Name *</label>
                   <input
                     type="text"
                     value={commentForm.user_name}
                     onChange={(e) => setCommentForm({ ...commentForm, user_name: e.target.value })}
                     required
-                    className="w-full px-4 py-2 rounded-lg border border-slate-300 focus:border-slate-500 focus:outline-none"
+                    className="w-full px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-700 focus:border-slate-500 focus:outline-none bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-2">Email *</label>
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Email *</label>
                   <input
                     type="email"
                     value={commentForm.user_email}
                     onChange={(e) => setCommentForm({ ...commentForm, user_email: e.target.value })}
                     required
-                    className="w-full px-4 py-2 rounded-lg border border-slate-300 focus:border-slate-500 focus:outline-none"
+                    className="w-full px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-700 focus:border-slate-500 focus:outline-none bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100"
                   />
                 </div>
               </div>
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-2">Comment *</label>
+                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Comment *</label>
                 <textarea
                   value={commentForm.comment}
                   onChange={(e) => setCommentForm({ ...commentForm, comment: e.target.value })}
                   required
                   rows={4}
-                  className="w-full px-4 py-2 rounded-lg border border-slate-300 focus:border-slate-500 focus:outline-none"
+                  className="w-full px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-700 focus:border-slate-500 focus:outline-none bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100"
                 />
               </div>
               <button
                 type="submit"
                 disabled={submitting}
-                className="bg-slate-800 text-white px-8 py-3 rounded-lg font-semibold hover:bg-slate-700 transition disabled:bg-slate-400"
+                className="bg-slate-800 dark:bg-slate-700 text-white px-8 py-3 rounded-lg font-semibold hover:bg-slate-700 dark:hover:bg-slate-600 transition disabled:bg-slate-400 dark:disabled:bg-slate-600"
               >
                 {submitting ? 'Submitting...' : 'Submit Comment'}
               </button>
-              <p className="text-sm text-slate-500">
+              <p className="text-sm text-slate-500 dark:text-slate-400">
                 Your comment will be visible after admin approval.
               </p>
             </form>

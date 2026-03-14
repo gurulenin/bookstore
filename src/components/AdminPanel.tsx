@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Plus, Edit, Trash2, LogOut, Save, X, BookOpen, FileText, Package, Settings, Image, Languages, Database, Music, Layout, Menu as MenuIcon, Home } from 'lucide-react';
+import { Plus, CreditCard as Edit, Trash2, LogOut, Save, X, BookOpen, FileText, Package, Settings, Image, Languages, Database, Music, LayoutGrid as Layout, Menu as MenuIcon, Home } from 'lucide-react';
 import { BookWithFormats, BookFormat, supabase } from '../lib/supabase';
 import BlogManagement from './BlogManagement';
 import OrderManagement from './OrderManagement';
@@ -182,10 +182,10 @@ export default function AdminPanel({ books, onLogout, onAddBook, onUpdateBook, o
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 py-8">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 py-8">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between mb-8">
-          <h1 className="text-4xl font-bold text-slate-800">Admin Panel</h1>
+          <h1 className="text-4xl font-bold text-slate-800 dark:text-slate-100">Admin Panel</h1>
           <button
             onClick={onLogout}
             className="bg-red-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-red-600 transition flex items-center space-x-2"
@@ -195,14 +195,14 @@ export default function AdminPanel({ books, onLogout, onAddBook, onUpdateBook, o
           </button>
         </div>
 
-        <div className="bg-white rounded-xl shadow-lg mb-8">
-          <div className="flex border-b">
+        <div className="bg-white dark:bg-slate-800 rounded-xl shadow-lg mb-8">
+          <div className="flex border-b dark:border-slate-700">
             <button
               onClick={() => setActiveTab('books')}
               className={`flex items-center space-x-2 px-6 py-4 font-semibold transition ${
                 activeTab === 'books'
-                  ? 'text-slate-800 border-b-2 border-slate-800'
-                  : 'text-slate-500 hover:text-slate-700'
+                  ? 'text-slate-800 dark:text-slate-100 border-b-2 border-slate-800 dark:border-slate-300'
+                  : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300'
               }`}
             >
               <BookOpen className="h-5 w-5" />
@@ -212,8 +212,8 @@ export default function AdminPanel({ books, onLogout, onAddBook, onUpdateBook, o
               onClick={() => setActiveTab('blogs')}
               className={`flex items-center space-x-2 px-6 py-4 font-semibold transition ${
                 activeTab === 'blogs'
-                  ? 'text-slate-800 border-b-2 border-slate-800'
-                  : 'text-slate-500 hover:text-slate-700'
+                  ? 'text-slate-800 dark:text-slate-100 border-b-2 border-slate-800 dark:border-slate-300'
+                  : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300'
               }`}
             >
               <FileText className="h-5 w-5" />
@@ -223,8 +223,8 @@ export default function AdminPanel({ books, onLogout, onAddBook, onUpdateBook, o
               onClick={() => setActiveTab('pages')}
               className={`flex items-center space-x-2 px-6 py-4 font-semibold transition ${
                 activeTab === 'pages'
-                  ? 'text-slate-800 border-b-2 border-slate-800'
-                  : 'text-slate-500 hover:text-slate-700'
+                  ? 'text-slate-800 dark:text-slate-100 border-b-2 border-slate-800 dark:border-slate-300'
+                  : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300'
               }`}
             >
               <Layout className="h-5 w-5" />
@@ -234,8 +234,8 @@ export default function AdminPanel({ books, onLogout, onAddBook, onUpdateBook, o
               onClick={() => setActiveTab('menus')}
               className={`flex items-center space-x-2 px-6 py-4 font-semibold transition ${
                 activeTab === 'menus'
-                  ? 'text-slate-800 border-b-2 border-slate-800'
-                  : 'text-slate-500 hover:text-slate-700'
+                  ? 'text-slate-800 dark:text-slate-100 border-b-2 border-slate-800 dark:border-slate-300'
+                  : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300'
               }`}
             >
               <MenuIcon className="h-5 w-5" />
@@ -245,8 +245,8 @@ export default function AdminPanel({ books, onLogout, onAddBook, onUpdateBook, o
               onClick={() => setActiveTab('orders')}
               className={`flex items-center space-x-2 px-6 py-4 font-semibold transition ${
                 activeTab === 'orders'
-                  ? 'text-slate-800 border-b-2 border-slate-800'
-                  : 'text-slate-500 hover:text-slate-700'
+                  ? 'text-slate-800 dark:text-slate-100 border-b-2 border-slate-800 dark:border-slate-300'
+                  : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300'
               }`}
             >
               <Package className="h-5 w-5" />
@@ -256,8 +256,8 @@ export default function AdminPanel({ books, onLogout, onAddBook, onUpdateBook, o
               onClick={() => setActiveTab('carousel')}
               className={`flex items-center space-x-2 px-6 py-4 font-semibold transition ${
                 activeTab === 'carousel'
-                  ? 'text-slate-800 border-b-2 border-slate-800'
-                  : 'text-slate-500 hover:text-slate-700'
+                  ? 'text-slate-800 dark:text-slate-100 border-b-2 border-slate-800 dark:border-slate-300'
+                  : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300'
               }`}
             >
               <Image className="h-5 w-5" />
@@ -267,8 +267,8 @@ export default function AdminPanel({ books, onLogout, onAddBook, onUpdateBook, o
               onClick={() => setActiveTab('homepage')}
               className={`flex items-center space-x-2 px-6 py-4 font-semibold transition ${
                 activeTab === 'homepage'
-                  ? 'text-slate-800 border-b-2 border-slate-800'
-                  : 'text-slate-500 hover:text-slate-700'
+                  ? 'text-slate-800 dark:text-slate-100 border-b-2 border-slate-800 dark:border-slate-300'
+                  : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300'
               }`}
             >
               <Home className="h-5 w-5" />
@@ -278,8 +278,8 @@ export default function AdminPanel({ books, onLogout, onAddBook, onUpdateBook, o
               onClick={() => setActiveTab('translations')}
               className={`flex items-center space-x-2 px-6 py-4 font-semibold transition ${
                 activeTab === 'translations'
-                  ? 'text-slate-800 border-b-2 border-slate-800'
-                  : 'text-slate-500 hover:text-slate-700'
+                  ? 'text-slate-800 dark:text-slate-100 border-b-2 border-slate-800 dark:border-slate-300'
+                  : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300'
               }`}
             >
               <Languages className="h-5 w-5" />
@@ -289,8 +289,8 @@ export default function AdminPanel({ books, onLogout, onAddBook, onUpdateBook, o
               onClick={() => setActiveTab('backup')}
               className={`flex items-center space-x-2 px-6 py-4 font-semibold transition ${
                 activeTab === 'backup'
-                  ? 'text-slate-800 border-b-2 border-slate-800'
-                  : 'text-slate-500 hover:text-slate-700'
+                  ? 'text-slate-800 dark:text-slate-100 border-b-2 border-slate-800 dark:border-slate-300'
+                  : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300'
               }`}
             >
               <Database className="h-5 w-5" />
@@ -300,8 +300,8 @@ export default function AdminPanel({ books, onLogout, onAddBook, onUpdateBook, o
               onClick={() => setActiveTab('settings')}
               className={`flex items-center space-x-2 px-6 py-4 font-semibold transition ${
                 activeTab === 'settings'
-                  ? 'text-slate-800 border-b-2 border-slate-800'
-                  : 'text-slate-500 hover:text-slate-700'
+                  ? 'text-slate-800 dark:text-slate-100 border-b-2 border-slate-800 dark:border-slate-300'
+                  : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300'
               }`}
             >
               <Settings className="h-5 w-5" />
@@ -324,12 +324,12 @@ export default function AdminPanel({ books, onLogout, onAddBook, onUpdateBook, o
 
             {showForm && (
               <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 overflow-y-auto">
-                <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full my-8">
-                  <div className="p-6 border-b border-slate-200 flex items-center justify-between">
-                    <h2 className="text-2xl font-bold text-slate-800">
+                <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl max-w-4xl w-full my-8">
+                  <div className="p-6 border-b border-slate-200 dark:border-slate-700 flex items-center justify-between">
+                    <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100">
                       {editingId ? 'Edit Book' : 'Add New Book'}
                     </h2>
-                    <button onClick={resetForm} className="text-slate-400 hover:text-slate-600">
+                    <button onClick={resetForm} className="text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300">
                       <X className="h-6 w-6" />
                     </button>
                   </div>
@@ -337,64 +337,64 @@ export default function AdminPanel({ books, onLogout, onAddBook, onUpdateBook, o
               <form onSubmit={handleSubmit} className="p-6 space-y-6 max-h-[70vh] overflow-y-auto">
                 <div className="grid md:grid-cols-2 gap-6">
                   <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-2">Title *</label>
+                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Title *</label>
                     <input
                       type="text"
                       value={formData.title}
                       onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                       required
-                      className="w-full px-4 py-2 rounded-lg border border-slate-300 focus:border-slate-500 focus:outline-none"
+                      className="w-full px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-700 focus:border-slate-500 focus:outline-none bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-2">Author *</label>
+                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Author *</label>
                     <input
                       type="text"
                       value={formData.author}
                       onChange={(e) => setFormData({ ...formData, author: e.target.value })}
                       required
-                      className="w-full px-4 py-2 rounded-lg border border-slate-300 focus:border-slate-500 focus:outline-none"
+                      className="w-full px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-700 focus:border-slate-500 focus:outline-none bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100"
                     />
                   </div>
 
                   <div className="md:col-span-2">
-                    <label className="block text-sm font-medium text-slate-700 mb-2">Description</label>
+                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Description</label>
                     <textarea
                       value={formData.description}
                       onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                       rows={3}
-                      className="w-full px-4 py-2 rounded-lg border border-slate-300 focus:border-slate-500 focus:outline-none"
+                      className="w-full px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-700 focus:border-slate-500 focus:outline-none bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-2">ISBN</label>
+                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">ISBN</label>
                     <input
                       type="text"
                       value={formData.isbn}
                       onChange={(e) => setFormData({ ...formData, isbn: e.target.value })}
-                      className="w-full px-4 py-2 rounded-lg border border-slate-300 focus:border-slate-500 focus:outline-none"
+                      className="w-full px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-700 focus:border-slate-500 focus:outline-none bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-2">SKU</label>
+                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">SKU</label>
                     <input
                       type="text"
                       value={formData.sku}
                       onChange={(e) => setFormData({ ...formData, sku: e.target.value })}
-                      className="w-full px-4 py-2 rounded-lg border border-slate-300 focus:border-slate-500 focus:outline-none"
+                      className="w-full px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-700 focus:border-slate-500 focus:outline-none bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100"
                       placeholder="Auto-generated if empty"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-2">Genre</label>
+                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Genre</label>
                     <select
                       value={formData.genre}
                       onChange={(e) => setFormData({ ...formData, genre: e.target.value })}
-                      className="w-full px-4 py-2 rounded-lg border border-slate-300 focus:border-slate-500 focus:outline-none"
+                      className="w-full px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-700 focus:border-slate-500 focus:outline-none bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100"
                     >
                       <option value="">Select a genre</option>
                       {genres.map((g) => (
@@ -404,32 +404,32 @@ export default function AdminPanel({ books, onLogout, onAddBook, onUpdateBook, o
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-2">Publisher</label>
+                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Publisher</label>
                     <input
                       type="text"
                       value={formData.publisher}
                       onChange={(e) => setFormData({ ...formData, publisher: e.target.value })}
-                      className="w-full px-4 py-2 rounded-lg border border-slate-300 focus:border-slate-500 focus:outline-none"
+                      className="w-full px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-700 focus:border-slate-500 focus:outline-none bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-2">Published Date</label>
+                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Published Date</label>
                     <input
                       type="date"
                       value={formData.published_date}
                       onChange={(e) => setFormData({ ...formData, published_date: e.target.value })}
-                      className="w-full px-4 py-2 rounded-lg border border-slate-300 focus:border-slate-500 focus:outline-none"
+                      className="w-full px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-700 focus:border-slate-500 focus:outline-none bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-2">Cover Image URL</label>
+                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Cover Image URL</label>
                     <input
                       type="url"
                       value={formData.cover_image_url}
                       onChange={(e) => setFormData({ ...formData, cover_image_url: e.target.value })}
-                      className="w-full px-4 py-2 rounded-lg border border-slate-300 focus:border-slate-500 focus:outline-none"
+                      className="w-full px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-700 focus:border-slate-500 focus:outline-none bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100"
                       placeholder="https://example.com/cover.jpg"
                     />
                   </div>
@@ -471,11 +471,11 @@ export default function AdminPanel({ books, onLogout, onAddBook, onUpdateBook, o
                         </div>
                         <div className="grid md:grid-cols-4 gap-4">
                           <div>
-                            <label className="block text-sm font-medium text-slate-700 mb-2">Type</label>
+                            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Type</label>
                             <select
                               value={format.format_type}
                               onChange={(e) => updateFormat(index, 'format_type', e.target.value)}
-                              className="w-full px-4 py-2 rounded-lg border border-slate-300 focus:border-slate-500 focus:outline-none"
+                              className="w-full px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-700 focus:border-slate-500 focus:outline-none bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100"
                             >
                               <option value="physical">Physical</option>
                               <option value="ebook">Ebook</option>
@@ -484,23 +484,23 @@ export default function AdminPanel({ books, onLogout, onAddBook, onUpdateBook, o
                           </div>
 
                           <div>
-                            <label className="block text-sm font-medium text-slate-700 mb-2">Price</label>
+                            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Price</label>
                             <input
                               type="number"
                               step="0.01"
                               value={format.price}
                               onChange={(e) => updateFormat(index, 'price', e.target.value)}
-                              className="w-full px-4 py-2 rounded-lg border border-slate-300 focus:border-slate-500 focus:outline-none"
+                              className="w-full px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-700 focus:border-slate-500 focus:outline-none bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100"
                             />
                           </div>
 
                           <div>
-                            <label className="block text-sm font-medium text-slate-700 mb-2">File Format</label>
+                            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">File Format</label>
                             {format.format_type === 'ebook' ? (
                               <select
                                 value={format.file_format}
                                 onChange={(e) => updateFormat(index, 'file_format', e.target.value)}
-                                className="w-full px-4 py-2 rounded-lg border border-slate-300 focus:border-slate-500 focus:outline-none"
+                                className="w-full px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-700 focus:border-slate-500 focus:outline-none bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100"
                               >
                                 <option value="">Select Format</option>
                                 <option value="pdf">PDF</option>
@@ -526,12 +526,12 @@ export default function AdminPanel({ books, onLogout, onAddBook, onUpdateBook, o
 
                           {format.format_type === 'physical' && (
                             <div>
-                              <label className="block text-sm font-medium text-slate-700 mb-2">Stock</label>
+                              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Stock</label>
                               <input
                                 type="number"
                                 value={format.stock_quantity}
                                 onChange={(e) => updateFormat(index, 'stock_quantity', e.target.value)}
-                                className="w-full px-4 py-2 rounded-lg border border-slate-300 focus:border-slate-500 focus:outline-none"
+                                className="w-full px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-700 focus:border-slate-500 focus:outline-none bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100"
                               />
                             </div>
                           )}
@@ -539,23 +539,23 @@ export default function AdminPanel({ books, onLogout, onAddBook, onUpdateBook, o
                           {format.format_type !== 'physical' && (
                             <>
                               <div className="md:col-span-3">
-                                <label className="block text-sm font-medium text-slate-700 mb-2">File URL</label>
+                                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">File URL</label>
                                 <input
                                   type="url"
                                   value={format.file_url}
                                   onChange={(e) => updateFormat(index, 'file_url', e.target.value)}
                                   placeholder={format.format_type === 'audiobook' ? 'https://example.com/audio.mp3' : 'https://example.com/file.pdf'}
-                                  className="w-full px-4 py-2 rounded-lg border border-slate-300 focus:border-slate-500 focus:outline-none"
+                                  className="w-full px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-700 focus:border-slate-500 focus:outline-none bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100"
                                 />
                               </div>
                               <div className="md:col-span-3">
-                                <label className="block text-sm font-medium text-slate-700 mb-2">License Info</label>
+                                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">License Info</label>
                                 <input
                                   type="text"
                                   value={format.license_info}
                                   onChange={(e) => updateFormat(index, 'license_info', e.target.value)}
                                   placeholder="e.g., CC-BY-SA, Public Domain, GPL, etc."
-                                  className="w-full px-4 py-2 rounded-lg border border-slate-300 focus:border-slate-500 focus:outline-none"
+                                  className="w-full px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-700 focus:border-slate-500 focus:outline-none bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100"
                                 />
                               </div>
                             </>
@@ -607,27 +607,27 @@ export default function AdminPanel({ books, onLogout, onAddBook, onUpdateBook, o
           </div>
         )}
 
-            <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+            <div className="bg-white dark:bg-slate-800 rounded-xl shadow-lg overflow-hidden">
               <div className="overflow-x-auto">
                 <table className="w-full">
-                  <thead className="bg-slate-100">
+                  <thead className="bg-slate-100 dark:bg-slate-900">
                     <tr>
-                      <th className="px-6 py-4 text-left text-sm font-semibold text-slate-700">Title</th>
-                      <th className="px-6 py-4 text-left text-sm font-semibold text-slate-700">Author</th>
-                      <th className="px-6 py-4 text-left text-sm font-semibold text-slate-700">Formats</th>
-                      <th className="px-6 py-4 text-left text-sm font-semibold text-slate-700">ISBN</th>
-                      <th className="px-6 py-4 text-right text-sm font-semibold text-slate-700">Actions</th>
+                      <th className="px-6 py-4 text-left text-sm font-semibold text-slate-700 dark:text-slate-300">Title</th>
+                      <th className="px-6 py-4 text-left text-sm font-semibold text-slate-700 dark:text-slate-300">Author</th>
+                      <th className="px-6 py-4 text-left text-sm font-semibold text-slate-700 dark:text-slate-300">Formats</th>
+                      <th className="px-6 py-4 text-left text-sm font-semibold text-slate-700 dark:text-slate-300">ISBN</th>
+                      <th className="px-6 py-4 text-right text-sm font-semibold text-slate-700 dark:text-slate-300">Actions</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-200">
+                  <tbody className="divide-y divide-slate-200 dark:divide-slate-700">
                     {books.map((book) => (
-                      <tr key={book.id} className="hover:bg-slate-50">
-                        <td className="px-6 py-4 text-sm text-slate-800">{book.title}</td>
-                        <td className="px-6 py-4 text-sm text-slate-600">{book.author}</td>
-                        <td className="px-6 py-4 text-sm text-slate-600">
+                      <tr key={book.id} className="hover:bg-slate-50 dark:hover:bg-slate-700">
+                        <td className="px-6 py-4 text-sm text-slate-800 dark:text-slate-100">{book.title}</td>
+                        <td className="px-6 py-4 text-sm text-slate-600 dark:text-slate-300">{book.author}</td>
+                        <td className="px-6 py-4 text-sm text-slate-600 dark:text-slate-300">
                           {book.formats.map(f => f.format_type).join(', ')}
                         </td>
-                        <td className="px-6 py-4 text-sm text-slate-600">{book.isbn || '-'}</td>
+                        <td className="px-6 py-4 text-sm text-slate-600 dark:text-slate-300">{book.isbn || '-'}</td>
                         <td className="px-6 py-4 text-right">
                           <div className="flex items-center justify-end space-x-2">
                             <button

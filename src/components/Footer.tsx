@@ -48,7 +48,7 @@ export default function Footer() {
   const activeSocialMedia = socialMediaIcons.filter(item => item.url);
 
   return (
-    <footer className="bg-slate-800 text-white py-6 md:py-8">
+    <footer className="bg-slate-800 dark:bg-slate-950 text-white py-6 md:py-8">
       <div className="container mx-auto px-4">
         <div className="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0 gap-4">
           <div className="flex items-center space-x-2 order-1 md:order-1">
@@ -64,7 +64,7 @@ export default function Footer() {
                   href={url!}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="hover:text-slate-300 transition-colors"
+                  className="hover:text-slate-300 dark:hover:text-slate-400 transition-colors"
                   aria-label={name}
                 >
                   <Icon className="h-5 w-5 md:h-5 md:w-5" />
@@ -73,7 +73,7 @@ export default function Footer() {
             </div>
           )}
 
-          <div className="text-xs md:text-sm text-slate-300 text-center order-3 md:order-3">
+          <div className="text-xs md:text-sm text-slate-300 dark:text-slate-400 text-center order-3 md:order-3">
             &copy; {new Date().getFullYear()} BookHub. All rights reserved.
           </div>
         </div>

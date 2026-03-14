@@ -29,13 +29,13 @@ export default function AboutPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 py-12">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 py-12">
       <div className="container mx-auto px-4 max-w-4xl">
-        <div className="bg-white rounded-xl shadow-lg p-8">
-          <h1 className="text-4xl font-bold text-slate-800 mb-8">{content.title}</h1>
+        <div className="bg-white dark:bg-slate-800 rounded-xl shadow-lg p-8">
+          <h1 className="text-4xl font-bold text-slate-800 dark:text-slate-100 mb-8">{content.title}</h1>
           <div className="prose prose-slate max-w-none">
             {content.content.split('\n').map((paragraph, index) => (
-              <p key={index} className="mb-4 text-slate-700 leading-relaxed">
+              <p key={index} className="mb-4 text-slate-700 dark:text-slate-300 leading-relaxed">
                 {paragraph}
               </p>
             ))}

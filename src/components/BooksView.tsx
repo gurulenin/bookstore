@@ -71,38 +71,38 @@ export default function BooksView({ books, formatFilter, onPurchase, onDownload 
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 py-12">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 py-12">
       <div className="container mx-auto px-4">
         <div className="mb-12 text-center">
-          <h1 className="text-5xl font-bold text-slate-800 mb-4">{getTitle()}</h1>
-          <p className="text-xl text-slate-600 mb-8">{getDescription()}</p>
+          <h1 className="text-5xl font-bold text-slate-800 dark:text-slate-100 mb-4">{getTitle()}</h1>
+          <p className="text-xl text-slate-600 dark:text-slate-300 mb-8">{getDescription()}</p>
 
           <div className="max-w-2xl mx-auto relative">
-            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-slate-400" />
+            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-slate-400 dark:text-slate-500" />
             <input
               type="text"
               placeholder="Search by title, author, or description..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-12 pr-4 py-4 rounded-xl border-2 border-slate-200 focus:border-slate-400 focus:outline-none text-lg"
+              className="w-full pl-12 pr-4 py-4 rounded-xl border-2 border-slate-200 dark:border-slate-700 focus:border-slate-400 dark:focus:border-slate-500 focus:outline-none text-lg bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100"
             />
           </div>
         </div>
 
-        <div className="bg-white rounded-xl shadow-lg p-6 mb-8">
+        <div className="bg-white dark:bg-slate-800 rounded-xl shadow-lg p-6 mb-8">
           <div className="flex items-center space-x-3 mb-4">
-            <Filter className="h-5 w-5 text-slate-600" />
-            <h3 className="text-lg font-semibold text-slate-800">{t('common.filter')}</h3>
+            <Filter className="h-5 w-5 text-slate-600 dark:text-slate-300" />
+            <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100">{t('common.filter')}</h3>
           </div>
           <div className="grid md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-2">
+              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
                 {t('filter.by_genre')}
               </label>
               <select
                 value={genreFilter}
                 onChange={(e) => setGenreFilter(e.target.value)}
-                className="w-full px-4 py-2 rounded-lg border border-slate-300 focus:border-slate-500 focus:outline-none"
+                className="w-full px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-700 focus:border-slate-500 focus:outline-none bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100"
               >
                 <option value="all">{t('filter.all_genres')}</option>
                 {genres.map((genre) => (
@@ -111,13 +111,13 @@ export default function BooksView({ books, formatFilter, onPurchase, onDownload 
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-2">
+              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
                 {t('filter.by_author')}
               </label>
               <select
                 value={authorFilter}
                 onChange={(e) => setAuthorFilter(e.target.value)}
-                className="w-full px-4 py-2 rounded-lg border border-slate-300 focus:border-slate-500 focus:outline-none"
+                className="w-full px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-700 focus:border-slate-500 focus:outline-none bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100"
               >
                 <option value="all">{t('filter.all_authors')}</option>
                 {uniqueAuthors.map((author) => (
@@ -130,13 +130,13 @@ export default function BooksView({ books, formatFilter, onPurchase, onDownload 
 
         {filteredBooks.length === 0 ? (
           <div className="text-center py-20">
-            <p className="text-2xl text-slate-500">
+            <p className="text-2xl text-slate-500 dark:text-slate-400">
               {searchQuery ? 'No books found matching your search' : 'No books available yet'}
             </p>
           </div>
         ) : (
           <>
-            <div className="mb-6 text-slate-600">
+            <div className="mb-6 text-slate-600 dark:text-slate-300">
               <p>{filteredBooks.length} {filteredBooks.length === 1 ? 'book' : 'books'} found</p>
             </div>
 

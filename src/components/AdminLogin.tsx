@@ -66,21 +66,21 @@ export default function AdminLogin({ onLogin }: AdminLoginProps) {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center py-12 px-4">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 flex items-center justify-center py-12 px-4">
       <div className="max-w-md w-full">
-        <div className="bg-white rounded-2xl shadow-xl p-8">
+        <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-xl p-8">
           <div className="text-center mb-8">
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-slate-800 rounded-full mb-4">
+            <div className="inline-flex items-center justify-center w-16 h-16 bg-slate-800 dark:bg-slate-700 rounded-full mb-4">
               {mode === 'signup' ? (
                 <UserPlus className="h-8 w-8 text-white" />
               ) : (
                 <LogIn className="h-8 w-8 text-white" />
               )}
             </div>
-            <h2 className="text-3xl font-bold text-slate-800">
+            <h2 className="text-3xl font-bold text-slate-800 dark:text-slate-100">
               {mode === 'signup' ? 'Create First Admin' : 'Admin Login'}
             </h2>
-            <p className="text-slate-600 mt-2">
+            <p className="text-slate-600 dark:text-slate-300 mt-2">
               {mode === 'signup'
                 ? 'Set up your administrator account'
                 : 'Sign in to manage your bookstore'}
@@ -88,15 +88,15 @@ export default function AdminLogin({ onLogin }: AdminLoginProps) {
           </div>
 
           {error && (
-            <div className="mb-6 bg-red-50 border border-red-200 rounded-lg p-4 flex items-start space-x-3">
-              <AlertCircle className="h-5 w-5 text-red-500 flex-shrink-0 mt-0.5" />
-              <p className="text-red-700 text-sm">{error}</p>
+            <div className="mb-6 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 flex items-start space-x-3">
+              <AlertCircle className="h-5 w-5 text-red-500 dark:text-red-400 flex-shrink-0 mt-0.5" />
+              <p className="text-red-700 dark:text-red-300 text-sm">{error}</p>
             </div>
           )}
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-slate-700 mb-2">
+              <label htmlFor="email" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
                 Email Address
               </label>
               <input
@@ -105,13 +105,13 @@ export default function AdminLogin({ onLogin }: AdminLoginProps) {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="w-full px-4 py-3 rounded-lg border border-slate-300 focus:border-slate-500 focus:ring-2 focus:ring-slate-200 focus:outline-none transition"
+                className="w-full px-4 py-3 rounded-lg border border-slate-300 dark:border-slate-700 focus:border-slate-500 dark:focus:border-slate-500 focus:ring-2 focus:ring-slate-200 dark:focus:ring-slate-600 focus:outline-none transition bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100"
                 placeholder="admin@bookstore.com"
               />
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-slate-700 mb-2">
+              <label htmlFor="password" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
                 Password
               </label>
               <input
@@ -120,7 +120,7 @@ export default function AdminLogin({ onLogin }: AdminLoginProps) {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                className="w-full px-4 py-3 rounded-lg border border-slate-300 focus:border-slate-500 focus:ring-2 focus:ring-slate-200 focus:outline-none transition"
+                className="w-full px-4 py-3 rounded-lg border border-slate-300 dark:border-slate-700 focus:border-slate-500 dark:focus:border-slate-500 focus:ring-2 focus:ring-slate-200 dark:focus:ring-slate-600 focus:outline-none transition bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100"
                 placeholder="Enter your password"
               />
             </div>
@@ -128,7 +128,7 @@ export default function AdminLogin({ onLogin }: AdminLoginProps) {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-slate-800 text-white py-3 rounded-lg font-semibold hover:bg-slate-700 transition disabled:bg-slate-400 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
+              className="w-full bg-slate-800 dark:bg-slate-700 text-white py-3 rounded-lg font-semibold hover:bg-slate-700 dark:hover:bg-slate-600 transition disabled:bg-slate-400 dark:disabled:bg-slate-600 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
             >
               {loading ? (
                 <>
@@ -148,12 +148,12 @@ export default function AdminLogin({ onLogin }: AdminLoginProps) {
             </button>
 
             {!isFirstAdmin && mode === 'login' && (
-              <p className="text-center text-sm text-slate-600 mt-4">
+              <p className="text-center text-sm text-slate-600 dark:text-slate-300 mt-4">
                 First time here?{' '}
                 <button
                   type="button"
                   onClick={() => setMode('signup')}
-                  className="text-slate-800 font-semibold hover:underline"
+                  className="text-slate-800 dark:text-slate-100 font-semibold hover:underline"
                 >
                   Create first admin account
                 </button>
