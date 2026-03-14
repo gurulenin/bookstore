@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { X, Download, ShoppingCart, BookOpen, Headphones, Play, ChevronDown, ChevronUp } from 'lucide-react';
 import { BookWithFormats, supabase } from '../lib/supabase';
 import AudiobookPlayer from './AudiobookPlayer';
+import ShareButton from './ShareButton';
 
 interface BookDetailModalProps {
   book: BookWithFormats;
@@ -89,7 +90,10 @@ export default function BookDetailModal({ book, onClose, onPurchase, onDownload 
             </div>
 
             <div className="flex flex-col">
-              <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-slate-800 dark:text-slate-100 mb-2">{book.title}</h1>
+              <div className="flex items-start justify-between gap-3 mb-2">
+                <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-slate-800 dark:text-slate-100 flex-1">{book.title}</h1>
+                <ShareButton bookId={book.id} bookTitle={book.title} bookAuthor={book.author} />
+              </div>
               <p className="text-base sm:text-lg md:text-xl text-slate-600 dark:text-slate-300 mb-3 sm:mb-4">{book.author}</p>
 
               {book.publisher && (
