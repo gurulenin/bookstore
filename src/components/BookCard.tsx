@@ -1,6 +1,5 @@
 import { BookOpen, Download, ShoppingCart, Headphones, FileText, ExternalLink } from 'lucide-react';
 import { BookWithFormats } from '../lib/supabase';
-import ShareButton from './ShareButton';
 
 interface BookCardProps {
   book: BookWithFormats;
@@ -40,12 +39,9 @@ export default function BookCard({ book, onPurchase, onDownload, onViewDetails, 
       </div>
 
       <div className="p-4">
-        <div className="flex items-start justify-between gap-2 mb-1">
-          <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100 line-clamp-2 flex-1">
-            {book.title}
-          </h3>
-          <ShareButton bookId={book.id} bookTitle={book.title} bookAuthor={book.author} />
-        </div>
+        <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100 mb-1 line-clamp-2">
+          {book.title}
+        </h3>
         <p className="text-slate-600 dark:text-slate-300 text-sm">{book.author}</p>
       </div>
     </div>
