@@ -6,7 +6,7 @@ import FontSizeSwitcher from './FontSizeSwitcher';
 import ThemeToggle from './ThemeToggle';
 import { supabase } from '../lib/supabase';
 
-type AppView = 'home' | 'books' | 'ebooks' | 'audiobooks' | 'contribute' | 'contribute_ebooks' | 'contribute_covers' | 'contribute_audiobooks' | 'donate' | 'blog' | 'about' | 'contact' | 'admin' | 'publish';
+type AppView = 'home' | 'books' | 'ebooks' | 'audiobooks' | 'contribute' | 'contribute_ebooks' | 'contribute_covers' | 'contribute_audiobooks' | 'donate' | 'blog' | 'about' | 'about_us' | 'kaniyam' | 'freetamilebooks' | 'nutpagam' | 'contact' | 'admin' | 'publish';
 
 interface NavbarProps {
   currentView: AppView;
@@ -23,6 +23,7 @@ interface MenuSetting {
 
 const BOOKS_SUBKEYS = new Set(['books', 'ebooks', 'audiobooks']);
 const CONTRIBUTE_VIEWS = new Set(['contribute', 'contribute_ebooks', 'contribute_covers', 'contribute_audiobooks', 'donate']);
+const ABOUT_VIEWS = new Set(['about', 'about_us', 'kaniyam', 'freetamilebooks', 'nutpagam']);
 
 export default function Navbar({ currentView, onViewChange }: NavbarProps) {
   const { language } = useTranslation();
@@ -32,11 +33,14 @@ export default function Navbar({ currentView, onViewChange }: NavbarProps) {
   const [mobileBooksOpen, setMobileBooksOpen] = useState(false);
   const [contributeDropdownOpen, setContributeDropdownOpen] = useState(false);
   const [mobileContributeOpen, setMobileContributeOpen] = useState(false);
+  const [aboutDropdownOpen, setAboutDropdownOpen] = useState(false);
+  const [mobileAboutOpen, setMobileAboutOpen] = useState(false);
   const [menus, setMenus] = useState<MenuSetting[]>([]);
   const desktopSettingsRef = useRef<HTMLDivElement>(null);
   const mobileSettingsRef = useRef<HTMLDivElement>(null);
   const booksDropdownRef = useRef<HTMLDivElement>(null);
   const contributeDropdownRef = useRef<HTMLDivElement>(null);
+  const aboutDropdownRef = useRef<HTMLDivElement>(null);
   const logoClickCountRef = useRef(0);
   const logoClickTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -51,6 +55,9 @@ export default function Navbar({ currentView, onViewChange }: NavbarProps) {
       }
       if (!contributeDropdownRef.current?.contains(target)) {
         setContributeDropdownOpen(false);
+      }
+      if (!aboutDropdownRef.current?.contains(target)) {
+        setAboutDropdownOpen(false);
       }
     };
     document.addEventListener('mousedown', handleClickOutside);
@@ -91,6 +98,7 @@ export default function Navbar({ currentView, onViewChange }: NavbarProps) {
     setMobileMenuOpen(false);
     setBooksDropdownOpen(false);
     setContributeDropdownOpen(false);
+    setAboutDropdownOpen(false);
   };
 
   const getMenuIcon = (menuKey: string, className: string) => {
@@ -109,10 +117,12 @@ export default function Navbar({ currentView, onViewChange }: NavbarProps) {
 
   const booksMenus = menus.filter(m => BOOKS_SUBKEYS.has(m.menu_key));
   const contributeMenu = menus.find(m => m.menu_key === 'contribute');
-  const otherMenus = menus.filter(m => !BOOKS_SUBKEYS.has(m.menu_key) && m.menu_key !== 'contribute');
+  const aboutMenu = menus.find(m => m.menu_key === 'about');
+  const otherMenus = menus.filter(m => !BOOKS_SUBKEYS.has(m.menu_key) && m.menu_key !== 'contribute' && m.menu_key !== 'about');
   const hasBooksMenu = booksMenus.length > 0;
   const isBooksActive = BOOKS_SUBKEYS.has(currentView);
   const isContributeActive = CONTRIBUTE_VIEWS.has(currentView);
+  const isAboutActive = ABOUT_VIEWS.has(currentView);
 
   const getMenuLabel = (menu: MenuSetting) =>
     language === 'ta' && menu.menu_label_tamil ? menu.menu_label_tamil : menu.menu_label;
@@ -138,6 +148,13 @@ export default function Navbar({ currentView, onViewChange }: NavbarProps) {
     { key: 'contribute_covers', label: language === 'ta' ? 'புத்தக அட்டைகள் உருவாக்குதல்' : 'Making Book Covers', icon: <Image className="h-4 w-4" /> },
     { key: 'contribute_audiobooks', label: language === 'ta' ? 'ஆடியோ புத்தகங்கள் உருவாக்குதல்' : 'Making Audio Books', icon: <Headphones className="h-4 w-4" /> },
     { key: 'donate', label: language === 'ta' ? 'நன்கொடை' : 'Donate', icon: <Heart className="h-4 w-4" /> },
+  ];
+
+  const aboutSubItems: Array<{ key: AppView; label: string; icon: ReactNode }> = [
+    { key: 'about_us', label: language === 'ta' ? 'எங்களைப் பற்றி' : 'About Us', icon: <Info className="h-4 w-4" /> },
+    { key: 'kaniyam', label: 'Kaniyam Foundation', icon: <BookOpen className="h-4 w-4" /> },
+    { key: 'freetamilebooks', label: 'FreeTamilEbooks.com', icon: <BookOpen className="h-4 w-4" /> },
+    { key: 'nutpagam', label: 'Nutpagam', icon: <BookOpen className="h-4 w-4" /> },
   ];
 
   return (
@@ -206,6 +223,41 @@ export default function Navbar({ currentView, onViewChange }: NavbarProps) {
                 {contributeDropdownOpen && (
                   <div className="absolute left-0 top-full mt-1 w-52 bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 py-1 z-50">
                     {contributeSubItems.map(item => (
+                      <button
+                        key={item.key}
+                        onClick={() => handleNavClick(item.key)}
+                        className={`w-full flex items-center space-x-3 px-4 py-2.5 text-sm font-medium transition ${
+                          currentView === item.key
+                            ? 'bg-slate-100 dark:bg-slate-700 text-slate-900 dark:text-white'
+                            : 'text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700'
+                        }`}
+                      >
+                        {item.icon}
+                        <span>{item.label}</span>
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+
+            {aboutMenu && (
+              <div ref={aboutDropdownRef} className="relative">
+                <button
+                  onClick={() => setAboutDropdownOpen(!aboutDropdownOpen)}
+                  className={`flex items-center space-x-1.5 px-3 py-2 rounded-lg font-medium transition text-sm xl:text-base ${
+                    isAboutActive
+                      ? 'bg-slate-800 dark:bg-slate-700 text-white'
+                      : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
+                  }`}
+                >
+                  <Info className="h-4 w-4 xl:h-5 xl:w-5" />
+                  <span>{getMenuLabel(aboutMenu)}</span>
+                  <ChevronDown className={`h-3.5 w-3.5 transition-transform ${aboutDropdownOpen ? 'rotate-180' : ''}`} />
+                </button>
+                {aboutDropdownOpen && (
+                  <div className="absolute left-0 top-full mt-1 w-52 bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 py-1 z-50">
+                    {aboutSubItems.map(item => (
                       <button
                         key={item.key}
                         onClick={() => handleNavClick(item.key)}
@@ -365,6 +417,43 @@ export default function Navbar({ currentView, onViewChange }: NavbarProps) {
                 {mobileContributeOpen && (
                   <div className="ml-4 mt-1 space-y-1 border-l-2 border-slate-200 dark:border-slate-700 pl-3">
                     {contributeSubItems.map(item => (
+                      <button
+                        key={item.key}
+                        onClick={() => handleNavClick(item.key)}
+                        className={`w-full flex items-center space-x-3 px-4 py-2.5 rounded-lg font-medium transition text-sm ${
+                          currentView === item.key
+                            ? 'bg-slate-800 dark:bg-slate-700 text-white'
+                            : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
+                        }`}
+                      >
+                        {item.icon}
+                        <span>{item.label}</span>
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+
+            {aboutMenu && (
+              <div>
+                <button
+                  onClick={() => setMobileAboutOpen(!mobileAboutOpen)}
+                  className={`w-full flex items-center justify-between px-4 py-3 rounded-lg font-medium transition ${
+                    isAboutActive
+                      ? 'bg-slate-800 dark:bg-slate-700 text-white'
+                      : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
+                  }`}
+                >
+                  <div className="flex items-center space-x-3">
+                    <Info className="h-5 w-5" />
+                    <span>{getMenuLabel(aboutMenu)}</span>
+                  </div>
+                  <ChevronDown className={`h-4 w-4 transition-transform ${mobileAboutOpen ? 'rotate-180' : ''}`} />
+                </button>
+                {mobileAboutOpen && (
+                  <div className="ml-4 mt-1 space-y-1 border-l-2 border-slate-200 dark:border-slate-700 pl-3">
+                    {aboutSubItems.map(item => (
                       <button
                         key={item.key}
                         onClick={() => handleNavClick(item.key)}

@@ -16,7 +16,7 @@ import HtmlReaderModal from './components/HtmlReaderModal';
 import PublishPage from './components/PublishPage';
 import ContributePage, { type ContributeSubView } from './components/ContributePage';
 
-type View = 'home' | 'books' | 'ebooks' | 'audiobooks' | 'featured' | 'contribute' | 'contribute_ebooks' | 'contribute_covers' | 'contribute_audiobooks' | 'donate' | 'blog' | 'about' | 'contact' | 'admin' | 'publish';
+type View = 'home' | 'books' | 'ebooks' | 'audiobooks' | 'featured' | 'contribute' | 'contribute_ebooks' | 'contribute_covers' | 'contribute_audiobooks' | 'donate' | 'blog' | 'about' | 'about_us' | 'kaniyam' | 'freetamilebooks' | 'nutpagam' | 'contact' | 'admin' | 'publish';
 
 function App() {
   const [currentView, setCurrentView] = useState<View>('home');
@@ -367,6 +367,11 @@ function App() {
         {currentView === 'publish' && <PublishPage />}
 
         {currentView === 'about' && <ContentPage pageKey="about" />}
+
+        {currentView === 'about_us' && <ContentPage pageKey="about_us" />}
+        {currentView === 'kaniyam' && <ContentPage pageKey="kaniyam" />}
+        {currentView === 'freetamilebooks' && <ContentPage pageKey="freetamilebooks" />}
+        {currentView === 'nutpagam' && <ContentPage pageKey="nutpagam" />}
 
         {currentView === 'contact' && <ContactPage />}
 
