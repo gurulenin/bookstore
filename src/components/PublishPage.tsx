@@ -1,10 +1,8 @@
 import { useState, useEffect } from 'react';
 import { BookOpen, PenLine, Upload, Users } from 'lucide-react';
-import { useTranslation } from '../lib/translations';
 import { supabase } from '../lib/supabase';
 
 export default function PublishPage() {
-  const { t } = useTranslation();
   const [formUrl, setFormUrl] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -27,50 +25,42 @@ export default function PublishPage() {
             <PenLine className="h-8 w-8 text-blue-600 dark:text-blue-400" />
           </div>
           <h1 className="text-3xl md:text-4xl font-bold text-slate-800 dark:text-slate-100 mb-3">
-            {t('publish.title') || 'Publish Your Book'}
+            Publish Your Book
           </h1>
           <p className="text-slate-600 dark:text-slate-300 text-base md:text-lg max-w-2xl mx-auto">
-            {t('publish.subtitle') || 'Are you an author? Share your work with thousands of readers. Fill out the form below and our team will get in touch with you.'}
+            Are you an author? Share your work with thousands of readers. Fill out the form below and our team will get in touch with you.
           </p>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-10">
           <div className="bg-white dark:bg-slate-800 rounded-xl shadow p-6 text-center">
             <BookOpen className="h-8 w-8 text-blue-500 mx-auto mb-3" />
-            <h3 className="font-semibold text-slate-800 dark:text-slate-100 mb-1">
-              {t('publish.step1.title') || 'Submit Request'}
-            </h3>
+            <h3 className="font-semibold text-slate-800 dark:text-slate-100 mb-1">Submit Request</h3>
             <p className="text-sm text-slate-500 dark:text-slate-400">
-              {t('publish.step1.desc') || 'Fill out the form with your book details and contact info.'}
+              Fill out the form with your book details and contact info.
             </p>
           </div>
           <div className="bg-white dark:bg-slate-800 rounded-xl shadow p-6 text-center">
             <Users className="h-8 w-8 text-green-500 mx-auto mb-3" />
-            <h3 className="font-semibold text-slate-800 dark:text-slate-100 mb-1">
-              {t('publish.step2.title') || 'We Review'}
-            </h3>
+            <h3 className="font-semibold text-slate-800 dark:text-slate-100 mb-1">We Review</h3>
             <p className="text-sm text-slate-500 dark:text-slate-400">
-              {t('publish.step2.desc') || 'Our editorial team reviews your submission and contacts you.'}
+              Our editorial team reviews your submission and contacts you.
             </p>
           </div>
           <div className="bg-white dark:bg-slate-800 rounded-xl shadow p-6 text-center">
             <Upload className="h-8 w-8 text-orange-500 mx-auto mb-3" />
-            <h3 className="font-semibold text-slate-800 dark:text-slate-100 mb-1">
-              {t('publish.step3.title') || 'Get Published'}
-            </h3>
+            <h3 className="font-semibold text-slate-800 dark:text-slate-100 mb-1">Get Published</h3>
             <p className="text-sm text-slate-500 dark:text-slate-400">
-              {t('publish.step3.desc') || 'Your book goes live and reaches thousands of readers.'}
+              Your book goes live and reaches thousands of readers.
             </p>
           </div>
         </div>
 
         <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg overflow-hidden">
           <div className="px-6 py-4 border-b border-slate-200 dark:border-slate-700">
-            <h2 className="text-lg font-semibold text-slate-800 dark:text-slate-100">
-              {t('publish.form.title') || 'Writer Request Form'}
-            </h2>
+            <h2 className="text-lg font-semibold text-slate-800 dark:text-slate-100">Writer Request Form</h2>
             <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
-              {t('publish.form.desc') || 'Please complete all fields. We typically respond within 3-5 business days.'}
+              Please complete all fields. We typically respond within 3-5 business days.
             </p>
           </div>
           <div className="p-2 md:p-4">
@@ -96,10 +86,10 @@ export default function PublishPage() {
                 <div className="text-center px-6 py-10">
                   <PenLine className="h-12 w-12 text-slate-300 dark:text-slate-600 mx-auto mb-4" />
                   <p className="text-slate-500 dark:text-slate-400 text-sm font-medium mb-2">
-                    {t('publish.form.placeholder.title') || 'Form not configured yet'}
+                    Form not configured yet
                   </p>
                   <p className="text-slate-400 dark:text-slate-500 text-xs max-w-xs mx-auto">
-                    {t('publish.form.placeholder.desc') || 'An administrator needs to add the Google Form URL in the admin panel.'}
+                    An administrator needs to add the Google Form URL in the admin panel.
                   </p>
                 </div>
               </div>
