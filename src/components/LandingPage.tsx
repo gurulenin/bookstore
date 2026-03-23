@@ -67,7 +67,7 @@ export default function LandingPage({ onNavigate, onViewBook }: LandingPageProps
 
       <div className="container mx-auto px-4 py-8 md:py-12 lg:py-16">
         <div className="text-center mb-8 md:mb-12 lg:mb-16">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-slate-800 dark:text-slate-100 mb-4 md:mb-6 px-4">
+          <h1 className={`font-bold text-slate-800 dark:text-slate-100 mb-4 md:mb-6 px-4 ${language === 'ta' ? 'text-2xl sm:text-3xl md:text-4xl lg:text-5xl' : 'text-3xl sm:text-4xl md:text-5xl lg:text-6xl'}`}>
             {t('landing.collection.title')}
           </h1>
           <p className="text-base sm:text-lg md:text-xl text-slate-600 dark:text-slate-300 max-w-3xl mx-auto px-4">
@@ -217,7 +217,7 @@ export default function LandingPage({ onNavigate, onViewBook }: LandingPageProps
 
         <div className="mt-12 md:mt-16 lg:mt-20 text-center">
           <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-6 md:p-8 lg:p-12 max-w-4xl mx-auto">
-            <h3 className="text-2xl md:text-3xl font-bold text-slate-800 dark:text-slate-100 mb-4">
+            <h3 className={`font-bold text-slate-800 dark:text-slate-100 mb-4 ${language === 'ta' ? 'text-xl md:text-2xl' : 'text-2xl md:text-3xl'}`}>
               {t('landing.why.title')}
             </h3>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 md:gap-8 mt-6 md:mt-8">
