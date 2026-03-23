@@ -14,8 +14,9 @@ import ContentPage from './components/ContentPage';
 import BookDetailModal from './components/BookDetailModal';
 import HtmlReaderModal from './components/HtmlReaderModal';
 import PublishPage from './components/PublishPage';
+import ContributePage, { type ContributeSubView } from './components/ContributePage';
 
-type View = 'home' | 'books' | 'ebooks' | 'audiobooks' | 'featured' | 'contribute' | 'blog' | 'about' | 'contact' | 'admin' | 'publish';
+type View = 'home' | 'books' | 'ebooks' | 'audiobooks' | 'featured' | 'contribute' | 'contribute_ebooks' | 'contribute_covers' | 'contribute_audiobooks' | 'donate' | 'blog' | 'about' | 'contact' | 'admin' | 'publish';
 
 function App() {
   const [currentView, setCurrentView] = useState<View>('home');
@@ -339,6 +340,13 @@ function App() {
 
         {currentView === 'blog' && selectedBlogId && (
           <BlogDetail blogId={selectedBlogId} onBack={() => setSelectedBlogId(null)} />
+        )}
+
+        {(currentView === 'contribute_ebooks' || currentView === 'contribute_covers' || currentView === 'contribute_audiobooks' || currentView === 'donate') && (
+          <ContributePage
+            subView={currentView as ContributeSubView}
+            onSubViewChange={(v) => setCurrentView(v)}
+          />
         )}
 
         {currentView === 'contribute' && <ContentPage pageKey="contribute" />}

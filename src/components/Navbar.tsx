@@ -1,12 +1,12 @@
-import { useState, useRef, useEffect, useCallback } from 'react';
-import { BookOpen, Headphones, ShoppingBag, FileText, Info, Mail, Settings, Menu, X, Heart, PenLine, ChevronDown, BookMarked } from 'lucide-react';
+import { useState, useRef, useEffect, useCallback, type ReactNode } from 'react';
+import { BookOpen, Headphones, ShoppingBag, FileText, Info, Mail, Settings, Menu, X, Heart, PenLine, ChevronDown, BookMarked, Image } from 'lucide-react';
 import { useTranslation } from '../lib/translations';
 import LanguageSwitcher from './LanguageSwitcher';
 import FontSizeSwitcher from './FontSizeSwitcher';
 import ThemeToggle from './ThemeToggle';
 import { supabase } from '../lib/supabase';
 
-type AppView = 'home' | 'books' | 'ebooks' | 'audiobooks' | 'contribute' | 'blog' | 'about' | 'contact' | 'admin' | 'publish';
+type AppView = 'home' | 'books' | 'ebooks' | 'audiobooks' | 'contribute' | 'contribute_ebooks' | 'contribute_covers' | 'contribute_audiobooks' | 'donate' | 'blog' | 'about' | 'contact' | 'admin' | 'publish';
 
 interface NavbarProps {
   currentView: AppView;
@@ -22,6 +22,7 @@ interface MenuSetting {
 }
 
 const BOOKS_SUBKEYS = new Set(['books', 'ebooks', 'audiobooks']);
+const CONTRIBUTE_VIEWS = new Set(['contribute', 'contribute_ebooks', 'contribute_covers', 'contribute_audiobooks', 'donate']);
 
 export default function Navbar({ currentView, onViewChange }: NavbarProps) {
   const { language } = useTranslation();
@@ -29,10 +30,13 @@ export default function Navbar({ currentView, onViewChange }: NavbarProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [booksDropdownOpen, setBooksDropdownOpen] = useState(false);
   const [mobileBooksOpen, setMobileBooksOpen] = useState(false);
+  const [contributeDropdownOpen, setContributeDropdownOpen] = useState(false);
+  const [mobileContributeOpen, setMobileContributeOpen] = useState(false);
   const [menus, setMenus] = useState<MenuSetting[]>([]);
   const desktopSettingsRef = useRef<HTMLDivElement>(null);
   const mobileSettingsRef = useRef<HTMLDivElement>(null);
   const booksDropdownRef = useRef<HTMLDivElement>(null);
+  const contributeDropdownRef = useRef<HTMLDivElement>(null);
   const logoClickCountRef = useRef(0);
   const logoClickTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -44,6 +48,9 @@ export default function Navbar({ currentView, onViewChange }: NavbarProps) {
       }
       if (!booksDropdownRef.current?.contains(target)) {
         setBooksDropdownOpen(false);
+      }
+      if (!contributeDropdownRef.current?.contains(target)) {
+        setContributeDropdownOpen(false);
       }
     };
     document.addEventListener('mousedown', handleClickOutside);
@@ -83,6 +90,7 @@ export default function Navbar({ currentView, onViewChange }: NavbarProps) {
     onViewChange(view);
     setMobileMenuOpen(false);
     setBooksDropdownOpen(false);
+    setContributeDropdownOpen(false);
   };
 
   const getMenuIcon = (menuKey: string, className: string) => {
@@ -100,9 +108,11 @@ export default function Navbar({ currentView, onViewChange }: NavbarProps) {
   };
 
   const booksMenus = menus.filter(m => BOOKS_SUBKEYS.has(m.menu_key));
-  const otherMenus = menus.filter(m => !BOOKS_SUBKEYS.has(m.menu_key));
+  const contributeMenu = menus.find(m => m.menu_key === 'contribute');
+  const otherMenus = menus.filter(m => !BOOKS_SUBKEYS.has(m.menu_key) && m.menu_key !== 'contribute');
   const hasBooksMenu = booksMenus.length > 0;
   const isBooksActive = BOOKS_SUBKEYS.has(currentView);
+  const isContributeActive = CONTRIBUTE_VIEWS.has(currentView);
 
   const getMenuLabel = (menu: MenuSetting) =>
     language === 'ta' && menu.menu_label_tamil ? menu.menu_label_tamil : menu.menu_label;
@@ -122,6 +132,13 @@ export default function Navbar({ currentView, onViewChange }: NavbarProps) {
         : (menu?.menu_label || item.labelEn);
       return { ...item, label };
     });
+
+  const contributeSubItems: Array<{ key: AppView; label: string; icon: ReactNode }> = [
+    { key: 'contribute_ebooks', label: language === 'ta' ? 'மின்-புத்தகங்கள் உருவாக்குதல்' : 'Making E-Books', icon: <BookOpen className="h-4 w-4" /> },
+    { key: 'contribute_covers', label: language === 'ta' ? 'புத்தக அட்டைகள் உருவாக்குதல்' : 'Making Book Covers', icon: <Image className="h-4 w-4" /> },
+    { key: 'contribute_audiobooks', label: language === 'ta' ? 'ஆடியோ புத்தகங்கள் உருவாக்குதல்' : 'Making Audio Books', icon: <Headphones className="h-4 w-4" /> },
+    { key: 'donate', label: language === 'ta' ? 'நன்கொடை' : 'Donate', icon: <Heart className="h-4 w-4" /> },
+  ];
 
   return (
     <nav className="bg-white dark:bg-slate-900 shadow-md sticky top-0 z-50 transition-colors">
@@ -154,6 +171,41 @@ export default function Navbar({ currentView, onViewChange }: NavbarProps) {
                 {booksDropdownOpen && (
                   <div className="absolute left-0 top-full mt-1 w-48 bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 py-1 z-50">
                     {booksSubItems.map(item => (
+                      <button
+                        key={item.key}
+                        onClick={() => handleNavClick(item.key)}
+                        className={`w-full flex items-center space-x-3 px-4 py-2.5 text-sm font-medium transition ${
+                          currentView === item.key
+                            ? 'bg-slate-100 dark:bg-slate-700 text-slate-900 dark:text-white'
+                            : 'text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700'
+                        }`}
+                      >
+                        {item.icon}
+                        <span>{item.label}</span>
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+
+            {contributeMenu && (
+              <div ref={contributeDropdownRef} className="relative">
+                <button
+                  onClick={() => setContributeDropdownOpen(!contributeDropdownOpen)}
+                  className={`flex items-center space-x-1.5 px-3 py-2 rounded-lg font-medium transition text-sm xl:text-base ${
+                    isContributeActive
+                      ? 'bg-slate-800 dark:bg-slate-700 text-white'
+                      : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
+                  }`}
+                >
+                  <Heart className="h-4 w-4 xl:h-5 xl:w-5" />
+                  <span>{getMenuLabel(contributeMenu)}</span>
+                  <ChevronDown className={`h-3.5 w-3.5 transition-transform ${contributeDropdownOpen ? 'rotate-180' : ''}`} />
+                </button>
+                {contributeDropdownOpen && (
+                  <div className="absolute left-0 top-full mt-1 w-52 bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 py-1 z-50">
+                    {contributeSubItems.map(item => (
                       <button
                         key={item.key}
                         onClick={() => handleNavClick(item.key)}
@@ -276,6 +328,43 @@ export default function Navbar({ currentView, onViewChange }: NavbarProps) {
                 {mobileBooksOpen && (
                   <div className="ml-4 mt-1 space-y-1 border-l-2 border-slate-200 dark:border-slate-700 pl-3">
                     {booksSubItems.map(item => (
+                      <button
+                        key={item.key}
+                        onClick={() => handleNavClick(item.key)}
+                        className={`w-full flex items-center space-x-3 px-4 py-2.5 rounded-lg font-medium transition text-sm ${
+                          currentView === item.key
+                            ? 'bg-slate-800 dark:bg-slate-700 text-white'
+                            : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
+                        }`}
+                      >
+                        {item.icon}
+                        <span>{item.label}</span>
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+
+            {contributeMenu && (
+              <div>
+                <button
+                  onClick={() => setMobileContributeOpen(!mobileContributeOpen)}
+                  className={`w-full flex items-center justify-between px-4 py-3 rounded-lg font-medium transition ${
+                    isContributeActive
+                      ? 'bg-slate-800 dark:bg-slate-700 text-white'
+                      : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
+                  }`}
+                >
+                  <div className="flex items-center space-x-3">
+                    <Heart className="h-5 w-5" />
+                    <span>{getMenuLabel(contributeMenu)}</span>
+                  </div>
+                  <ChevronDown className={`h-4 w-4 transition-transform ${mobileContributeOpen ? 'rotate-180' : ''}`} />
+                </button>
+                {mobileContributeOpen && (
+                  <div className="ml-4 mt-1 space-y-1 border-l-2 border-slate-200 dark:border-slate-700 pl-3">
+                    {contributeSubItems.map(item => (
                       <button
                         key={item.key}
                         onClick={() => handleNavClick(item.key)}
