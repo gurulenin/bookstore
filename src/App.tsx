@@ -13,8 +13,9 @@ import CheckoutFlow from './components/CheckoutFlow';
 import ContentPage from './components/ContentPage';
 import BookDetailModal from './components/BookDetailModal';
 import HtmlReaderModal from './components/HtmlReaderModal';
+import PublishPage from './components/PublishPage';
 
-type View = 'home' | 'books' | 'ebooks' | 'audiobooks' | 'featured' | 'contribute' | 'blog' | 'about' | 'contact' | 'admin';
+type View = 'home' | 'books' | 'ebooks' | 'audiobooks' | 'featured' | 'contribute' | 'blog' | 'about' | 'contact' | 'admin' | 'publish';
 
 function App() {
   const [currentView, setCurrentView] = useState<View>('home');
@@ -341,6 +342,8 @@ function App() {
         )}
 
         {currentView === 'contribute' && <ContentPage pageKey="contribute" />}
+
+        {currentView === 'publish' && <PublishPage />}
 
         {currentView === 'about' && <ContentPage pageKey="about" />}
 

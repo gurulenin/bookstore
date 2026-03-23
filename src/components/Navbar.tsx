@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { BookOpen, Headphones, ShoppingBag, FileText, Info, Mail, Settings, Menu, X, Heart } from 'lucide-react';
+import { BookOpen, Headphones, ShoppingBag, FileText, Info, Mail, Settings, Menu, X, Heart, PenLine } from 'lucide-react';
 import { useTranslation } from '../lib/translations';
 import LanguageSwitcher from './LanguageSwitcher';
 import FontSizeSwitcher from './FontSizeSwitcher';
@@ -7,8 +7,8 @@ import ThemeToggle from './ThemeToggle';
 import { supabase } from '../lib/supabase';
 
 interface NavbarProps {
-  currentView: 'home' | 'books' | 'ebooks' | 'audiobooks' | 'contribute' | 'blog' | 'about' | 'contact' | 'admin';
-  onViewChange: (view: 'home' | 'books' | 'ebooks' | 'audiobooks' | 'contribute' | 'blog' | 'about' | 'contact' | 'admin') => void;
+  currentView: 'home' | 'books' | 'ebooks' | 'audiobooks' | 'contribute' | 'blog' | 'about' | 'contact' | 'admin' | 'publish';
+  onViewChange: (view: 'home' | 'books' | 'ebooks' | 'audiobooks' | 'contribute' | 'blog' | 'about' | 'contact' | 'admin' | 'publish') => void;
 }
 
 interface MenuSetting {
@@ -79,7 +79,7 @@ export default function Navbar({ currentView, onViewChange }: NavbarProps) {
     }, 400);
   }, [onViewChange]);
 
-  const handleNavClick = (view: 'home' | 'books' | 'ebooks' | 'audiobooks' | 'contribute' | 'blog' | 'about' | 'contact' | 'admin') => {
+  const handleNavClick = (view: 'home' | 'books' | 'ebooks' | 'audiobooks' | 'contribute' | 'blog' | 'about' | 'contact' | 'admin' | 'publish') => {
     onViewChange(view);
     setMobileMenuOpen(false);
   };
@@ -100,6 +100,8 @@ export default function Navbar({ currentView, onViewChange }: NavbarProps) {
         return <Info className={className} />;
       case 'contact':
         return <Mail className={className} />;
+      case 'publish':
+        return <PenLine className={className} />;
       default:
         return <FileText className={className} />;
     }
