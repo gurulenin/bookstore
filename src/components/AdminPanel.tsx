@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
-import { Plus, CreditCard as Edit, Trash2, LogOut, Save, X, BookOpen, FileText, Package, Settings, Image, Languages, Database, Music, LayoutGrid as Layout, Menu as MenuIcon, Home } from 'lucide-react';
+import { Plus, CreditCard as Edit, Trash2, LogOut, Save, X, BookOpen, FileText, Package, Settings, Image, Languages, Database, Music, LayoutGrid as Layout, Menu as MenuIcon, Home, Upload } from 'lucide-react';
 import { BookWithFormats, BookFormat, supabase } from '../lib/supabase';
 import BlogManagement from './BlogManagement';
+import BookCsvImport from './BookCsvImport';
 import OrderManagement from './OrderManagement';
 import SiteSettingsManagement from './SiteSettingsManagement';
 import CarouselManagement from './CarouselManagement';
@@ -46,6 +47,7 @@ interface BookFormData {
 export default function AdminPanel({ books, onLogout, onAddBook, onUpdateBook, onDeleteBook }: AdminPanelProps) {
   const [activeTab, setActiveTab] = useState<AdminTab>('books');
   const [showForm, setShowForm] = useState(false);
+  const [showCsvImport, setShowCsvImport] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [genres, setGenres] = useState<Array<{ name_en: string; name_ta: string }>>([]);
   const [managingChaptersFormatId, setManagingChaptersFormatId] = useState<string | null>(null);
@@ -312,7 +314,14 @@ export default function AdminPanel({ books, onLogout, onAddBook, onUpdateBook, o
 
         {activeTab === 'books' && (
           <>
-            <div className="flex justify-end mb-6">
+            <div className="flex justify-end mb-6 space-x-3">
+              <button
+                onClick={() => setShowCsvImport(true)}
+                className="bg-white dark:bg-slate-800 border-2 border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-300 px-6 py-3 rounded-lg font-semibold hover:bg-slate-50 dark:hover:bg-slate-700 transition flex items-center space-x-2"
+              >
+                <Upload className="h-5 w-5" />
+                <span>Import CSV</span>
+              </button>
               <button
                 onClick={() => setShowForm(true)}
                 className="bg-slate-800 text-white px-6 py-3 rounded-lg font-semibold hover:bg-slate-700 transition flex items-center space-x-2"
@@ -668,6 +677,16 @@ export default function AdminPanel({ books, onLogout, onAddBook, onUpdateBook, o
         <ChapterManagement
           formatId={managingChaptersFormatId}
           onClose={() => setManagingChaptersFormatId(null)}
+        />
+      )}
+
+      {showCsvImport && (
+        <BookCsvImport
+          onClose={() => setShowCsvImport(false)}
+          onImportComplete={() => {
+            setShowCsvImport(false);
+            window.location.reload();
+          }}
         />
       )}
     </div>
