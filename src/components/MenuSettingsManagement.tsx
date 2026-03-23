@@ -6,6 +6,7 @@ interface MenuSetting {
   id: string;
   menu_key: string;
   menu_label: string;
+  menu_label_tamil: string;
   is_enabled: boolean;
   order_index: number;
 }
@@ -44,6 +45,13 @@ export default function MenuSettingsManagement() {
     setHasChanges(true);
   };
 
+  const updateLabelTamil = (id: string, label: string) => {
+    setMenus(prev => prev.map(menu =>
+      menu.id === id ? { ...menu, menu_label_tamil: label } : menu
+    ));
+    setHasChanges(true);
+  };
+
   const moveUp = (index: number) => {
     if (index === 0) return;
     const newMenus = [...menus];
@@ -72,6 +80,7 @@ export default function MenuSettingsManagement() {
         .from('menu_settings')
         .update({
           menu_label: menu.menu_label,
+          menu_label_tamil: menu.menu_label_tamil,
           is_enabled: menu.is_enabled,
           order_index: menu.order_index
         })
@@ -121,7 +130,10 @@ export default function MenuSettingsManagement() {
                 Menu Key
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
-                Menu Label
+                English Label
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                Tamil Label
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
                 Status
@@ -146,6 +158,15 @@ export default function MenuSettingsManagement() {
                     value={menu.menu_label}
                     onChange={(e) => updateLabel(menu.id, e.target.value)}
                     className="px-3 py-1 border border-slate-300 rounded focus:border-slate-500 focus:outline-none text-sm"
+                  />
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <input
+                    type="text"
+                    value={menu.menu_label_tamil || ''}
+                    onChange={(e) => updateLabelTamil(menu.id, e.target.value)}
+                    className="px-3 py-1 border border-slate-300 rounded focus:border-slate-500 focus:outline-none text-sm"
+                    placeholder="தமிழ் பெயர்"
                   />
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
