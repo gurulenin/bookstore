@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Save, Eye, EyeOff, MoveUp, MoveDown } from 'lucide-react';
+import { Save, Eye, EyeOff, MoveUp, MoveDown, ChevronRight } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 
 interface MenuSetting {
@@ -9,11 +9,13 @@ interface MenuSetting {
   menu_label_tamil: string;
   is_enabled: boolean;
   order_index: number;
+  parent_key: string | null;
 }
 
 export default function MenuSettingsManagement() {
   const [menus, setMenus] = useState<MenuSetting[]>([]);
   const [hasChanges, setHasChanges] = useState(false);
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     loadMenus();
@@ -31,50 +33,45 @@ export default function MenuSettingsManagement() {
     }
   };
 
-  const toggleEnabled = (id: string) => {
-    setMenus(prev => prev.map(menu =>
-      menu.id === id ? { ...menu, is_enabled: !menu.is_enabled } : menu
-    ));
+  const topLevel = menus.filter(m => !m.parent_key);
+
+  const childrenOf = (key: string) =>
+    menus.filter(m => m.parent_key === key).sort((a, b) => a.order_index - b.order_index);
+
+  const updateMenu = (id: string, patch: Partial<MenuSetting>) => {
+    setMenus(prev => prev.map(m => m.id === id ? { ...m, ...patch } : m));
     setHasChanges(true);
   };
 
-  const updateLabel = (id: string, label: string) => {
-    setMenus(prev => prev.map(menu =>
-      menu.id === id ? { ...menu, menu_label: label } : menu
-    ));
-    setHasChanges(true);
-  };
-
-  const updateLabelTamil = (id: string, label: string) => {
-    setMenus(prev => prev.map(menu =>
-      menu.id === id ? { ...menu, menu_label_tamil: label } : menu
-    ));
-    setHasChanges(true);
-  };
-
-  const moveUp = (index: number) => {
-    if (index === 0) return;
-    const newMenus = [...menus];
-    [newMenus[index - 1], newMenus[index]] = [newMenus[index], newMenus[index - 1]];
-    newMenus.forEach((menu, idx) => {
-      menu.order_index = idx + 1;
+  const moveTopLevel = (index: number, dir: -1 | 1) => {
+    const top = [...topLevel];
+    const target = index + dir;
+    if (target < 0 || target >= top.length) return;
+    [top[index], top[target]] = [top[target], top[index]];
+    const reindexed = top.map((m, i) => ({ ...m, order_index: i + 1 }));
+    setMenus(prev => {
+      const children = prev.filter(m => m.parent_key);
+      return [...reindexed, ...children];
     });
-    setMenus(newMenus);
     setHasChanges(true);
   };
 
-  const moveDown = (index: number) => {
-    if (index === menus.length - 1) return;
-    const newMenus = [...menus];
-    [newMenus[index], newMenus[index + 1]] = [newMenus[index + 1], newMenus[index]];
-    newMenus.forEach((menu, idx) => {
-      menu.order_index = idx + 1;
+  const moveChild = (parentKey: string, index: number, dir: -1 | 1) => {
+    const kids = childrenOf(parentKey);
+    const target = index + dir;
+    if (target < 0 || target >= kids.length) return;
+    const newKids = [...kids];
+    [newKids[index], newKids[target]] = [newKids[target], newKids[index]];
+    const reindexed = newKids.map((m, i) => ({ ...m, order_index: i + 1 }));
+    setMenus(prev => {
+      const others = prev.filter(m => m.parent_key !== parentKey);
+      return [...others, ...reindexed];
     });
-    setMenus(newMenus);
     setHasChanges(true);
   };
 
   const handleSave = async () => {
+    setSaving(true);
     const updates = menus.map(menu =>
       supabase
         .from('menu_settings')
@@ -82,22 +79,100 @@ export default function MenuSettingsManagement() {
           menu_label: menu.menu_label,
           menu_label_tamil: menu.menu_label_tamil,
           is_enabled: menu.is_enabled,
-          order_index: menu.order_index
+          order_index: menu.order_index,
         })
         .eq('id', menu.id)
     );
 
     const results = await Promise.all(updates);
-    const hasError = results.some(r => r.error);
+    setSaving(false);
 
-    if (hasError) {
-      alert('Error updating menu settings');
+    if (results.some(r => r.error)) {
+      alert('Error saving menu settings. Please try again.');
       return;
     }
 
-    alert('Menu settings saved successfully');
-    loadMenus();
+    await loadMenus();
   };
+
+  const renderRow = (
+    menu: MenuSetting,
+    index: number,
+    total: number,
+    isChild: boolean,
+    onUp: () => void,
+    onDown: () => void
+  ) => (
+    <tr key={menu.id} className={`hover:bg-slate-50 ${isChild ? 'bg-slate-50/60' : ''}`}>
+      <td className="px-4 py-3 whitespace-nowrap text-xs text-slate-400 w-10">
+        {menu.order_index}
+      </td>
+      <td className="px-4 py-3 whitespace-nowrap text-sm">
+        <div className="flex items-center space-x-1.5">
+          {isChild && <ChevronRight className="h-3 w-3 text-slate-400 flex-shrink-0 ml-2" />}
+          <span className={`font-mono text-xs px-1.5 py-0.5 rounded ${
+            isChild
+              ? 'bg-slate-100 text-slate-500'
+              : 'bg-slate-200 text-slate-700 font-semibold'
+          }`}>
+            {menu.menu_key}
+          </span>
+        </div>
+      </td>
+      <td className="px-4 py-3">
+        <input
+          type="text"
+          value={menu.menu_label}
+          onChange={(e) => updateMenu(menu.id, { menu_label: e.target.value })}
+          className="w-full px-2.5 py-1 border border-slate-300 rounded focus:border-slate-500 focus:outline-none text-sm"
+        />
+      </td>
+      <td className="px-4 py-3">
+        <input
+          type="text"
+          value={menu.menu_label_tamil || ''}
+          onChange={(e) => updateMenu(menu.id, { menu_label_tamil: e.target.value })}
+          className="w-full px-2.5 py-1 border border-slate-300 rounded focus:border-slate-500 focus:outline-none text-sm"
+          placeholder="தமிழ் பெயர்"
+        />
+      </td>
+      <td className="px-4 py-3 whitespace-nowrap">
+        <button
+          onClick={() => updateMenu(menu.id, { is_enabled: !menu.is_enabled })}
+          className={`inline-flex items-center space-x-1.5 px-2.5 py-1 text-xs font-semibold rounded-full transition ${
+            menu.is_enabled
+              ? 'bg-green-100 text-green-800 hover:bg-green-200'
+              : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+          }`}
+        >
+          {menu.is_enabled
+            ? <><Eye className="h-3 w-3" /><span>Visible</span></>
+            : <><EyeOff className="h-3 w-3" /><span>Hidden</span></>
+          }
+        </button>
+      </td>
+      <td className="px-4 py-3 whitespace-nowrap text-right">
+        <div className="flex items-center justify-end space-x-1">
+          <button
+            onClick={onUp}
+            disabled={index === 0}
+            className="p-1 text-slate-500 hover:text-slate-800 disabled:opacity-25 disabled:cursor-not-allowed rounded hover:bg-slate-100 transition"
+            title="Move up"
+          >
+            <MoveUp className="h-4 w-4" />
+          </button>
+          <button
+            onClick={onDown}
+            disabled={index === total - 1}
+            className="p-1 text-slate-500 hover:text-slate-800 disabled:opacity-25 disabled:cursor-not-allowed rounded hover:bg-slate-100 transition"
+            title="Move down"
+          >
+            <MoveDown className="h-4 w-4" />
+          </button>
+        </div>
+      </td>
+    </tr>
+  );
 
   return (
     <div className="space-y-6">
@@ -105,16 +180,17 @@ export default function MenuSettingsManagement() {
         <div>
           <h2 className="text-2xl font-bold text-slate-800">Menu Settings</h2>
           <p className="text-sm text-slate-600 mt-1">
-            Control which menus are visible and their order
+            Edit labels, show/hide menus, and adjust display order. Sub-menus are shown indented under their parent.
           </p>
         </div>
         {hasChanges && (
           <button
             onClick={handleSave}
-            className="bg-slate-800 text-white px-6 py-2 rounded-lg font-semibold hover:bg-slate-700 transition flex items-center space-x-2"
+            disabled={saving}
+            className="bg-slate-800 text-white px-5 py-2 rounded-lg font-semibold hover:bg-slate-700 transition flex items-center space-x-2 disabled:opacity-60"
           >
-            <Save className="h-5 w-5" />
-            <span>Save Changes</span>
+            <Save className="h-4 w-4" />
+            <span>{saving ? 'Saving...' : 'Save Changes'}</span>
           </button>
         )}
       </div>
@@ -123,96 +199,30 @@ export default function MenuSettingsManagement() {
         <table className="min-w-full divide-y divide-slate-200">
           <thead className="bg-slate-50">
             <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
-                Order
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
-                Menu Key
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
-                English Label
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
-                Tamil Label
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
-                Status
-              </th>
-              <th className="px-6 py-3 text-right text-xs font-medium text-slate-500 uppercase tracking-wider">
-                Actions
-              </th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider w-10">#</th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Key</th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">English Label</th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Tamil Label</th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Visibility</th>
+              <th className="px-4 py-3 text-right text-xs font-medium text-slate-500 uppercase tracking-wider">Reorder</th>
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-slate-200">
-            {menus.map((menu, index) => (
-              <tr key={menu.id} className="hover:bg-slate-50">
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-500">
-                  {menu.order_index}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-slate-900">
-                  {menu.menu_key}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <input
-                    type="text"
-                    value={menu.menu_label}
-                    onChange={(e) => updateLabel(menu.id, e.target.value)}
-                    className="px-3 py-1 border border-slate-300 rounded focus:border-slate-500 focus:outline-none text-sm"
-                  />
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <input
-                    type="text"
-                    value={menu.menu_label_tamil || ''}
-                    onChange={(e) => updateLabelTamil(menu.id, e.target.value)}
-                    className="px-3 py-1 border border-slate-300 rounded focus:border-slate-500 focus:outline-none text-sm"
-                    placeholder="தமிழ் பெயர்"
-                  />
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <button
-                    onClick={() => toggleEnabled(menu.id)}
-                    className={`inline-flex items-center space-x-1 px-3 py-1 text-xs font-semibold rounded-full transition ${
-                      menu.is_enabled
-                        ? 'bg-green-100 text-green-800 hover:bg-green-200'
-                        : 'bg-slate-100 text-slate-800 hover:bg-slate-200'
-                    }`}
-                  >
-                    {menu.is_enabled ? (
-                      <>
-                        <Eye className="h-3 w-3" />
-                        <span>Enabled</span>
-                      </>
-                    ) : (
-                      <>
-                        <EyeOff className="h-3 w-3" />
-                        <span>Disabled</span>
-                      </>
-                    )}
-                  </button>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                  <div className="flex items-center justify-end space-x-2">
-                    <button
-                      onClick={() => moveUp(index)}
-                      disabled={index === 0}
-                      className="text-slate-600 hover:text-slate-900 disabled:opacity-30 disabled:cursor-not-allowed"
-                      title="Move up"
-                    >
-                      <MoveUp className="h-5 w-5" />
-                    </button>
-                    <button
-                      onClick={() => moveDown(index)}
-                      disabled={index === menus.length - 1}
-                      className="text-slate-600 hover:text-slate-900 disabled:opacity-30 disabled:cursor-not-allowed"
-                      title="Move down"
-                    >
-                      <MoveDown className="h-5 w-5" />
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            ))}
+            {topLevel.map((menu, index) => {
+              const kids = childrenOf(menu.menu_key);
+              return [
+                renderRow(menu, index, topLevel.length, false,
+                  () => moveTopLevel(index, -1),
+                  () => moveTopLevel(index, 1)
+                ),
+                ...kids.map((child, ci) =>
+                  renderRow(child, ci, kids.length, true,
+                    () => moveChild(menu.menu_key, ci, -1),
+                    () => moveChild(menu.menu_key, ci, 1)
+                  )
+                ),
+              ];
+            })}
           </tbody>
         </table>
       </div>

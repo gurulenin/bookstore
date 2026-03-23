@@ -19,6 +19,7 @@ interface MenuSetting {
   menu_label_tamil: string;
   is_enabled: boolean;
   order_index: number;
+  parent_key?: string | null;
 }
 
 const BOOKS_SUBKEYS = new Set(['books', 'ebooks', 'audiobooks']);
@@ -70,9 +71,8 @@ export default function Navbar({ currentView, onViewChange }: NavbarProps) {
     const { data } = await supabase
       .from('menu_settings')
       .select('*')
-      .eq('is_enabled', true)
       .order('order_index');
-    if (data) setMenus(data.filter((m: MenuSetting) => m.menu_key !== 'admin'));
+    if (data) setMenus(data);
   };
 
   const handleLogoClick = useCallback(() => {
@@ -115,10 +115,11 @@ export default function Navbar({ currentView, onViewChange }: NavbarProps) {
     }
   };
 
-  const booksMenus = menus.filter(m => BOOKS_SUBKEYS.has(m.menu_key));
-  const contributeMenu = menus.find(m => m.menu_key === 'contribute');
-  const aboutMenu = menus.find(m => m.menu_key === 'about');
-  const otherMenus = menus.filter(m => !BOOKS_SUBKEYS.has(m.menu_key) && m.menu_key !== 'contribute' && m.menu_key !== 'about');
+  const topLevelEnabled = menus.filter(m => m.is_enabled && !m.parent_key && m.menu_key !== 'admin');
+  const booksMenus = topLevelEnabled.filter(m => BOOKS_SUBKEYS.has(m.menu_key));
+  const contributeMenu = topLevelEnabled.find(m => m.menu_key === 'contribute');
+  const aboutMenu = topLevelEnabled.find(m => m.menu_key === 'about');
+  const otherMenus = topLevelEnabled.filter(m => !BOOKS_SUBKEYS.has(m.menu_key) && m.menu_key !== 'contribute' && m.menu_key !== 'about');
   const hasBooksMenu = booksMenus.length > 0;
   const isBooksActive = BOOKS_SUBKEYS.has(currentView);
   const isContributeActive = CONTRIBUTE_VIEWS.has(currentView);
@@ -143,19 +144,37 @@ export default function Navbar({ currentView, onViewChange }: NavbarProps) {
       return { ...item, label };
     });
 
-  const contributeSubItems: Array<{ key: AppView; label: string; icon: ReactNode }> = [
-    { key: 'contribute_ebooks', label: language === 'ta' ? 'மின்-புத்தகங்கள் உருவாக்குதல்' : 'Making E-Books', icon: <BookOpen className="h-4 w-4" /> },
-    { key: 'contribute_covers', label: language === 'ta' ? 'புத்தக அட்டைகள் உருவாக்குதல்' : 'Making Book Covers', icon: <Image className="h-4 w-4" /> },
-    { key: 'contribute_audiobooks', label: language === 'ta' ? 'ஆடியோ புத்தகங்கள் உருவாக்குதல்' : 'Making Audio Books', icon: <Headphones className="h-4 w-4" /> },
-    { key: 'donate', label: language === 'ta' ? 'நன்கொடை' : 'Donate', icon: <Heart className="h-4 w-4" /> },
-  ];
+  const contributeIconMap: Record<string, ReactNode> = {
+    contribute_ebooks: <BookOpen className="h-4 w-4" />,
+    contribute_covers: <Image className="h-4 w-4" />,
+    contribute_audiobooks: <Headphones className="h-4 w-4" />,
+    donate: <Heart className="h-4 w-4" />,
+  };
 
-  const aboutSubItems: Array<{ key: AppView; label: string; icon: ReactNode }> = [
-    { key: 'about_us', label: language === 'ta' ? 'எங்களைப் பற்றி' : 'About Us', icon: <Info className="h-4 w-4" /> },
-    { key: 'kaniyam', label: 'Kaniyam Foundation', icon: <BookOpen className="h-4 w-4" /> },
-    { key: 'freetamilebooks', label: 'FreeTamilEbooks.com', icon: <BookOpen className="h-4 w-4" /> },
-    { key: 'nutpagam', label: 'Nutpagam', icon: <BookOpen className="h-4 w-4" /> },
-  ];
+  const contributeSubItems = menus
+    .filter(m => m.parent_key === 'contribute' && m.is_enabled)
+    .sort((a, b) => a.order_index - b.order_index)
+    .map(m => ({
+      key: m.menu_key as AppView,
+      label: language === 'ta' && m.menu_label_tamil ? m.menu_label_tamil : m.menu_label,
+      icon: contributeIconMap[m.menu_key] ?? <FileText className="h-4 w-4" />,
+    }));
+
+  const aboutIconMap: Record<string, ReactNode> = {
+    about_us: <Info className="h-4 w-4" />,
+    kaniyam: <BookMarked className="h-4 w-4" />,
+    freetamilebooks: <BookOpen className="h-4 w-4" />,
+    nutpagam: <BookOpen className="h-4 w-4" />,
+  };
+
+  const aboutSubItems = menus
+    .filter(m => m.parent_key === 'about' && m.is_enabled)
+    .sort((a, b) => a.order_index - b.order_index)
+    .map(m => ({
+      key: m.menu_key as AppView,
+      label: language === 'ta' && m.menu_label_tamil ? m.menu_label_tamil : m.menu_label,
+      icon: aboutIconMap[m.menu_key] ?? <Info className="h-4 w-4" />,
+    }));
 
   return (
     <nav className="bg-white dark:bg-slate-900 shadow-md sticky top-0 z-50 transition-colors">
