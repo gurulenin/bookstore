@@ -22,7 +22,7 @@ export function FontSettingsProvider({ children }: { children: ReactNode }) {
     const saved = localStorage.getItem('fontSize');
     return (saved === 'small' || saved === 'medium' || saved === 'large' || saved === 'extra-large')
       ? saved
-      : 'medium';
+      : 'small';
   });
 
   useEffect(() => {
