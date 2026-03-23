@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, type ElementType } from 'react';
 import { Plus, CreditCard as Edit, Trash2, LogOut, Save, X, BookOpen, FileText, Package, Settings, Image, Languages, Database, Music, LayoutGrid as Layout, Menu as MenuIcon, Home, Upload, MessageSquare, Tag } from 'lucide-react';
 import { BookWithFormats, BookFormat, supabase } from '../lib/supabase';
 import BlogManagement from './BlogManagement';
@@ -199,140 +199,37 @@ export default function AdminPanel({ books, onLogout, onAddBook, onUpdateBook, o
           </button>
         </div>
 
-        <div className="bg-white dark:bg-slate-800 rounded-xl shadow-lg mb-8">
-          <div className="flex border-b dark:border-slate-700">
-            <button
-              onClick={() => setActiveTab('books')}
-              className={`flex items-center space-x-2 px-6 py-4 font-semibold transition ${
-                activeTab === 'books'
-                  ? 'text-slate-800 dark:text-slate-100 border-b-2 border-slate-800 dark:border-slate-300'
-                  : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300'
-              }`}
-            >
-              <BookOpen className="h-5 w-5" />
-              <span>Books</span>
-            </button>
-            <button
-              onClick={() => setActiveTab('blogs')}
-              className={`flex items-center space-x-2 px-6 py-4 font-semibold transition ${
-                activeTab === 'blogs'
-                  ? 'text-slate-800 dark:text-slate-100 border-b-2 border-slate-800 dark:border-slate-300'
-                  : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300'
-              }`}
-            >
-              <FileText className="h-5 w-5" />
-              <span>Blogs</span>
-            </button>
-            <button
-              onClick={() => setActiveTab('pages')}
-              className={`flex items-center space-x-2 px-6 py-4 font-semibold transition ${
-                activeTab === 'pages'
-                  ? 'text-slate-800 dark:text-slate-100 border-b-2 border-slate-800 dark:border-slate-300'
-                  : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300'
-              }`}
-            >
-              <Layout className="h-5 w-5" />
-              <span>Pages</span>
-            </button>
-            <button
-              onClick={() => setActiveTab('menus')}
-              className={`flex items-center space-x-2 px-6 py-4 font-semibold transition ${
-                activeTab === 'menus'
-                  ? 'text-slate-800 dark:text-slate-100 border-b-2 border-slate-800 dark:border-slate-300'
-                  : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300'
-              }`}
-            >
-              <MenuIcon className="h-5 w-5" />
-              <span>Menus</span>
-            </button>
-            <button
-              onClick={() => setActiveTab('orders')}
-              className={`flex items-center space-x-2 px-6 py-4 font-semibold transition ${
-                activeTab === 'orders'
-                  ? 'text-slate-800 dark:text-slate-100 border-b-2 border-slate-800 dark:border-slate-300'
-                  : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300'
-              }`}
-            >
-              <Package className="h-5 w-5" />
-              <span>Orders</span>
-            </button>
-            <button
-              onClick={() => setActiveTab('carousel')}
-              className={`flex items-center space-x-2 px-6 py-4 font-semibold transition ${
-                activeTab === 'carousel'
-                  ? 'text-slate-800 dark:text-slate-100 border-b-2 border-slate-800 dark:border-slate-300'
-                  : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300'
-              }`}
-            >
-              <Image className="h-5 w-5" />
-              <span>Carousel</span>
-            </button>
-            <button
-              onClick={() => setActiveTab('homepage')}
-              className={`flex items-center space-x-2 px-6 py-4 font-semibold transition ${
-                activeTab === 'homepage'
-                  ? 'text-slate-800 dark:text-slate-100 border-b-2 border-slate-800 dark:border-slate-300'
-                  : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300'
-              }`}
-            >
-              <Home className="h-5 w-5" />
-              <span>Homepage</span>
-            </button>
-            <button
-              onClick={() => setActiveTab('translations')}
-              className={`flex items-center space-x-2 px-6 py-4 font-semibold transition ${
-                activeTab === 'translations'
-                  ? 'text-slate-800 dark:text-slate-100 border-b-2 border-slate-800 dark:border-slate-300'
-                  : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300'
-              }`}
-            >
-              <Languages className="h-5 w-5" />
-              <span>Translations</span>
-            </button>
-            <button
-              onClick={() => setActiveTab('backup')}
-              className={`flex items-center space-x-2 px-6 py-4 font-semibold transition ${
-                activeTab === 'backup'
-                  ? 'text-slate-800 dark:text-slate-100 border-b-2 border-slate-800 dark:border-slate-300'
-                  : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300'
-              }`}
-            >
-              <Database className="h-5 w-5" />
-              <span>Backup</span>
-            </button>
-            <button
-              onClick={() => setActiveTab('settings')}
-              className={`flex items-center space-x-2 px-6 py-4 font-semibold transition ${
-                activeTab === 'settings'
-                  ? 'text-slate-800 dark:text-slate-100 border-b-2 border-slate-800 dark:border-slate-300'
-                  : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300'
-              }`}
-            >
-              <Settings className="h-5 w-5" />
-              <span>Settings</span>
-            </button>
-            <button
-              onClick={() => setActiveTab('contacts')}
-              className={`flex items-center space-x-2 px-6 py-4 font-semibold transition ${
-                activeTab === 'contacts'
-                  ? 'text-slate-800 dark:text-slate-100 border-b-2 border-slate-800 dark:border-slate-300'
-                  : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300'
-              }`}
-            >
-              <MessageSquare className="h-5 w-5" />
-              <span>Contacts</span>
-            </button>
-            <button
-              onClick={() => setActiveTab('genres')}
-              className={`flex items-center space-x-2 px-6 py-4 font-semibold transition ${
-                activeTab === 'genres'
-                  ? 'text-slate-800 dark:text-slate-100 border-b-2 border-slate-800 dark:border-slate-300'
-                  : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300'
-              }`}
-            >
-              <Tag className="h-5 w-5" />
-              <span>Genres</span>
-            </button>
+        <div className="bg-white dark:bg-slate-800 rounded-xl shadow-lg mb-8 p-3">
+          <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-12 gap-1">
+            {(
+              [
+                { id: 'books', icon: BookOpen, label: 'Books' },
+                { id: 'blogs', icon: FileText, label: 'Blogs' },
+                { id: 'pages', icon: Layout, label: 'Pages' },
+                { id: 'menus', icon: MenuIcon, label: 'Menus' },
+                { id: 'orders', icon: Package, label: 'Orders' },
+                { id: 'carousel', icon: Image, label: 'Carousel' },
+                { id: 'homepage', icon: Home, label: 'Homepage' },
+                { id: 'translations', icon: Languages, label: 'Translations' },
+                { id: 'backup', icon: Database, label: 'Backup' },
+                { id: 'settings', icon: Settings, label: 'Settings' },
+                { id: 'contacts', icon: MessageSquare, label: 'Contacts' },
+                { id: 'genres', icon: Tag, label: 'Genres' },
+              ] as Array<{ id: AdminTab; icon: ElementType; label: string }>
+            ).map(({ id, icon: Icon, label }) => (
+              <button
+                key={id}
+                onClick={() => setActiveTab(id)}
+                className={`flex flex-col items-center gap-1 px-2 py-2.5 rounded-lg font-medium text-xs transition ${
+                  activeTab === id
+                    ? 'bg-slate-800 dark:bg-slate-100 text-white dark:text-slate-800'
+                    : 'text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 hover:text-slate-700 dark:hover:text-slate-200'
+                }`}
+              >
+                <Icon className="h-4 w-4 flex-shrink-0" />
+                <span className="leading-tight text-center">{label}</span>
+              </button>
+            ))}
           </div>
         </div>
 
