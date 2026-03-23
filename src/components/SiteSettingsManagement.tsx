@@ -4,6 +4,8 @@ import { supabase } from '../lib/supabase';
 
 interface SiteSettings {
   id: string;
+  site_name: string;
+  site_logo_url: string | null;
   about_us_title: string;
   about_us_content: string;
   contact_us_title: string;
@@ -45,6 +47,8 @@ export default function SiteSettingsManagement() {
     await supabase
       .from('site_settings')
       .update({
+        site_name: settings.site_name,
+        site_logo_url: settings.site_logo_url,
         about_us_title: settings.about_us_title,
         about_us_content: settings.about_us_content,
         contact_us_title: settings.contact_us_title,
@@ -79,6 +83,45 @@ export default function SiteSettingsManagement() {
       </div>
 
       <form onSubmit={handleSave} className="space-y-8">
+        <div className="bg-white rounded-xl shadow-lg p-6 space-y-6">
+          <h3 className="text-xl font-bold text-slate-800 border-b pb-3">Site Branding</h3>
+
+          <div className="grid md:grid-cols-2 gap-6">
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-2">Site Name</label>
+              <input
+                type="text"
+                value={settings.site_name || ''}
+                onChange={(e) => setSettings({ ...settings, site_name: e.target.value })}
+                className="w-full px-4 py-2 rounded-lg border border-slate-300 focus:border-slate-500 focus:outline-none"
+                placeholder="My Book Store"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-2">Logo URL</label>
+              <input
+                type="url"
+                value={settings.site_logo_url || ''}
+                onChange={(e) => setSettings({ ...settings, site_logo_url: e.target.value })}
+                className="w-full px-4 py-2 rounded-lg border border-slate-300 focus:border-slate-500 focus:outline-none"
+                placeholder="https://example.com/logo.png"
+              />
+            </div>
+          </div>
+
+          {settings.site_logo_url && (
+            <div>
+              <p className="text-sm font-medium text-slate-700 mb-2">Logo Preview:</p>
+              <img
+                src={settings.site_logo_url}
+                alt="Site Logo"
+                className="h-16 border rounded-lg object-contain bg-slate-50 p-2"
+              />
+            </div>
+          )}
+        </div>
+
         <div className="bg-white rounded-xl shadow-lg p-6 space-y-6">
           <h3 className="text-xl font-bold text-slate-800 border-b pb-3">About Us Page</h3>
 
