@@ -3,12 +3,12 @@
 @tailwind utilities;
 
 @layer base {
-  body {
-    @apply bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 transition-colors;
+  html, body {
+    font-family: 'Noto Sans Tamil', sans-serif;
   }
 
-  body[lang="ta"], body[lang="ta"] * {
-    font-family: 'Noto Sans Tamil', sans-serif;
+  body {
+    @apply bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 transition-colors;
   }
 
   html.font-size-small {

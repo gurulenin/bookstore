@@ -5,6 +5,7 @@ export default {
   theme: {
     extend: {
       fontFamily: {
+        sans: ['"Noto Sans Tamil"', 'sans-serif'],
         'noto-tamil': ['"Noto Sans Tamil"', 'sans-serif'],
       },
     },
