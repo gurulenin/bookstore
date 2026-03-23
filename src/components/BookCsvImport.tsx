@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react';
-import { Upload, Download, X, AlertCircle, CheckCircle, Loader } from 'lucide-react';
+import { Upload, Download, X, AlertCircle, CheckCircle, Loader, FileText } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 
 interface CsvImportProps {
@@ -263,28 +263,40 @@ export default function BookCsvImport({ onClose, onImportComplete }: CsvImportPr
 
         <div className="flex-1 overflow-y-auto p-6 space-y-6">
           {step === 'upload' && (
-            <div className="space-y-6">
+            <div className="space-y-5">
               <div className="bg-slate-50 dark:bg-slate-900 rounded-xl p-4 text-sm text-slate-600 dark:text-slate-400 space-y-2">
                 <p className="font-semibold text-slate-700 dark:text-slate-300">CSV Format Requirements</p>
                 <ul className="list-disc list-inside space-y-1">
                   <li><strong>title</strong>, <strong>author</strong> — required for every row</li>
-                  <li><strong>format_type</strong> — must be <code>physical</code>, <code>ebook</code>, or <code>audiobook</code></li>
-                  <li>One row per format. Books with multiple formats need multiple rows with the same title/author/ISBN</li>
+                  <li><strong>format_type</strong> — must be <code className="bg-slate-200 dark:bg-slate-700 px-1 rounded">physical</code>, <code className="bg-slate-200 dark:bg-slate-700 px-1 rounded">ebook</code>, or <code className="bg-slate-200 dark:bg-slate-700 px-1 rounded">audiobook</code></li>
+                  <li>One row per format — books with multiple formats need multiple rows with the same title/author/ISBN</li>
                   <li>Existing books (matched by title+author) will be updated, not duplicated</li>
                 </ul>
               </div>
 
-              <button
-                onClick={downloadSampleCsv}
-                className="w-full flex items-center justify-center space-x-2 border-2 border-dashed border-slate-300 dark:border-slate-600 rounded-xl py-4 text-slate-600 dark:text-slate-400 hover:border-slate-500 hover:text-slate-700 dark:hover:text-slate-300 transition"
-              >
-                <Download className="h-5 w-5" />
-                <span>Download Sample CSV</span>
-              </button>
+              <div className="border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden">
+                <div className="flex items-center justify-between px-4 py-3 bg-slate-100 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700">
+                  <div className="flex items-center space-x-2">
+                    <FileText className="h-4 w-4 text-slate-500 dark:text-slate-400" />
+                    <span className="text-sm font-semibold text-slate-700 dark:text-slate-300">sample_books.csv</span>
+                    <span className="text-xs text-slate-400 dark:text-slate-500">— preview &amp; download</span>
+                  </div>
+                  <button
+                    onClick={downloadSampleCsv}
+                    className="flex items-center space-x-1.5 bg-slate-800 dark:bg-slate-600 text-white text-xs font-semibold px-3 py-1.5 rounded-lg hover:bg-slate-700 dark:hover:bg-slate-500 transition"
+                  >
+                    <Download className="h-3.5 w-3.5" />
+                    <span>Download</span>
+                  </button>
+                </div>
+                <div className="overflow-x-auto max-h-40 bg-slate-950 dark:bg-slate-950">
+                  <pre className="text-xs text-green-400 p-4 whitespace-pre leading-relaxed font-mono">{SAMPLE_CSV}</pre>
+                </div>
+              </div>
 
               <div
                 onClick={() => fileInputRef.current?.click()}
-                className="cursor-pointer flex flex-col items-center justify-center border-2 border-dashed border-slate-300 dark:border-slate-600 rounded-xl py-12 space-y-3 hover:border-slate-500 dark:hover:border-slate-400 transition"
+                className="cursor-pointer flex flex-col items-center justify-center border-2 border-dashed border-slate-300 dark:border-slate-600 rounded-xl py-10 space-y-3 hover:border-slate-500 dark:hover:border-slate-400 transition"
               >
                 <Upload className="h-10 w-10 text-slate-400" />
                 <p className="text-slate-600 dark:text-slate-400 font-medium">Click to upload your CSV file</p>
