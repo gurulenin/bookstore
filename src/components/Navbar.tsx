@@ -1,5 +1,5 @@
-import { useState, useRef, useEffect } from 'react';
-import { BookOpen, Headphones, ShoppingBag, User, FileText, Info, Mail, Settings, Menu, X, Heart } from 'lucide-react';
+import { useState, useRef, useEffect, useCallback } from 'react';
+import { BookOpen, Headphones, ShoppingBag, FileText, Info, Mail, Settings, Menu, X, Heart } from 'lucide-react';
 import { useTranslation } from '../lib/translations';
 import LanguageSwitcher from './LanguageSwitcher';
 import FontSizeSwitcher from './FontSizeSwitcher';
@@ -25,6 +25,8 @@ export default function Navbar({ currentView, onViewChange }: NavbarProps) {
   const [menus, setMenus] = useState<MenuSetting[]>([]);
   const desktopSettingsRef = useRef<HTMLDivElement>(null);
   const mobileSettingsRef = useRef<HTMLDivElement>(null);
+  const logoClickCountRef = useRef(0);
+  const logoClickTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -51,8 +53,31 @@ export default function Navbar({ currentView, onViewChange }: NavbarProps) {
       .eq('is_enabled', true)
       .order('order_index');
 
-    if (data) setMenus(data);
+    if (data) setMenus(data.filter((m: MenuSetting) => m.menu_key !== 'admin'));
   };
+
+  const handleLogoClick = useCallback(() => {
+    logoClickCountRef.current += 1;
+
+    if (logoClickTimerRef.current) {
+      clearTimeout(logoClickTimerRef.current);
+    }
+
+    if (logoClickCountRef.current >= 3) {
+      logoClickCountRef.current = 0;
+      onViewChange('admin');
+      setMobileMenuOpen(false);
+      return;
+    }
+
+    logoClickTimerRef.current = setTimeout(() => {
+      if (logoClickCountRef.current < 3) {
+        onViewChange('home');
+        setMobileMenuOpen(false);
+      }
+      logoClickCountRef.current = 0;
+    }, 400);
+  }, [onViewChange]);
 
   const handleNavClick = (view: 'home' | 'books' | 'ebooks' | 'audiobooks' | 'contribute' | 'blog' | 'about' | 'contact' | 'admin') => {
     onViewChange(view);
@@ -75,8 +100,6 @@ export default function Navbar({ currentView, onViewChange }: NavbarProps) {
         return <Info className={className} />;
       case 'contact':
         return <Mail className={className} />;
-      case 'admin':
-        return <User className={className} />;
       default:
         return <FileText className={className} />;
     }
@@ -87,7 +110,7 @@ export default function Navbar({ currentView, onViewChange }: NavbarProps) {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           <button
-            onClick={() => handleNavClick('home')}
+            onClick={handleLogoClick}
             className="flex items-center space-x-2 text-xl md:text-2xl font-bold text-slate-800 dark:text-slate-100 hover:text-slate-600 dark:hover:text-slate-300 transition"
           >
             <BookOpen className="h-6 w-6 md:h-8 md:w-8" />
