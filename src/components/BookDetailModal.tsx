@@ -126,8 +126,8 @@ export default function BookDetailModal({ book, onClose, onPurchase, onDownload 
                   <div className="border-t dark:border-slate-700 pt-3 sm:pt-4">
                     <div className="flex items-center justify-between mb-2 sm:mb-3">
                       <div className="flex items-center space-x-2">
-                        <ShoppingCart className="h-5 w-5 sm:h-6 sm:w-6 text-blue-500" />
-                        <span className="text-base sm:text-lg font-semibold text-slate-700 dark:text-slate-300">Printed Book</span>
+                        <ShoppingCart className="h-4 w-4 sm:h-5 sm:w-5 text-blue-500" />
+                        <span className="text-sm sm:text-base font-semibold text-slate-700 dark:text-slate-300">Printed Book</span>
                       </div>
                       <span className="text-xl sm:text-2xl font-bold text-blue-600">
                         ₹{physicalFormat.price.toFixed(2)}
@@ -152,7 +152,7 @@ export default function BookDetailModal({ book, onClose, onPurchase, onDownload 
                   <div className="border-t dark:border-slate-700 pt-3 sm:pt-4">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-2">
-                        <BookOpen className="h-4 w-4 text-green-500" />
+                        <BookOpen className="h-5 w-5 text-green-500" />
                         <span className="text-sm font-semibold text-slate-700 dark:text-slate-300">Ebook - FREE</span>
                       </div>
                       <div className="flex items-center gap-1.5 flex-wrap justify-end">
@@ -186,7 +186,7 @@ export default function BookDetailModal({ book, onClose, onPurchase, onDownload 
                         <div key={format.id}>
                           <div className="flex items-center justify-between">
                             <div className="flex items-center space-x-2">
-                              <Headphones className="h-4 w-4 text-orange-500" />
+                              <Headphones className="h-5 w-5 text-orange-500" />
                               <span className="text-sm font-semibold text-slate-700 dark:text-slate-300">Audiobook - FREE</span>
                             </div>
                             {hasChapters ? (
