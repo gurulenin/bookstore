@@ -23,11 +23,15 @@ export default function Navbar({ currentView, onViewChange }: NavbarProps) {
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [menus, setMenus] = useState<MenuSetting[]>([]);
-  const settingsRef = useRef<HTMLDivElement>(null);
+  const desktopSettingsRef = useRef<HTMLDivElement>(null);
+  const mobileSettingsRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (settingsRef.current && !settingsRef.current.contains(event.target as Node)) {
+      const target = event.target as Node;
+      const inDesktop = desktopSettingsRef.current?.contains(target);
+      const inMobile = mobileSettingsRef.current?.contains(target);
+      if (!inDesktop && !inMobile) {
         setSettingsOpen(false);
       }
     };
@@ -108,7 +112,7 @@ export default function Navbar({ currentView, onViewChange }: NavbarProps) {
 
             <ThemeToggle />
 
-            <div ref={settingsRef} className="relative">
+            <div ref={desktopSettingsRef} className="relative">
               <button
                 onClick={() => setSettingsOpen(!settingsOpen)}
                 className="flex items-center justify-center p-2 rounded-lg text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
@@ -140,7 +144,7 @@ export default function Navbar({ currentView, onViewChange }: NavbarProps) {
           <div className="flex lg:hidden items-center space-x-2">
             <ThemeToggle />
 
-            <div ref={settingsRef} className="relative">
+            <div ref={mobileSettingsRef} className="relative">
               <button
                 onClick={() => setSettingsOpen(!settingsOpen)}
                 className="flex items-center justify-center p-2 rounded-lg text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
