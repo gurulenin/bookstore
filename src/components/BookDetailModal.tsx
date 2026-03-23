@@ -155,7 +155,12 @@ export default function BookDetailModal({ book, onClose, onPurchase, onDownload 
                         <span className="text-sm font-semibold text-slate-700 dark:text-slate-300">Ebook - FREE</span>
                       </div>
                       <div className="flex items-center gap-1.5 flex-wrap justify-end">
-                        {ebookFormats.map((format) => {
+                        {[...ebookFormats].sort((a, b) => {
+                          const order: Record<string, number> = { html: 0, epub: 1, pdf: 2 };
+                          const aKey = a.file_format?.toLowerCase() ?? '';
+                          const bKey = b.file_format?.toLowerCase() ?? '';
+                          return (order[aKey] ?? 99) - (order[bKey] ?? 99);
+                        }).map((format) => {
                           const fileFormat = format.file_format?.toLowerCase();
                           const label = fileFormat === 'html' ? 'Read Online' : format.file_format?.toUpperCase();
                           return (
