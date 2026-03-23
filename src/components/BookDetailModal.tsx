@@ -90,29 +90,25 @@ export default function BookDetailModal({ book, onClose, onPurchase, onDownload 
               <div className="absolute top-2 right-2">
                 <ShareButton bookId={book.id} bookTitle={book.title} bookAuthor={book.author} />
               </div>
+
+              {(book.publisher || book.published_date || book.isbn) && (
+                <div className="mt-3 space-y-1 text-xs text-slate-500 dark:text-slate-400">
+                  {book.publisher && (
+                    <p><span className="font-medium">Publisher:</span> {book.publisher}</p>
+                  )}
+                  {book.published_date && (
+                    <p><span className="font-medium">Published:</span> {book.published_date}</p>
+                  )}
+                  {book.isbn && (
+                    <p><span className="font-medium">ISBN:</span> {book.isbn}</p>
+                  )}
+                </div>
+              )}
             </div>
 
             <div className="flex flex-col">
               <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-slate-800 dark:text-slate-100 mb-2">{book.title}</h1>
               <p className="text-base sm:text-lg md:text-xl text-slate-600 dark:text-slate-300 mb-3 sm:mb-4">{book.author}</p>
-
-              {book.publisher && (
-                <p className="text-slate-500 dark:text-slate-400 mb-1.5 sm:mb-2 text-sm sm:text-base">
-                  <span className="font-medium">Publisher:</span> {book.publisher}
-                </p>
-              )}
-
-              {book.published_date && (
-                <p className="text-slate-500 dark:text-slate-400 mb-1.5 sm:mb-2 text-sm sm:text-base">
-                  <span className="font-medium">Published:</span> {book.published_date}
-                </p>
-              )}
-
-              {book.isbn && (
-                <p className="text-slate-500 dark:text-slate-400 mb-3 sm:mb-4 text-sm sm:text-base">
-                  <span className="font-medium">ISBN:</span> {book.isbn}
-                </p>
-              )}
 
               {book.description && (
                 <div className="mb-4 sm:mb-6">
