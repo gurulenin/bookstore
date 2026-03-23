@@ -1,5 +1,5 @@
 import { useState, useEffect, type ElementType } from 'react';
-import { Plus, CreditCard as Edit, Trash2, LogOut, Save, X, BookOpen, FileText, Package, Settings, Image, Languages, Database, Music, LayoutGrid as Layout, Menu as MenuIcon, Home, Upload, MessageSquare, Tag } from 'lucide-react';
+import { Plus, CreditCard as Edit, Trash2, LogOut, Save, X, BookOpen, FileText, Package, Settings, Image, Languages, Database, Music, LayoutGrid as Layout, Menu as MenuIcon, Home, Upload, MessageSquare, Tag, PenLine } from 'lucide-react';
 import { BookWithFormats, BookFormat, supabase } from '../lib/supabase';
 import BlogManagement from './BlogManagement';
 import BookCsvImport from './BookCsvImport';
@@ -14,6 +14,7 @@ import MenuSettingsManagement from './MenuSettingsManagement';
 import HomePageSettingsManagement from './HomePageSettingsManagement';
 import ContactSubmissions from './ContactSubmissions';
 import GenreManagement from './GenreManagement';
+import PublishPageManagement from './PublishPageManagement';
 
 interface AdminPanelProps {
   books: BookWithFormats[];
@@ -23,7 +24,7 @@ interface AdminPanelProps {
   onDeleteBook: (id: string) => void;
 }
 
-type AdminTab = 'books' | 'blogs' | 'pages' | 'menus' | 'orders' | 'carousel' | 'homepage' | 'translations' | 'backup' | 'settings' | 'contacts' | 'genres';
+type AdminTab = 'books' | 'blogs' | 'pages' | 'menus' | 'orders' | 'carousel' | 'homepage' | 'translations' | 'backup' | 'settings' | 'contacts' | 'genres' | 'publish';
 
 interface BookFormData {
   title: string;
@@ -215,6 +216,7 @@ export default function AdminPanel({ books, onLogout, onAddBook, onUpdateBook, o
                 { id: 'settings', icon: Settings, label: 'Settings' },
                 { id: 'contacts', icon: MessageSquare, label: 'Contacts' },
                 { id: 'genres', icon: Tag, label: 'Genres' },
+                { id: 'publish', icon: PenLine, label: 'Publish Page' },
               ] as Array<{ id: AdminTab; icon: ElementType; label: string }>
             ).map(({ id, icon: Icon, label }) => (
               <button
@@ -594,6 +596,7 @@ export default function AdminPanel({ books, onLogout, onAddBook, onUpdateBook, o
         {activeTab === 'settings' && <SiteSettingsManagement />}
         {activeTab === 'contacts' && <ContactSubmissions />}
         {activeTab === 'genres' && <GenreManagement />}
+        {activeTab === 'publish' && <PublishPageManagement />}
       </div>
 
       {managingChaptersFormatId && (

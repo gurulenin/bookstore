@@ -1,8 +1,23 @@
+import { useState, useEffect } from 'react';
 import { BookOpen, PenLine, Upload, Users } from 'lucide-react';
 import { useTranslation } from '../lib/translations';
+import { supabase } from '../lib/supabase';
 
 export default function PublishPage() {
   const { t } = useTranslation();
+  const [formUrl, setFormUrl] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    supabase
+      .from('site_settings')
+      .select('publish_form_url')
+      .maybeSingle()
+      .then(({ data }) => {
+        setFormUrl(data?.publish_form_url || null);
+        setLoading(false);
+      });
+  }, []);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 py-12 px-4">
@@ -59,17 +74,36 @@ export default function PublishPage() {
             </p>
           </div>
           <div className="p-2 md:p-4">
-            <div className="w-full flex items-center justify-center min-h-[500px] bg-slate-50 dark:bg-slate-900 rounded-xl">
-              <div className="text-center px-6 py-10">
-                <PenLine className="h-12 w-12 text-slate-300 dark:text-slate-600 mx-auto mb-4" />
-                <p className="text-slate-500 dark:text-slate-400 text-sm font-medium mb-2">
-                  {t('publish.form.placeholder.title') || 'Google Form will appear here'}
-                </p>
-                <p className="text-slate-400 dark:text-slate-500 text-xs max-w-xs mx-auto">
-                  {t('publish.form.placeholder.desc') || 'Paste your Google Form embed URL in the admin panel to display the form here.'}
-                </p>
+            {loading ? (
+              <div className="w-full flex items-center justify-center min-h-[400px]">
+                <div className="h-8 w-8 border-4 border-slate-200 dark:border-slate-700 border-t-blue-500 rounded-full animate-spin" />
               </div>
-            </div>
+            ) : formUrl ? (
+              <iframe
+                src={formUrl}
+                title="Writer Request Form"
+                width="100%"
+                height="700"
+                frameBorder="0"
+                marginHeight={0}
+                marginWidth={0}
+                className="block rounded-xl"
+              >
+                Loading…
+              </iframe>
+            ) : (
+              <div className="w-full flex items-center justify-center min-h-[400px] bg-slate-50 dark:bg-slate-900 rounded-xl">
+                <div className="text-center px-6 py-10">
+                  <PenLine className="h-12 w-12 text-slate-300 dark:text-slate-600 mx-auto mb-4" />
+                  <p className="text-slate-500 dark:text-slate-400 text-sm font-medium mb-2">
+                    {t('publish.form.placeholder.title') || 'Form not configured yet'}
+                  </p>
+                  <p className="text-slate-400 dark:text-slate-500 text-xs max-w-xs mx-auto">
+                    {t('publish.form.placeholder.desc') || 'An administrator needs to add the Google Form URL in the admin panel.'}
+                  </p>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
