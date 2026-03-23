@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { X, Download, ShoppingCart, BookOpen, Headphones, Play, ChevronDown, ChevronUp } from 'lucide-react';
+import { X, ShoppingCart, BookOpen, Headphones, Play, ChevronDown, ChevronUp } from 'lucide-react';
 import { BookWithFormats, supabase } from '../lib/supabase';
 import AudiobookPlayer from './AudiobookPlayer';
 import ShareButton from './ShareButton';
@@ -149,118 +149,109 @@ export default function BookDetailModal({ book, onClose, onPurchase, onDownload 
                 )}
 
                 {ebookFormats.length > 0 && (
-                  <div className="border-t pt-3 sm:pt-4">
-                    <div className="flex items-center space-x-2 mb-2 sm:mb-3">
-                      <BookOpen className="h-5 w-5 sm:h-6 sm:w-6 text-green-500" />
-                      <span className="text-base sm:text-lg font-semibold text-slate-700">Ebook - FREE</span>
-                    </div>
-                    <div className="space-y-2">
-                      {ebookFormats.map((format) => {
-                        const fileFormat = format.file_format?.toLowerCase();
-                        const displayName = fileFormat === 'html' ? 'Read Online' : `Download ${format.file_format?.toUpperCase()}`;
-
-                        return (
-                          <button
-                            key={format.id}
-                            onClick={() => onDownload?.(format.id, format.file_url || '', format.file_format || '')}
-                            disabled={!format.is_available}
-                            className="w-full bg-green-500 text-white py-2.5 sm:py-3 rounded-lg font-semibold hover:bg-green-600 transition disabled:bg-slate-300 disabled:cursor-not-allowed flex items-center justify-center space-x-2 text-sm sm:text-base"
-                          >
-                            <Download className="h-4 w-4 sm:h-5 sm:w-5" />
-                            <span>{displayName}</span>
-                          </button>
-                        );
-                      })}
+                  <div className="border-t dark:border-slate-700 pt-3 sm:pt-4">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-2">
+                        <BookOpen className="h-4 w-4 text-green-500" />
+                        <span className="text-sm font-semibold text-slate-700 dark:text-slate-300">Ebook - FREE</span>
+                      </div>
+                      <div className="flex items-center gap-1.5 flex-wrap justify-end">
+                        {ebookFormats.map((format) => {
+                          const fileFormat = format.file_format?.toLowerCase();
+                          const label = fileFormat === 'html' ? 'Read Online' : format.file_format?.toUpperCase();
+                          return (
+                            <button
+                              key={format.id}
+                              onClick={() => onDownload?.(format.id, format.file_url || '', format.file_format || '')}
+                              disabled={!format.is_available}
+                              className="bg-green-500 hover:bg-green-600 disabled:bg-slate-300 disabled:cursor-not-allowed text-white text-xs font-semibold px-3 py-1.5 rounded-full transition whitespace-nowrap"
+                            >
+                              {label}
+                            </button>
+                          );
+                        })}
+                      </div>
                     </div>
                   </div>
                 )}
 
                 {audiobookFormats.length > 0 && (
-                  <div className="border-t pt-3 sm:pt-4">
-                    <div className="flex items-center space-x-2 mb-2 sm:mb-3">
-                      <Headphones className="h-5 w-5 sm:h-6 sm:w-6 text-orange-500" />
-                      <span className="text-base sm:text-lg font-semibold text-slate-700">Audiobook - FREE</span>
-                    </div>
-                    <div className="space-y-3 sm:space-y-4">
-                      {audiobookFormats.map((format) => {
-                        const formatChapters = chapters[format.id] || [];
-                        const hasChapters = formatChapters.length > 0;
-                        const isExpanded = expandedFormats[format.id];
+                  <div className="border-t dark:border-slate-700 pt-3 sm:pt-4">
+                    {audiobookFormats.map((format) => {
+                      const formatChapters = chapters[format.id] || [];
+                      const hasChapters = formatChapters.length > 0;
+                      const isExpanded = expandedFormats[format.id];
 
-                        return (
-                          <div key={format.id} className="space-y-2">
+                      return (
+                        <div key={format.id}>
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center space-x-2">
+                              <Headphones className="h-4 w-4 text-orange-500" />
+                              <span className="text-sm font-semibold text-slate-700 dark:text-slate-300">Audiobook - FREE</span>
+                            </div>
                             {hasChapters ? (
-                              <>
-                                <button
-                                  onClick={() => toggleFormatExpanded(format.id)}
-                                  className="w-full bg-orange-500 text-white py-2.5 sm:py-3 rounded-lg font-semibold hover:bg-orange-600 transition flex items-center justify-between px-3 sm:px-4 text-sm sm:text-base"
-                                >
-                                  <span className="flex items-center space-x-2">
-                                    <Headphones className="h-4 w-4 sm:h-5 sm:w-5" />
-                                    <span>{formatChapters.length} Chapters Available</span>
-                                  </span>
-                                  {isExpanded ? <ChevronUp className="h-4 w-4 sm:h-5 sm:w-5" /> : <ChevronDown className="h-4 w-4 sm:h-5 sm:w-5" />}
-                                </button>
-
-                                {isExpanded && (
-                                  <div className="space-y-2 pl-2 sm:pl-4 border-l-2 border-orange-200">
-                                    {formatChapters.map((chapter) => (
-                                      <div key={chapter.id} className="bg-slate-50 rounded-lg p-2 sm:p-3">
-                                        <div className="flex items-start justify-between mb-2">
-                                          <div>
-                                            <p className="font-medium text-slate-800 text-xs sm:text-sm">
-                                              Chapter {chapter.chapter_number}: {chapter.chapter_title}
-                                            </p>
-                                            {chapter.duration_minutes && (
-                                              <p className="text-xs text-slate-500">{chapter.duration_minutes} min</p>
-                                            )}
-                                          </div>
-                                        </div>
-                                        <div className="flex space-x-2">
-                                          <button
-                                            onClick={() => playAudio(chapter.file_url, `Chapter ${chapter.chapter_number}: ${chapter.chapter_title}`)}
-                                            className="flex-1 bg-orange-500 text-white py-1.5 sm:py-2 rounded-lg font-medium hover:bg-orange-600 transition flex items-center justify-center space-x-1 text-xs sm:text-sm"
-                                          >
-                                            <Play className="h-3 w-3 sm:h-4 sm:w-4" />
-                                            <span>Play</span>
-                                          </button>
-                                          <button
-                                            onClick={() => window.open(chapter.file_url, '_blank')}
-                                            className="flex-1 bg-slate-600 text-white py-1.5 sm:py-2 rounded-lg font-medium hover:bg-slate-700 transition flex items-center justify-center space-x-1 text-xs sm:text-sm"
-                                          >
-                                            <Download className="h-3 w-3 sm:h-4 sm:w-4" />
-                                            <span>Download</span>
-                                          </button>
-                                        </div>
-                                      </div>
-                                    ))}
-                                  </div>
-                                )}
-                              </>
+                              <button
+                                onClick={() => toggleFormatExpanded(format.id)}
+                                className="bg-orange-500 hover:bg-orange-600 text-white text-xs font-semibold px-3 py-1.5 rounded-full transition flex items-center gap-1"
+                              >
+                                <span>{formatChapters.length} Chapters</span>
+                                {isExpanded ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />}
+                              </button>
                             ) : (
-                              <>
+                              <div className="flex items-center gap-1.5">
                                 <button
                                   onClick={() => playAudio(format.file_url || '', book.title)}
                                   disabled={!format.is_available || !format.file_url}
-                                  className="w-full bg-orange-500 text-white py-2.5 sm:py-3 rounded-lg font-semibold hover:bg-orange-600 transition disabled:bg-slate-300 disabled:cursor-not-allowed flex items-center justify-center space-x-2 text-sm sm:text-base"
+                                  className="bg-orange-500 hover:bg-orange-600 disabled:bg-slate-300 disabled:cursor-not-allowed text-white text-xs font-semibold px-3 py-1.5 rounded-full transition"
                                 >
-                                  <Play className="h-4 w-4 sm:h-5 sm:w-5" />
-                                  <span>Play Audio</span>
+                                  Play
                                 </button>
                                 <button
                                   onClick={() => onDownload?.(format.id, format.file_url || '', format.file_format || '')}
                                   disabled={!format.is_available || !format.file_url}
-                                  className="w-full bg-slate-600 text-white py-2.5 sm:py-3 rounded-lg font-semibold hover:bg-slate-700 transition disabled:bg-slate-300 disabled:cursor-not-allowed flex items-center justify-center space-x-2 text-sm sm:text-base"
+                                  className="bg-slate-600 hover:bg-slate-700 disabled:bg-slate-300 disabled:cursor-not-allowed text-white text-xs font-semibold px-3 py-1.5 rounded-full transition"
                                 >
-                                  <Download className="h-4 w-4 sm:h-5 sm:w-5" />
-                                  <span>Download Audio</span>
+                                  Download
                                 </button>
-                              </>
+                              </div>
                             )}
                           </div>
-                        );
-                      })}
-                    </div>
+
+                          {hasChapters && isExpanded && (
+                            <div className="mt-3 space-y-2 pl-2 sm:pl-4 border-l-2 border-orange-200">
+                              {formatChapters.map((chapter) => (
+                                <div key={chapter.id} className="bg-slate-50 dark:bg-slate-700 rounded-lg p-2 sm:p-3">
+                                  <div className="flex items-center justify-between gap-2">
+                                    <div className="min-w-0">
+                                      <p className="font-medium text-slate-800 dark:text-slate-100 text-xs sm:text-sm truncate">
+                                        Ch.{chapter.chapter_number}: {chapter.chapter_title}
+                                      </p>
+                                      {chapter.duration_minutes && (
+                                        <p className="text-xs text-slate-500">{chapter.duration_minutes} min</p>
+                                      )}
+                                    </div>
+                                    <div className="flex gap-1.5 flex-shrink-0">
+                                      <button
+                                        onClick={() => playAudio(chapter.file_url, `Chapter ${chapter.chapter_number}: ${chapter.chapter_title}`)}
+                                        className="bg-orange-500 hover:bg-orange-600 text-white text-xs font-semibold px-2.5 py-1 rounded-full transition"
+                                      >
+                                        Play
+                                      </button>
+                                      <button
+                                        onClick={() => window.open(chapter.file_url, '_blank')}
+                                        className="bg-slate-600 hover:bg-slate-700 text-white text-xs font-semibold px-2.5 py-1 rounded-full transition"
+                                      >
+                                        Save
+                                      </button>
+                                    </div>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
                   </div>
                 )}
 
