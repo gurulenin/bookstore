@@ -1,5 +1,6 @@
 import { BookOpen, Download, ShoppingCart, Headphones, FileText, ExternalLink } from 'lucide-react';
 import { BookWithFormats } from '../lib/supabase';
+import { useTranslation } from '../lib/translations';
 
 interface BookCardProps {
   book: BookWithFormats;
@@ -10,6 +11,7 @@ interface BookCardProps {
 }
 
 export default function BookCard({ book, onPurchase, onDownload, onViewDetails, showAllFormats }: BookCardProps) {
+  const { t } = useTranslation();
   const physicalFormat = book.formats.find(f => f.format_type === 'physical');
   const ebookFormats = book.formats.filter(f => f.format_type === 'ebook');
   const audiobookFormats = book.formats.filter(f => f.format_type === 'audiobook');
@@ -33,7 +35,7 @@ export default function BookCard({ book, onPurchase, onDownload, onViewDetails, 
         )}
         <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-10 transition-all duration-300 flex items-center justify-center">
           <div className="opacity-0 group-hover:opacity-100 transition-opacity bg-white dark:bg-slate-700 px-4 py-2 rounded-lg shadow-lg">
-            <span className="text-slate-800 dark:text-slate-100 font-medium">View Details</span>
+            <span className="text-slate-800 dark:text-slate-100 font-medium">{t('action.view_details')}</span>
           </div>
         </div>
       </div>

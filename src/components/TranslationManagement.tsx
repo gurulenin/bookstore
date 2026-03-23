@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Plus, Edit, Save, X, Languages } from 'lucide-react';
+import { Plus, CreditCard as Edit, Save, X, Languages } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { useTranslation } from '../lib/translations';
 
@@ -241,6 +241,8 @@ export default function TranslationManagement() {
                   <option value="action">Action</option>
                   <option value="admin">Admin</option>
                   <option value="filter">Filter</option>
+                  <option value="landing">Landing</option>
+                  <option value="settings">Settings</option>
                 </select>
               </div>
 

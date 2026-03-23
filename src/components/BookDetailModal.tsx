@@ -3,6 +3,7 @@ import { X, ShoppingCart, BookOpen, Headphones, Play, ChevronDown, ChevronUp } f
 import { BookWithFormats, supabase } from '../lib/supabase';
 import AudiobookPlayer from './AudiobookPlayer';
 import ShareButton from './ShareButton';
+import { useTranslation } from '../lib/translations';
 
 interface BookDetailModalProps {
   book: BookWithFormats;
@@ -20,6 +21,7 @@ interface AudioChapter {
 }
 
 export default function BookDetailModal({ book, onClose, onPurchase, onDownload }: BookDetailModalProps) {
+  const { t } = useTranslation();
   const [playingAudioUrl, setPlayingAudioUrl] = useState<string | null>(null);
   const [playingChapterTitle, setPlayingChapterTitle] = useState<string | null>(null);
   const [playingFormatId, setPlayingFormatId] = useState<string | null>(null);
@@ -97,13 +99,13 @@ export default function BookDetailModal({ book, onClose, onPurchase, onDownload 
               {(book.publisher || book.published_date || book.isbn) && (
                 <div className="mt-3 space-y-1.5 text-sm text-slate-600 dark:text-slate-300">
                   {book.publisher && (
-                    <p><span className="font-semibold">Publisher:</span> {book.publisher}</p>
+                    <p><span className="font-semibold">{t('book.publisher_label')}:</span> {book.publisher}</p>
                   )}
                   {book.published_date && (
-                    <p><span className="font-semibold">Published:</span> {book.published_date}</p>
+                    <p><span className="font-semibold">{t('book.published_label')}:</span> {book.published_date}</p>
                   )}
                   {book.isbn && (
-                    <p><span className="font-semibold">ISBN:</span> {book.isbn}</p>
+                    <p><span className="font-semibold">{t('book.isbn_label')}:</span> {book.isbn}</p>
                   )}
                 </div>
               )}
@@ -115,7 +117,7 @@ export default function BookDetailModal({ book, onClose, onPurchase, onDownload 
 
               {book.description && (
                 <div className="mb-4 sm:mb-6">
-                  <h3 className="text-base sm:text-lg font-semibold text-slate-800 dark:text-slate-100 mb-2">Description</h3>
+                  <h3 className="text-base sm:text-lg font-semibold text-slate-800 dark:text-slate-100 mb-2">{t('book.description_label')}</h3>
                   <p className="text-slate-600 dark:text-slate-300 leading-relaxed text-sm sm:text-base">{book.description}</p>
                 </div>
               )}
@@ -126,7 +128,7 @@ export default function BookDetailModal({ book, onClose, onPurchase, onDownload 
                     <div className="flex items-center justify-between mb-2 sm:mb-3">
                       <div className="flex items-center space-x-2">
                         <ShoppingCart className="h-4 w-4 sm:h-5 sm:w-5 text-blue-500" />
-                        <span className="text-sm sm:text-base font-semibold text-slate-700 dark:text-slate-300">Printed Book</span>
+                        <span className="text-sm sm:text-base font-semibold text-slate-700 dark:text-slate-300">{t('book.printed_book')}</span>
                       </div>
                       <span className="text-xl sm:text-2xl font-bold text-blue-600">
                         ₹{physicalFormat.price.toFixed(2)}
@@ -134,7 +136,7 @@ export default function BookDetailModal({ book, onClose, onPurchase, onDownload 
                     </div>
                     {physicalFormat.stock_quantity !== undefined && (
                       <p className="text-xs sm:text-sm text-slate-500 mb-2">
-                        Stock: {physicalFormat.stock_quantity} available
+                        {t('book.stock_label')}: {physicalFormat.stock_quantity} {t('book.stock_available')}
                       </p>
                     )}
                     <button
@@ -142,7 +144,7 @@ export default function BookDetailModal({ book, onClose, onPurchase, onDownload 
                       disabled={!physicalFormat.is_available}
                       className="w-full bg-blue-500 text-white py-2.5 sm:py-3 rounded-lg font-semibold hover:bg-blue-600 transition disabled:bg-slate-300 disabled:cursor-not-allowed text-sm sm:text-base"
                     >
-                      {physicalFormat.is_available ? 'Add to Cart' : 'Out of Stock'}
+                      {physicalFormat.is_available ? t('action.add_to_cart') : t('book.out_of_stock')}
                     </button>
                   </div>
                 )}
@@ -152,7 +154,7 @@ export default function BookDetailModal({ book, onClose, onPurchase, onDownload 
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-2">
                         <BookOpen className="h-5 w-5 text-green-500" />
-                        <span className="text-sm font-semibold text-slate-700 dark:text-slate-300">Ebook - FREE</span>
+                        <span className="text-sm font-semibold text-slate-700 dark:text-slate-300">{t('book.ebook_free')}</span>
                       </div>
                       <div className="flex items-center gap-1.5 flex-wrap justify-end">
                         {[...ebookFormats].sort((a, b) => {
@@ -162,7 +164,7 @@ export default function BookDetailModal({ book, onClose, onPurchase, onDownload 
                           return (order[aKey] ?? 99) - (order[bKey] ?? 99);
                         }).map((format) => {
                           const fileFormat = format.file_format?.toLowerCase();
-                          const label = fileFormat === 'html' ? 'Read Online' : format.file_format?.toUpperCase();
+                          const label = fileFormat === 'html' ? t('book.read_online') : format.file_format?.toUpperCase();
                           return (
                             <button
                               key={format.id}
@@ -191,7 +193,7 @@ export default function BookDetailModal({ book, onClose, onPurchase, onDownload 
                           <div className="flex items-center justify-between">
                             <div className="flex items-center space-x-2">
                               <Headphones className="h-5 w-5 text-orange-500" />
-                              <span className="text-sm font-semibold text-slate-700 dark:text-slate-300">Audiobook - FREE</span>
+                              <span className="text-sm font-semibold text-slate-700 dark:text-slate-300">{t('book.audiobook_free')}</span>
                             </div>
                             {hasChapters ? (
                               <div className="flex items-center gap-1.5">
@@ -200,13 +202,13 @@ export default function BookDetailModal({ book, onClose, onPurchase, onDownload 
                                   disabled={!format.is_available || !format.file_url}
                                   className="bg-orange-500 hover:bg-orange-600 disabled:bg-slate-300 disabled:cursor-not-allowed text-white text-xs font-semibold px-3 py-1.5 rounded-full transition"
                                 >
-                                  Play
+                                  {t('action.play')}
                                 </button>
                                 <button
                                   onClick={() => toggleFormatExpanded(format.id)}
                                   className="bg-slate-500 hover:bg-slate-600 text-white text-xs font-semibold px-3 py-1.5 rounded-full transition flex items-center gap-1"
                                 >
-                                  <span>{formatChapters.length} Chapters</span>
+                                  <span>{formatChapters.length} {t('action.chapters')}</span>
                                   {isExpanded ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />}
                                 </button>
                               </div>
@@ -217,14 +219,14 @@ export default function BookDetailModal({ book, onClose, onPurchase, onDownload 
                                   disabled={!format.is_available || !format.file_url}
                                   className="bg-orange-500 hover:bg-orange-600 disabled:bg-slate-300 disabled:cursor-not-allowed text-white text-xs font-semibold px-3 py-1.5 rounded-full transition"
                                 >
-                                  Play
+                                  {t('action.play')}
                                 </button>
                                 <button
                                   onClick={() => onDownload?.(format.id, format.file_url || '', format.file_format || '')}
                                   disabled={!format.is_available || !format.file_url}
                                   className="bg-slate-600 hover:bg-slate-700 disabled:bg-slate-300 disabled:cursor-not-allowed text-white text-xs font-semibold px-3 py-1.5 rounded-full transition"
                                 >
-                                  Download
+                                  {t('action.download')}
                                 </button>
                               </div>
                             )}
@@ -248,13 +250,13 @@ export default function BookDetailModal({ book, onClose, onPurchase, onDownload 
                                         onClick={() => playAudio(chapter.file_url, `Chapter ${chapter.chapter_number}: ${chapter.chapter_title}`)}
                                         className="bg-orange-500 hover:bg-orange-600 text-white text-xs font-semibold px-2.5 py-1 rounded-full transition"
                                       >
-                                        Play
+                                        {t('action.play')}
                                       </button>
                                       <button
                                         onClick={() => window.open(chapter.file_url, '_blank')}
                                         className="bg-slate-600 hover:bg-slate-700 text-white text-xs font-semibold px-2.5 py-1 rounded-full transition"
                                       >
-                                        Save
+                                        {t('action.save')}
                                       </button>
                                     </div>
                                   </div>
