@@ -22,6 +22,7 @@ interface AudioChapter {
 export default function BookDetailModal({ book, onClose, onPurchase, onDownload }: BookDetailModalProps) {
   const [playingAudioUrl, setPlayingAudioUrl] = useState<string | null>(null);
   const [playingChapterTitle, setPlayingChapterTitle] = useState<string | null>(null);
+  const [playingFormatId, setPlayingFormatId] = useState<string | null>(null);
   const [chapters, setChapters] = useState<Record<string, AudioChapter[]>>({});
   const [expandedFormats, setExpandedFormats] = useState<Record<string, boolean>>({});
   const physicalFormat = book.formats.find(f => f.format_type === 'physical');
@@ -37,6 +38,7 @@ export default function BookDetailModal({ book, onClose, onPurchase, onDownload 
         .from('audiobook_chapters')
         .select('*')
         .in('book_format_id', formatIds)
+        .eq('is_marker', false)
         .order('chapter_number', { ascending: true });
 
       if (!error && data) {
@@ -58,9 +60,10 @@ export default function BookDetailModal({ book, onClose, onPurchase, onDownload 
     setExpandedFormats(prev => ({ ...prev, [formatId]: !prev[formatId] }));
   };
 
-  const playAudio = (url: string, title?: string) => {
+  const playAudio = (url: string, title?: string, formatId?: string) => {
     setPlayingAudioUrl(url);
     setPlayingChapterTitle(title || null);
+    setPlayingFormatId(formatId || null);
   };
 
   return (
@@ -186,17 +189,26 @@ export default function BookDetailModal({ book, onClose, onPurchase, onDownload 
                               <span className="text-sm font-semibold text-slate-700 dark:text-slate-300">Audiobook - FREE</span>
                             </div>
                             {hasChapters ? (
-                              <button
-                                onClick={() => toggleFormatExpanded(format.id)}
-                                className="bg-orange-500 hover:bg-orange-600 text-white text-xs font-semibold px-3 py-1.5 rounded-full transition flex items-center gap-1"
-                              >
-                                <span>{formatChapters.length} Chapters</span>
-                                {isExpanded ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />}
-                              </button>
+                              <div className="flex items-center gap-1.5">
+                                <button
+                                  onClick={() => playAudio(format.file_url || '', book.title, format.id)}
+                                  disabled={!format.is_available || !format.file_url}
+                                  className="bg-orange-500 hover:bg-orange-600 disabled:bg-slate-300 disabled:cursor-not-allowed text-white text-xs font-semibold px-3 py-1.5 rounded-full transition"
+                                >
+                                  Play
+                                </button>
+                                <button
+                                  onClick={() => toggleFormatExpanded(format.id)}
+                                  className="bg-slate-500 hover:bg-slate-600 text-white text-xs font-semibold px-3 py-1.5 rounded-full transition flex items-center gap-1"
+                                >
+                                  <span>{formatChapters.length} Chapters</span>
+                                  {isExpanded ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />}
+                                </button>
+                              </div>
                             ) : (
                               <div className="flex items-center gap-1.5">
                                 <button
-                                  onClick={() => playAudio(format.file_url || '', book.title)}
+                                  onClick={() => playAudio(format.file_url || '', book.title, format.id)}
                                   disabled={!format.is_available || !format.file_url}
                                   className="bg-orange-500 hover:bg-orange-600 disabled:bg-slate-300 disabled:cursor-not-allowed text-white text-xs font-semibold px-3 py-1.5 rounded-full transition"
                                 >
@@ -262,13 +274,14 @@ export default function BookDetailModal({ book, onClose, onPurchase, onDownload 
                           onClick={() => {
                             setPlayingAudioUrl(null);
                             setPlayingChapterTitle(null);
+                            setPlayingFormatId(null);
                           }}
                           className="bg-slate-100 rounded-full p-1.5 sm:p-2 hover:bg-slate-200 transition flex-shrink-0"
                         >
                           <X className="h-5 w-5 sm:h-6 sm:w-6 text-slate-700" />
                         </button>
                       </div>
-                      <AudiobookPlayer url={playingAudioUrl} title={playingChapterTitle || book.title} />
+                      <AudiobookPlayer url={playingAudioUrl} title={playingChapterTitle || book.title} formatId={playingFormatId || undefined} />
                     </div>
                   </div>
                 )}

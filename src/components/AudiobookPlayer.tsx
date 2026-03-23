@@ -82,13 +82,15 @@ export default function AudiobookPlayer({ url, title, formatId }: AudiobookPlaye
   };
 
   const seekToMarker = (seconds: number) => {
-    if (audioRef.current) {
-      audioRef.current.currentTime = seconds;
-      setCurrentTime(seconds);
-      if (!isPlaying) {
-        audioRef.current.play();
-        setIsPlaying(true);
-      }
+    const audio = audioRef.current;
+    if (!audio) return;
+    audio.currentTime = seconds;
+    setCurrentTime(seconds);
+    const playPromise = audio.play();
+    if (playPromise !== undefined) {
+      playPromise.then(() => setIsPlaying(true)).catch(() => {});
+    } else {
+      setIsPlaying(true);
     }
   };
 
