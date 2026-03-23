@@ -6,7 +6,7 @@ import FontSizeSwitcher from './FontSizeSwitcher';
 import ThemeToggle from './ThemeToggle';
 import { supabase } from '../lib/supabase';
 
-type AppView = 'home' | 'books' | 'ebooks' | 'audiobooks' | 'contribute' | 'contribute_ebooks' | 'contribute_covers' | 'contribute_audiobooks' | 'donate' | 'blog' | 'about' | 'about_us' | 'kaniyam' | 'freetamilebooks' | 'nutpagam' | 'contact' | 'admin' | 'publish';
+type AppView = 'home' | 'books' | 'ebooks' | 'audiobooks' | 'contribute' | 'contribute_ebooks' | 'contribute_covers' | 'contribute_audiobooks' | 'donate' | 'blog' | 'about' | 'about_us' | 'kaniyam' | 'freetamilebooks' | 'nutpagam' | 'printhink' | 'contact' | 'admin' | 'publish' | string;
 
 interface NavbarProps {
   currentView: AppView;
@@ -24,7 +24,7 @@ interface MenuSetting {
 
 const BOOKS_SUBKEYS = new Set(['books', 'ebooks', 'audiobooks']);
 const CONTRIBUTE_VIEWS = new Set(['contribute', 'contribute_ebooks', 'contribute_covers', 'contribute_audiobooks', 'donate']);
-const ABOUT_VIEWS = new Set(['about', 'about_us', 'kaniyam', 'freetamilebooks', 'nutpagam']);
+const ABOUT_VIEWS = new Set(['about', 'about_us', 'kaniyam', 'freetamilebooks', 'nutpagam', 'printhink']);
 
 export default function Navbar({ currentView, onViewChange }: NavbarProps) {
   const { language } = useTranslation();
@@ -165,6 +165,7 @@ export default function Navbar({ currentView, onViewChange }: NavbarProps) {
     kaniyam: <BookMarked className="h-4 w-4" />,
     freetamilebooks: <BookOpen className="h-4 w-4" />,
     nutpagam: <BookOpen className="h-4 w-4" />,
+    printhink: <FileText className="h-4 w-4" />,
   };
 
   const aboutSubItems = menus

@@ -16,7 +16,7 @@ import HtmlReaderModal from './components/HtmlReaderModal';
 import PublishPage from './components/PublishPage';
 import ContributePage, { type ContributeSubView } from './components/ContributePage';
 
-type View = 'home' | 'books' | 'ebooks' | 'audiobooks' | 'featured' | 'contribute' | 'contribute_ebooks' | 'contribute_covers' | 'contribute_audiobooks' | 'donate' | 'blog' | 'about' | 'about_us' | 'kaniyam' | 'freetamilebooks' | 'nutpagam' | 'contact' | 'admin' | 'publish';
+type View = 'home' | 'books' | 'ebooks' | 'audiobooks' | 'featured' | 'contribute' | 'contribute_ebooks' | 'contribute_covers' | 'contribute_audiobooks' | 'donate' | 'blog' | 'about' | 'about_us' | 'kaniyam' | 'freetamilebooks' | 'nutpagam' | 'printhink' | 'contact' | 'admin' | 'publish' | string;
 
 function App() {
   const [currentView, setCurrentView] = useState<View>('home');
@@ -372,6 +372,11 @@ function App() {
         {currentView === 'kaniyam' && <ContentPage pageKey="kaniyam" />}
         {currentView === 'freetamilebooks' && <ContentPage pageKey="freetamilebooks" />}
         {currentView === 'nutpagam' && <ContentPage pageKey="nutpagam" />}
+        {currentView === 'printhink' && <ContentPage pageKey="printhink" />}
+
+        {!['home','books','ebooks','audiobooks','featured','contribute','contribute_ebooks','contribute_covers','contribute_audiobooks','donate','blog','about','about_us','kaniyam','freetamilebooks','nutpagam','printhink','contact','admin','publish'].includes(currentView) && (
+          <ContentPage pageKey={currentView} />
+        )}
 
         {currentView === 'contact' && <ContactPage />}
 

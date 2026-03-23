@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Save, Eye, EyeOff, MoveUp, MoveDown, ChevronRight } from 'lucide-react';
+import { Save, Eye, EyeOff, MoveUp, MoveDown, ChevronRight, Plus, Trash2 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 
 interface MenuSetting {
@@ -12,10 +12,23 @@ interface MenuSetting {
   parent_key: string | null;
 }
 
+interface AddForm {
+  menu_key: string;
+  menu_label: string;
+  menu_label_tamil: string;
+  parent_key: string;
+}
+
+const EMPTY_FORM: AddForm = { menu_key: '', menu_label: '', menu_label_tamil: '', parent_key: '' };
+
 export default function MenuSettingsManagement() {
   const [menus, setMenus] = useState<MenuSetting[]>([]);
   const [hasChanges, setHasChanges] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [showAddForm, setShowAddForm] = useState(false);
+  const [addForm, setAddForm] = useState<AddForm>(EMPTY_FORM);
+  const [addError, setAddError] = useState('');
+  const [adding, setAdding] = useState(false);
 
   useEffect(() => {
     loadMenus();
@@ -37,6 +50,8 @@ export default function MenuSettingsManagement() {
 
   const childrenOf = (key: string) =>
     menus.filter(m => m.parent_key === key).sort((a, b) => a.order_index - b.order_index);
+
+  const topLevelKeys = topLevel.map(m => m.menu_key);
 
   const updateMenu = (id: string, patch: Partial<MenuSetting>) => {
     setMenus(prev => prev.map(m => m.id === id ? { ...m, ...patch } : m));
@@ -92,6 +107,52 @@ export default function MenuSettingsManagement() {
       return;
     }
 
+    await loadMenus();
+  };
+
+  const handleAdd = async () => {
+    setAddError('');
+    const key = addForm.menu_key.trim().toLowerCase().replace(/\s+/g, '_');
+    if (!key) { setAddError('Menu key is required.'); return; }
+    if (!addForm.menu_label.trim()) { setAddError('English label is required.'); return; }
+    if (menus.some(m => m.menu_key === key)) { setAddError(`Key "${key}" already exists.`); return; }
+
+    const parentKey = addForm.parent_key || null;
+    const siblings = parentKey
+      ? menus.filter(m => m.parent_key === parentKey)
+      : menus.filter(m => !m.parent_key);
+    const nextIndex = siblings.length + 1;
+
+    setAdding(true);
+    const { error } = await supabase.from('menu_settings').insert({
+      menu_key: key,
+      menu_label: addForm.menu_label.trim(),
+      menu_label_tamil: addForm.menu_label_tamil.trim() || null,
+      is_enabled: true,
+      order_index: nextIndex,
+      parent_key: parentKey,
+    });
+    setAdding(false);
+
+    if (error) {
+      setAddError('Failed to add menu item. Please try again.');
+      return;
+    }
+
+    setAddForm(EMPTY_FORM);
+    setShowAddForm(false);
+    await loadMenus();
+  };
+
+  const handleDelete = async (menu: MenuSetting) => {
+    const kids = childrenOf(menu.menu_key);
+    const confirmMsg = kids.length > 0
+      ? `Delete "${menu.menu_label}" and its ${kids.length} sub-item(s)?`
+      : `Delete "${menu.menu_label}"?`;
+    if (!window.confirm(confirmMsg)) return;
+
+    const ids = [menu.id, ...kids.map(k => k.id)];
+    await supabase.from('menu_settings').delete().in('id', ids);
     await loadMenus();
   };
 
@@ -169,6 +230,13 @@ export default function MenuSettingsManagement() {
           >
             <MoveDown className="h-4 w-4" />
           </button>
+          <button
+            onClick={() => handleDelete(menu)}
+            className="p-1 text-red-400 hover:text-red-600 rounded hover:bg-red-50 transition"
+            title="Delete"
+          >
+            <Trash2 className="h-4 w-4" />
+          </button>
         </div>
       </td>
     </tr>
@@ -180,20 +248,98 @@ export default function MenuSettingsManagement() {
         <div>
           <h2 className="text-2xl font-bold text-slate-800">Menu Settings</h2>
           <p className="text-sm text-slate-600 mt-1">
-            Edit labels, show/hide menus, and adjust display order. Sub-menus are shown indented under their parent.
+            Edit labels, show/hide menus, reorder, and add new menu items. Sub-menus are shown indented under their parent.
           </p>
         </div>
-        {hasChanges && (
+        <div className="flex items-center space-x-3">
+          {hasChanges && (
+            <button
+              onClick={handleSave}
+              disabled={saving}
+              className="bg-slate-800 text-white px-5 py-2 rounded-lg font-semibold hover:bg-slate-700 transition flex items-center space-x-2 disabled:opacity-60"
+            >
+              <Save className="h-4 w-4" />
+              <span>{saving ? 'Saving...' : 'Save Changes'}</span>
+            </button>
+          )}
           <button
-            onClick={handleSave}
-            disabled={saving}
-            className="bg-slate-800 text-white px-5 py-2 rounded-lg font-semibold hover:bg-slate-700 transition flex items-center space-x-2 disabled:opacity-60"
+            onClick={() => { setShowAddForm(v => !v); setAddError(''); setAddForm(EMPTY_FORM); }}
+            className="bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-blue-700 transition flex items-center space-x-2"
           >
-            <Save className="h-4 w-4" />
-            <span>{saving ? 'Saving...' : 'Save Changes'}</span>
+            <Plus className="h-4 w-4" />
+            <span>Add Menu Item</span>
           </button>
-        )}
+        </div>
       </div>
+
+      {showAddForm && (
+        <div className="bg-blue-50 border border-blue-200 rounded-lg p-5 space-y-4">
+          <h3 className="font-semibold text-blue-900">New Menu Item</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-xs font-medium text-slate-700 mb-1">Menu Key <span className="text-red-500">*</span></label>
+              <input
+                type="text"
+                value={addForm.menu_key}
+                onChange={e => setAddForm(f => ({ ...f, menu_key: e.target.value }))}
+                placeholder="e.g. my_page"
+                className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:border-blue-500 focus:outline-none text-sm"
+              />
+              <p className="text-xs text-slate-500 mt-1">Unique identifier (lowercase, underscores). This becomes the page route.</p>
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-slate-700 mb-1">Parent Menu <span className="text-slate-400">(optional)</span></label>
+              <select
+                value={addForm.parent_key}
+                onChange={e => setAddForm(f => ({ ...f, parent_key: e.target.value }))}
+                className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:border-blue-500 focus:outline-none text-sm bg-white"
+              >
+                <option value="">— Top-level menu —</option>
+                {topLevelKeys.map(k => (
+                  <option key={k} value={k}>{k}</option>
+                ))}
+              </select>
+              <p className="text-xs text-slate-500 mt-1">Leave blank to add as a top-level menu item.</p>
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-slate-700 mb-1">English Label <span className="text-red-500">*</span></label>
+              <input
+                type="text"
+                value={addForm.menu_label}
+                onChange={e => setAddForm(f => ({ ...f, menu_label: e.target.value }))}
+                placeholder="e.g. My Page"
+                className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:border-blue-500 focus:outline-none text-sm"
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-slate-700 mb-1">Tamil Label <span className="text-slate-400">(optional)</span></label>
+              <input
+                type="text"
+                value={addForm.menu_label_tamil}
+                onChange={e => setAddForm(f => ({ ...f, menu_label_tamil: e.target.value }))}
+                placeholder="தமிழ் பெயர்"
+                className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:border-blue-500 focus:outline-none text-sm"
+              />
+            </div>
+          </div>
+          {addError && <p className="text-sm text-red-600">{addError}</p>}
+          <div className="flex items-center space-x-3">
+            <button
+              onClick={handleAdd}
+              disabled={adding}
+              className="bg-blue-600 text-white px-5 py-2 rounded-lg font-semibold hover:bg-blue-700 transition disabled:opacity-60"
+            >
+              {adding ? 'Adding...' : 'Add Item'}
+            </button>
+            <button
+              onClick={() => { setShowAddForm(false); setAddError(''); setAddForm(EMPTY_FORM); }}
+              className="px-5 py-2 rounded-lg font-semibold text-slate-700 hover:bg-slate-100 transition"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      )}
 
       <div className="bg-white rounded-lg shadow overflow-hidden">
         <table className="min-w-full divide-y divide-slate-200">
@@ -204,7 +350,7 @@ export default function MenuSettingsManagement() {
               <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">English Label</th>
               <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Tamil Label</th>
               <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Visibility</th>
-              <th className="px-4 py-3 text-right text-xs font-medium text-slate-500 uppercase tracking-wider">Reorder</th>
+              <th className="px-4 py-3 text-right text-xs font-medium text-slate-500 uppercase tracking-wider">Actions</th>
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-slate-200">
