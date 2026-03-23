@@ -83,7 +83,7 @@ export default function CheckoutFlow({ book, onClose }: CheckoutFlowProps) {
   };
 
   const generateWhatsAppMessage = () => {
-    const message = `Hi, I have placed an order for "${book.title}" by ${book.author}. Order Total: Rs.${totalAmount.toFixed(2)}`;
+    const message = `Hi, I have placed an order for "${book.title}" by ${book.author}. Order Total: ₹${totalAmount.toFixed(2)}`;
     return encodeURIComponent(message);
   };
 
@@ -238,15 +238,15 @@ export default function CheckoutFlow({ book, onClose }: CheckoutFlowProps) {
                 </div>
                 <div className="flex justify-between text-xs sm:text-sm">
                   <span className="text-slate-600 dark:text-slate-300">Price:</span>
-                  <span className="text-slate-800 dark:text-slate-100">Rs.{bookPrice.toFixed(2)}</span>
+                  <span className="text-slate-800 dark:text-slate-100">₹{bookPrice.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between text-xs sm:text-sm">
                   <span className="text-slate-600 dark:text-slate-300">Shipping ({formData.is_tamil_nadu ? 'TN' : 'Other'}):</span>
-                  <span className="text-slate-800 dark:text-slate-100">Rs.{shippingCost.toFixed(2)}</span>
+                  <span className="text-slate-800 dark:text-slate-100">₹{shippingCost.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between font-bold text-base sm:text-lg border-t dark:border-slate-600 pt-2 sm:pt-3">
                   <span className="text-slate-800 dark:text-slate-100">Total:</span>
-                  <span className="text-slate-800 dark:text-slate-100">Rs.{totalAmount.toFixed(2)}</span>
+                  <span className="text-slate-800 dark:text-slate-100">₹{totalAmount.toFixed(2)}</span>
                 </div>
               </div>
 
@@ -297,7 +297,7 @@ export default function CheckoutFlow({ book, onClose }: CheckoutFlowProps) {
                 )}
 
                 <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 mb-3 sm:mb-4">
-                  Total Amount: <span className="font-bold text-base sm:text-lg text-slate-800 dark:text-slate-100">Rs.{totalAmount.toFixed(2)}</span>
+                  Total Amount: <span className="font-bold text-base sm:text-lg text-slate-800 dark:text-slate-100">₹{totalAmount.toFixed(2)}</span>
                 </p>
               </div>
 

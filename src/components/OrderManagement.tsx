@@ -128,7 +128,7 @@ export default function OrderManagement() {
                     <div className="text-xs text-slate-500">{order.book_author}</div>
                   </td>
                   <td className="px-6 py-4 text-sm font-medium text-slate-800">
-                    Rs.{order.total_amount.toFixed(2)}
+                    ₹{order.total_amount.toFixed(2)}
                   </td>
                   <td className="px-6 py-4 text-sm">
                     <span className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(order.order_status)}`}>
@@ -172,9 +172,9 @@ export default function OrderManagement() {
                     <div><span className="font-medium">Date:</span> {new Date(selectedOrder.created_at).toLocaleString()}</div>
                     <div><span className="font-medium">Book:</span> {selectedOrder.book_title}</div>
                     <div><span className="font-medium">Author:</span> {selectedOrder.book_author}</div>
-                    <div><span className="font-medium">Book Price:</span> Rs.{selectedOrder.book_price.toFixed(2)}</div>
-                    <div><span className="font-medium">Shipping:</span> Rs.{selectedOrder.shipping_cost.toFixed(2)}</div>
-                    <div><span className="font-medium text-lg">Total:</span> <span className="text-lg font-bold">Rs.{selectedOrder.total_amount.toFixed(2)}</span></div>
+                    <div><span className="font-medium">Book Price:</span> ₹{selectedOrder.book_price.toFixed(2)}</div>
+                    <div><span className="font-medium">Shipping:</span> ₹{selectedOrder.shipping_cost.toFixed(2)}</div>
+                    <div><span className="font-medium text-lg">Total:</span> <span className="text-lg font-bold">₹{selectedOrder.total_amount.toFixed(2)}</span></div>
                   </div>
                 </div>
 

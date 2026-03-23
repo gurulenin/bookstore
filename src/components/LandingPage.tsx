@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { BookOpen, Headphones, ShoppingBag, Download, DollarSign, Star } from 'lucide-react';
+import { BookOpen, Headphones, ShoppingBag, Download, IndianRupee, Star } from 'lucide-react';
 import HeroCarousel from './HeroCarousel';
 import { useTranslation } from '../lib/translations';
 import { supabase } from '../lib/supabase';
@@ -102,7 +102,7 @@ export default function LandingPage({ onNavigate, onViewBook }: LandingPageProps
                   </p>
                   <ul className="space-y-2 md:space-y-3 mb-6 md:mb-8">
                     <li className="flex items-center text-slate-700 dark:text-slate-300 text-sm md:text-base">
-                      <DollarSign className="h-4 w-4 md:h-5 md:w-5 mr-2 text-blue-500 flex-shrink-0" />
+                      <IndianRupee className="h-4 w-4 md:h-5 md:w-5 mr-2 text-blue-500 flex-shrink-0" />
                       <span>{t('landing.printed.price')}</span>
                     </li>
                     <li className="flex items-center text-slate-700 dark:text-slate-300 text-sm md:text-base">

@@ -130,7 +130,7 @@ export default function BookDetailModal({ book, onClose, onPurchase, onDownload 
                         <span className="text-base sm:text-lg font-semibold text-slate-700 dark:text-slate-300">Printed Book</span>
                       </div>
                       <span className="text-xl sm:text-2xl font-bold text-blue-600">
-                        ${physicalFormat.price.toFixed(2)}
+                        ₹{physicalFormat.price.toFixed(2)}
                       </span>
                     </div>
                     {physicalFormat.stock_quantity !== undefined && (
