@@ -92,15 +92,15 @@ export default function BookDetailModal({ book, onClose, onPurchase, onDownload 
               </div>
 
               {(book.publisher || book.published_date || book.isbn) && (
-                <div className="mt-3 space-y-1 text-xs text-slate-500 dark:text-slate-400">
+                <div className="mt-3 space-y-1.5 text-sm text-slate-600 dark:text-slate-300">
                   {book.publisher && (
-                    <p><span className="font-medium">Publisher:</span> {book.publisher}</p>
+                    <p><span className="font-semibold">Publisher:</span> {book.publisher}</p>
                   )}
                   {book.published_date && (
-                    <p><span className="font-medium">Published:</span> {book.published_date}</p>
+                    <p><span className="font-semibold">Published:</span> {book.published_date}</p>
                   )}
                   {book.isbn && (
-                    <p><span className="font-medium">ISBN:</span> {book.isbn}</p>
+                    <p><span className="font-semibold">ISBN:</span> {book.isbn}</p>
                   )}
                 </div>
               )}
