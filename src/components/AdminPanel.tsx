@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Plus, CreditCard as Edit, Trash2, LogOut, Save, X, BookOpen, FileText, Package, Settings, Image, Languages, Database, Music, LayoutGrid as Layout, Menu as MenuIcon, Home, Upload, MessageSquare } from 'lucide-react';
+import { Plus, CreditCard as Edit, Trash2, LogOut, Save, X, BookOpen, FileText, Package, Settings, Image, Languages, Database, Music, LayoutGrid as Layout, Menu as MenuIcon, Home, Upload, MessageSquare, Tag } from 'lucide-react';
 import { BookWithFormats, BookFormat, supabase } from '../lib/supabase';
 import BlogManagement from './BlogManagement';
 import BookCsvImport from './BookCsvImport';
@@ -13,6 +13,7 @@ import PageContentManagement from './PageContentManagement';
 import MenuSettingsManagement from './MenuSettingsManagement';
 import HomePageSettingsManagement from './HomePageSettingsManagement';
 import ContactSubmissions from './ContactSubmissions';
+import GenreManagement from './GenreManagement';
 
 interface AdminPanelProps {
   books: BookWithFormats[];
@@ -22,7 +23,7 @@ interface AdminPanelProps {
   onDeleteBook: (id: string) => void;
 }
 
-type AdminTab = 'books' | 'blogs' | 'pages' | 'menus' | 'orders' | 'carousel' | 'homepage' | 'translations' | 'backup' | 'settings' | 'contacts';
+type AdminTab = 'books' | 'blogs' | 'pages' | 'menus' | 'orders' | 'carousel' | 'homepage' | 'translations' | 'backup' | 'settings' | 'contacts' | 'genres';
 
 interface BookFormData {
   title: string;
@@ -320,6 +321,17 @@ export default function AdminPanel({ books, onLogout, onAddBook, onUpdateBook, o
             >
               <MessageSquare className="h-5 w-5" />
               <span>Contacts</span>
+            </button>
+            <button
+              onClick={() => setActiveTab('genres')}
+              className={`flex items-center space-x-2 px-6 py-4 font-semibold transition ${
+                activeTab === 'genres'
+                  ? 'text-slate-800 dark:text-slate-100 border-b-2 border-slate-800 dark:border-slate-300'
+                  : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300'
+              }`}
+            >
+              <Tag className="h-5 w-5" />
+              <span>Genres</span>
             </button>
           </div>
         </div>
@@ -684,6 +696,7 @@ export default function AdminPanel({ books, onLogout, onAddBook, onUpdateBook, o
         {activeTab === 'backup' && <BackupRestore />}
         {activeTab === 'settings' && <SiteSettingsManagement />}
         {activeTab === 'contacts' && <ContactSubmissions />}
+        {activeTab === 'genres' && <GenreManagement />}
       </div>
 
       {managingChaptersFormatId && (
