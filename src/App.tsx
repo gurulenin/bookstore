@@ -12,6 +12,7 @@ import ContactPage from './components/ContactPage';
 import CheckoutFlow from './components/CheckoutFlow';
 import ContentPage from './components/ContentPage';
 import BookDetailModal from './components/BookDetailModal';
+import HtmlReaderModal from './components/HtmlReaderModal';
 
 type View = 'home' | 'books' | 'ebooks' | 'audiobooks' | 'featured' | 'contribute' | 'blog' | 'about' | 'contact' | 'admin';
 
@@ -23,6 +24,7 @@ function App() {
   const [selectedBlogId, setSelectedBlogId] = useState<string | null>(null);
   const [checkoutBook, setCheckoutBook] = useState<BookWithFormats | null>(null);
   const [selectedBookId, setSelectedBookId] = useState<string | null>(null);
+  const [htmlReader, setHtmlReader] = useState<{ url: string; title: string } | null>(null);
 
   useEffect(() => {
     checkAuth();
@@ -261,7 +263,8 @@ function App() {
     const format = fileFormat?.toLowerCase();
 
     if (format === 'html') {
-      window.open(url, '_blank');
+      const book = [...books, ...featuredBooks].find(b => b.id === selectedBookId);
+      setHtmlReader({ url, title: book?.title ?? 'Read Online' });
     } else {
       window.open(url, '_blank');
     }
@@ -356,6 +359,14 @@ function App() {
             onClose={() => setSelectedBookId(null)}
             onPurchase={handlePurchase}
             onDownload={handleDownload}
+          />
+        )}
+
+        {htmlReader && (
+          <HtmlReaderModal
+            url={htmlReader.url}
+            title={htmlReader.title}
+            onClose={() => setHtmlReader(null)}
           />
         )}
       </main>
