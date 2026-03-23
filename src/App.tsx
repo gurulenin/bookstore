@@ -344,8 +344,21 @@ function App() {
 
         {(currentView === 'contribute_ebooks' || currentView === 'contribute_covers' || currentView === 'contribute_audiobooks' || currentView === 'donate') && (
           <ContributePage
-            subView={currentView as ContributeSubView}
-            onSubViewChange={(v) => setCurrentView(v)}
+            subView={
+              currentView === 'contribute_ebooks' ? 'making_ebooks'
+              : currentView === 'contribute_covers' ? 'making_covers'
+              : currentView === 'contribute_audiobooks' ? 'making_audiobooks'
+              : 'donate'
+            }
+            onSubViewChange={(v) => {
+              const map: Record<ContributeSubView, View> = {
+                making_ebooks: 'contribute_ebooks',
+                making_covers: 'contribute_covers',
+                making_audiobooks: 'contribute_audiobooks',
+                donate: 'donate',
+              };
+              setCurrentView(map[v]);
+            }}
           />
         )}
 
