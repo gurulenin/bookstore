@@ -30,6 +30,21 @@ interface HomePageSettings {
   featured_books_card_title_ta: string;
   featured_books_card_desc_en: string;
   featured_books_card_desc_ta: string;
+  show_why_choose_us: boolean;
+  why_choose_us_title_en: string;
+  why_choose_us_title_ta: string;
+  stat1_value_en: string;
+  stat1_value_ta: string;
+  stat1_label_en: string;
+  stat1_label_ta: string;
+  stat2_value_en: string;
+  stat2_value_ta: string;
+  stat2_label_en: string;
+  stat2_label_ta: string;
+  stat3_value_en: string;
+  stat3_value_ta: string;
+  stat3_label_en: string;
+  stat3_label_ta: string;
 }
 
 export default function LandingPage({ onNavigate, onViewBook }: LandingPageProps) {
@@ -215,27 +230,43 @@ export default function LandingPage({ onNavigate, onViewBook }: LandingPageProps
           </div>
         )}
 
-        <div className="mt-12 md:mt-16 lg:mt-20 text-center">
-          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-6 md:p-8 lg:p-12 max-w-4xl mx-auto">
-            <h3 className={`font-bold text-slate-800 dark:text-slate-100 mb-4 ${language === 'ta' ? 'text-xl md:text-2xl' : 'text-2xl md:text-3xl'}`}>
-              {t('landing.why.title')}
-            </h3>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 md:gap-8 mt-6 md:mt-8">
-              <div>
-                <div className="text-3xl md:text-4xl font-bold text-blue-500 mb-2">10,000+</div>
-                <div className="text-slate-600 dark:text-slate-300 text-sm md:text-base">{t('landing.stats.books')}</div>
-              </div>
-              <div>
-                <div className="text-3xl md:text-4xl font-bold text-green-500 mb-2">{t('landing.why.free.title')}</div>
-                <div className="text-slate-600 dark:text-slate-300 text-sm md:text-base">{t('landing.stats.free')}</div>
-              </div>
-              <div>
-                <div className="text-3xl md:text-4xl font-bold text-orange-500 mb-2">24/7</div>
-                <div className="text-slate-600 dark:text-slate-300 text-sm md:text-base">{t('landing.stats.access')}</div>
+        {(settings?.show_why_choose_us ?? true) && (
+          <div className="mt-12 md:mt-16 lg:mt-20 text-center">
+            <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-6 md:p-8 lg:p-12 max-w-4xl mx-auto">
+              <h3 className={`font-bold text-slate-800 dark:text-slate-100 mb-4 ${language === 'ta' ? 'text-xl md:text-2xl' : 'text-2xl md:text-3xl'}`}>
+                {settings
+                  ? (language === 'ta' ? settings.why_choose_us_title_ta : settings.why_choose_us_title_en)
+                  : t('landing.why.title')}
+              </h3>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 md:gap-8 mt-6 md:mt-8">
+                <div>
+                  <div className="text-3xl md:text-4xl font-bold text-blue-500 mb-2">
+                    {settings ? (language === 'ta' ? settings.stat1_value_ta : settings.stat1_value_en) : '10,000+'}
+                  </div>
+                  <div className="text-slate-600 dark:text-slate-300 text-sm md:text-base">
+                    {settings ? (language === 'ta' ? settings.stat1_label_ta : settings.stat1_label_en) : t('landing.stats.books')}
+                  </div>
+                </div>
+                <div>
+                  <div className="text-3xl md:text-4xl font-bold text-green-500 mb-2">
+                    {settings ? (language === 'ta' ? settings.stat2_value_ta : settings.stat2_value_en) : t('landing.why.free.title')}
+                  </div>
+                  <div className="text-slate-600 dark:text-slate-300 text-sm md:text-base">
+                    {settings ? (language === 'ta' ? settings.stat2_label_ta : settings.stat2_label_en) : t('landing.stats.free')}
+                  </div>
+                </div>
+                <div>
+                  <div className="text-3xl md:text-4xl font-bold text-orange-500 mb-2">
+                    {settings ? (language === 'ta' ? settings.stat3_value_ta : settings.stat3_value_en) : '24/7'}
+                  </div>
+                  <div className="text-slate-600 dark:text-slate-300 text-sm md:text-base">
+                    {settings ? (language === 'ta' ? settings.stat3_label_ta : settings.stat3_label_en) : t('landing.stats.access')}
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );

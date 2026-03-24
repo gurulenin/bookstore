@@ -24,6 +24,21 @@ interface HomePageSettings {
   featured_books_card_title_ta: string;
   featured_books_card_desc_en: string;
   featured_books_card_desc_ta: string;
+  show_why_choose_us: boolean;
+  why_choose_us_title_en: string;
+  why_choose_us_title_ta: string;
+  stat1_value_en: string;
+  stat1_value_ta: string;
+  stat1_label_en: string;
+  stat1_label_ta: string;
+  stat2_value_en: string;
+  stat2_value_ta: string;
+  stat2_label_en: string;
+  stat2_label_ta: string;
+  stat3_value_en: string;
+  stat3_value_ta: string;
+  stat3_label_en: string;
+  stat3_label_ta: string;
 }
 
 interface Book {
@@ -118,6 +133,21 @@ export default function HomePageSettingsManagement() {
         featured_books_card_title_ta: settings.featured_books_card_title_ta,
         featured_books_card_desc_en: settings.featured_books_card_desc_en,
         featured_books_card_desc_ta: settings.featured_books_card_desc_ta,
+        show_why_choose_us: settings.show_why_choose_us,
+        why_choose_us_title_en: settings.why_choose_us_title_en,
+        why_choose_us_title_ta: settings.why_choose_us_title_ta,
+        stat1_value_en: settings.stat1_value_en,
+        stat1_value_ta: settings.stat1_value_ta,
+        stat1_label_en: settings.stat1_label_en,
+        stat1_label_ta: settings.stat1_label_ta,
+        stat2_value_en: settings.stat2_value_en,
+        stat2_value_ta: settings.stat2_value_ta,
+        stat2_label_en: settings.stat2_label_en,
+        stat2_label_ta: settings.stat2_label_ta,
+        stat3_value_en: settings.stat3_value_en,
+        stat3_value_ta: settings.stat3_value_ta,
+        stat3_label_en: settings.stat3_label_en,
+        stat3_label_ta: settings.stat3_label_ta,
         updated_at: new Date().toISOString(),
       })
       .eq('id', settings.id);
@@ -420,6 +450,143 @@ export default function HomePageSettingsManagement() {
           >
             <Save className="h-4 w-4" />
             {saving ? 'Saving...' : 'Save Format Cards Settings'}
+          </button>
+        </div>
+      </div>
+
+      <div className="bg-white rounded-lg shadow-md p-6">
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-2xl font-bold text-slate-800">"Why Choose Us" Section</h2>
+          <label className="flex items-center gap-2 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={settings.show_why_choose_us ?? true}
+              onChange={(e) => setSettings({ ...settings, show_why_choose_us: e.target.checked })}
+              className="w-5 h-5 rounded border-slate-300"
+            />
+            <span className="text-sm font-medium text-slate-700">Show section</span>
+          </label>
+        </div>
+
+        <div className="space-y-6">
+          <div className="grid md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-1">Section Title (English)</label>
+              <input
+                type="text"
+                value={settings.why_choose_us_title_en}
+                onChange={(e) => setSettings({ ...settings, why_choose_us_title_en: e.target.value })}
+                className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-500"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-1">Section Title (Tamil)</label>
+              <input
+                type="text"
+                value={settings.why_choose_us_title_ta}
+                onChange={(e) => setSettings({ ...settings, why_choose_us_title_ta: e.target.value })}
+                className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-500"
+              />
+            </div>
+          </div>
+
+          <div className="border-l-4 border-blue-500 pl-4 space-y-3">
+            <p className="font-semibold text-slate-700">Stat 1 (Blue)</p>
+            <div className="grid md:grid-cols-2 gap-3">
+              <div>
+                <label className="block text-xs font-medium text-slate-600 mb-1">Value (English)</label>
+                <input type="text" value={settings.stat1_value_en}
+                  onChange={(e) => setSettings({ ...settings, stat1_value_en: e.target.value })}
+                  className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500" />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-slate-600 mb-1">Value (Tamil)</label>
+                <input type="text" value={settings.stat1_value_ta}
+                  onChange={(e) => setSettings({ ...settings, stat1_value_ta: e.target.value })}
+                  className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500" />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-slate-600 mb-1">Label (English)</label>
+                <input type="text" value={settings.stat1_label_en}
+                  onChange={(e) => setSettings({ ...settings, stat1_label_en: e.target.value })}
+                  className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500" />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-slate-600 mb-1">Label (Tamil)</label>
+                <input type="text" value={settings.stat1_label_ta}
+                  onChange={(e) => setSettings({ ...settings, stat1_label_ta: e.target.value })}
+                  className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500" />
+              </div>
+            </div>
+          </div>
+
+          <div className="border-l-4 border-green-500 pl-4 space-y-3">
+            <p className="font-semibold text-slate-700">Stat 2 (Green)</p>
+            <div className="grid md:grid-cols-2 gap-3">
+              <div>
+                <label className="block text-xs font-medium text-slate-600 mb-1">Value (English)</label>
+                <input type="text" value={settings.stat2_value_en}
+                  onChange={(e) => setSettings({ ...settings, stat2_value_en: e.target.value })}
+                  className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-green-500" />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-slate-600 mb-1">Value (Tamil)</label>
+                <input type="text" value={settings.stat2_value_ta}
+                  onChange={(e) => setSettings({ ...settings, stat2_value_ta: e.target.value })}
+                  className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-green-500" />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-slate-600 mb-1">Label (English)</label>
+                <input type="text" value={settings.stat2_label_en}
+                  onChange={(e) => setSettings({ ...settings, stat2_label_en: e.target.value })}
+                  className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-green-500" />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-slate-600 mb-1">Label (Tamil)</label>
+                <input type="text" value={settings.stat2_label_ta}
+                  onChange={(e) => setSettings({ ...settings, stat2_label_ta: e.target.value })}
+                  className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-green-500" />
+              </div>
+            </div>
+          </div>
+
+          <div className="border-l-4 border-orange-500 pl-4 space-y-3">
+            <p className="font-semibold text-slate-700">Stat 3 (Orange)</p>
+            <div className="grid md:grid-cols-2 gap-3">
+              <div>
+                <label className="block text-xs font-medium text-slate-600 mb-1">Value (English)</label>
+                <input type="text" value={settings.stat3_value_en}
+                  onChange={(e) => setSettings({ ...settings, stat3_value_en: e.target.value })}
+                  className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-orange-500" />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-slate-600 mb-1">Value (Tamil)</label>
+                <input type="text" value={settings.stat3_value_ta}
+                  onChange={(e) => setSettings({ ...settings, stat3_value_ta: e.target.value })}
+                  className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-orange-500" />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-slate-600 mb-1">Label (English)</label>
+                <input type="text" value={settings.stat3_label_en}
+                  onChange={(e) => setSettings({ ...settings, stat3_label_en: e.target.value })}
+                  className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-orange-500" />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-slate-600 mb-1">Label (Tamil)</label>
+                <input type="text" value={settings.stat3_label_ta}
+                  onChange={(e) => setSettings({ ...settings, stat3_label_ta: e.target.value })}
+                  className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-orange-500" />
+              </div>
+            </div>
+          </div>
+
+          <button
+            onClick={saveSettings}
+            disabled={saving}
+            className="flex items-center gap-2 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
+          >
+            <Save className="h-4 w-4" />
+            {saving ? 'Saving...' : 'Save Why Choose Us Settings'}
           </button>
         </div>
       </div>
