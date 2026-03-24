@@ -22,6 +22,10 @@ interface MenuSetting {
   parent_key?: string | null;
 }
 
+interface SiteSettings {
+  site_name: string | null;
+}
+
 const BOOKS_SUBKEYS = new Set(['books', 'ebooks', 'audiobooks']);
 const CONTRIBUTE_VIEWS = new Set(['contribute', 'contribute_ebooks', 'contribute_covers', 'contribute_audiobooks', 'donate']);
 const ABOUT_VIEWS = new Set(['about', 'about_us', 'kaniyam', 'freetamilebooks', 'nutpagam', 'printhink']);
@@ -37,6 +41,7 @@ export default function Navbar({ currentView, onViewChange }: NavbarProps) {
   const [aboutDropdownOpen, setAboutDropdownOpen] = useState(false);
   const [mobileAboutOpen, setMobileAboutOpen] = useState(false);
   const [menus, setMenus] = useState<MenuSetting[]>([]);
+  const [siteName, setSiteName] = useState<string>('BookHub');
   const desktopSettingsRef = useRef<HTMLDivElement>(null);
   const mobileSettingsRef = useRef<HTMLDivElement>(null);
   const booksDropdownRef = useRef<HTMLDivElement>(null);
@@ -65,7 +70,10 @@ export default function Navbar({ currentView, onViewChange }: NavbarProps) {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  useEffect(() => { loadMenus(); }, []);
+  useEffect(() => {
+    loadMenus();
+    loadSiteName();
+  }, []);
 
   const loadMenus = async () => {
     const { data } = await supabase
@@ -73,6 +81,16 @@ export default function Navbar({ currentView, onViewChange }: NavbarProps) {
       .select('*')
       .order('order_index');
     if (data) setMenus(data);
+  };
+
+  const loadSiteName = async () => {
+    const { data } = await supabase
+      .from('site_settings')
+      .select('site_name')
+      .maybeSingle();
+    if (data?.site_name) {
+      setSiteName(data.site_name);
+    }
   };
 
   const handleLogoClick = useCallback(() => {
@@ -186,7 +204,7 @@ export default function Navbar({ currentView, onViewChange }: NavbarProps) {
             className="flex items-center space-x-2 text-xl md:text-2xl font-bold text-slate-800 dark:text-slate-100 hover:text-slate-600 dark:hover:text-slate-300 transition"
           >
             <BookOpen className="h-6 w-6 md:h-8 md:w-8" />
-            <span>BookHub</span>
+            <span>{siteName}</span>
           </button>
 
           <div className="hidden lg:flex items-center space-x-1 xl:space-x-2">

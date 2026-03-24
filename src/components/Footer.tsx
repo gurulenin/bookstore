@@ -11,7 +11,18 @@ interface SocialLinks {
   github_url: string | null;
 }
 
+interface SiteSettings {
+  site_name: string | null;
+  facebook_url: string | null;
+  twitter_url: string | null;
+  instagram_url: string | null;
+  linkedin_url: string | null;
+  youtube_url: string | null;
+  github_url: string | null;
+}
+
 export default function Footer() {
+  const [siteName, setSiteName] = useState<string>('BookHub');
   const [socialLinks, setSocialLinks] = useState<SocialLinks>({
     facebook_url: null,
     twitter_url: null,
@@ -22,16 +33,19 @@ export default function Footer() {
   });
 
   useEffect(() => {
-    loadSocialLinks();
+    loadSiteData();
   }, []);
 
-  const loadSocialLinks = async () => {
+  const loadSiteData = async () => {
     const { data } = await supabase
       .from('site_settings')
-      .select('facebook_url, twitter_url, instagram_url, linkedin_url, youtube_url, github_url')
+      .select('site_name, facebook_url, twitter_url, instagram_url, linkedin_url, youtube_url, github_url')
       .maybeSingle();
 
     if (data) {
+      if (data.site_name) {
+        setSiteName(data.site_name);
+      }
       setSocialLinks(data);
     }
   };
@@ -53,7 +67,7 @@ export default function Footer() {
         <div className="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0 gap-4">
           <div className="flex items-center space-x-2 order-1 md:order-1">
             <BookOpen className="h-5 w-5 md:h-6 md:w-6" />
-            <span className="text-lg md:text-xl font-bold">BookHub</span>
+            <span className="text-lg md:text-xl font-bold">{siteName}</span>
           </div>
 
           {activeSocialMedia.length > 0 && (
@@ -74,7 +88,7 @@ export default function Footer() {
           )}
 
           <div className="text-xs md:text-sm text-slate-300 dark:text-slate-400 text-center order-3 md:order-3">
-            &copy; {new Date().getFullYear()} BookHub. All rights reserved.
+            &copy; {new Date().getFullYear()} {siteName}. All rights reserved.
           </div>
         </div>
       </div>
