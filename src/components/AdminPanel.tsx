@@ -1,5 +1,5 @@
 import { useState, useEffect, type ElementType } from 'react';
-import { Plus, CreditCard as Edit, Trash2, LogOut, Save, X, BookOpen, FileText, Package, Settings, Image, Languages, Database, Music, LayoutGrid as Layout, Menu as MenuIcon, Home, Upload, MessageSquare, Tag, PenLine, Heart } from 'lucide-react';
+import { Plus, CreditCard as Edit, Trash2, LogOut, Save, X, BookOpen, FileText, Package, Settings, Image, Languages, Database, Music, LayoutGrid as Layout, Menu as MenuIcon, Home, Upload, MessageSquare, Tag, PenLine, Heart, Star } from 'lucide-react';
 import { BookWithFormats, BookFormat, supabase } from '../lib/supabase';
 import BlogManagement from './BlogManagement';
 import BookCsvImport from './BookCsvImport';
@@ -16,6 +16,7 @@ import ContactSubmissions from './ContactSubmissions';
 import GenreManagement from './GenreManagement';
 import PublishPageManagement from './PublishPageManagement';
 import ContributePageManagement from './ContributePageManagement';
+import BookOfTheDayManagement from './BookOfTheDayManagement';
 
 interface AdminPanelProps {
   books: BookWithFormats[];
@@ -25,7 +26,7 @@ interface AdminPanelProps {
   onDeleteBook: (id: string) => void;
 }
 
-type AdminTab = 'books' | 'blogs' | 'pages' | 'menus' | 'orders' | 'carousel' | 'homepage' | 'translations' | 'backup' | 'settings' | 'contacts' | 'genres' | 'publish' | 'contribute';
+type AdminTab = 'books' | 'blogs' | 'pages' | 'menus' | 'orders' | 'carousel' | 'homepage' | 'translations' | 'backup' | 'settings' | 'contacts' | 'genres' | 'publish' | 'contribute' | 'bookoftheday';
 
 interface BookFormData {
   title: string;
@@ -219,6 +220,7 @@ export default function AdminPanel({ books, onLogout, onAddBook, onUpdateBook, o
                 { id: 'genres', icon: Tag, label: 'Genres' },
                 { id: 'publish', icon: PenLine, label: 'Publish Page' },
                 { id: 'contribute', icon: Heart, label: 'Contribute' },
+                { id: 'bookoftheday', icon: Star, label: 'Book of Day' },
               ] as Array<{ id: AdminTab; icon: ElementType; label: string }>
             ).map(({ id, icon: Icon, label }) => (
               <button
@@ -600,6 +602,7 @@ export default function AdminPanel({ books, onLogout, onAddBook, onUpdateBook, o
         {activeTab === 'genres' && <GenreManagement />}
         {activeTab === 'publish' && <PublishPageManagement />}
         {activeTab === 'contribute' && <ContributePageManagement />}
+        {activeTab === 'bookoftheday' && <BookOfTheDayManagement />}
       </div>
 
       {managingChaptersFormatId && (

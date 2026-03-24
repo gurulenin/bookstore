@@ -16,6 +16,7 @@ import HtmlReaderModal from './components/HtmlReaderModal';
 import PublishPage from './components/PublishPage';
 import ContributePage, { type ContributeSubView } from './components/ContributePage';
 import WhatsAppFloat from './components/WhatsAppFloat';
+import SplashScreen from './components/SplashScreen';
 
 type View = 'home' | 'books' | 'ebooks' | 'audiobooks' | 'featured' | 'contribute' | 'contribute_ebooks' | 'contribute_covers' | 'contribute_audiobooks' | 'donate' | 'blog' | 'about' | 'about_us' | 'kaniyam' | 'freetamilebooks' | 'nutpagam' | 'printhink' | 'contact' | 'admin' | 'publish' | string;
 
@@ -28,6 +29,7 @@ function App() {
   const [checkoutBook, setCheckoutBook] = useState<BookWithFormats | null>(null);
   const [selectedBookId, setSelectedBookId] = useState<string | null>(null);
   const [htmlReader, setHtmlReader] = useState<{ url: string; title: string } | null>(null);
+  const [showSplash, setShowSplash] = useState(true);
 
   useEffect(() => {
     checkAuth();
@@ -408,6 +410,16 @@ function App() {
 
       <Footer />
       <WhatsAppFloat />
+
+      {showSplash && (
+        <SplashScreen
+          onClose={() => setShowSplash(false)}
+          onViewBook={(id) => {
+            setShowSplash(false);
+            setSelectedBookId(id);
+          }}
+        />
+      )}
     </div>
   );
 }
