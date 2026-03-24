@@ -9,6 +9,14 @@ interface LandingPageProps {
   onViewBook: (bookId: string) => void;
 }
 
+interface WhyChooseStat {
+  value_en: string;
+  value_ta: string;
+  label_en: string;
+  label_ta: string;
+  color: string;
+}
+
 interface HomePageSettings {
   show_physical_books_card: boolean;
   show_ebooks_card: boolean;
@@ -33,18 +41,7 @@ interface HomePageSettings {
   show_why_choose_us: boolean;
   why_choose_us_title_en: string;
   why_choose_us_title_ta: string;
-  stat1_value_en: string;
-  stat1_value_ta: string;
-  stat1_label_en: string;
-  stat1_label_ta: string;
-  stat2_value_en: string;
-  stat2_value_ta: string;
-  stat2_label_en: string;
-  stat2_label_ta: string;
-  stat3_value_en: string;
-  stat3_value_ta: string;
-  stat3_label_en: string;
-  stat3_label_ta: string;
+  why_choose_us_stats: WhyChooseStat[] | null;
 }
 
 export default function LandingPage({ onNavigate, onViewBook }: LandingPageProps) {
@@ -230,43 +227,42 @@ export default function LandingPage({ onNavigate, onViewBook }: LandingPageProps
           </div>
         )}
 
-        {(settings?.show_why_choose_us ?? true) && (
-          <div className="mt-12 md:mt-16 lg:mt-20 text-center">
-            <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-6 md:p-8 lg:p-12 max-w-4xl mx-auto">
-              <h3 className={`font-bold text-slate-800 dark:text-slate-100 mb-4 ${language === 'ta' ? 'text-xl md:text-2xl' : 'text-2xl md:text-3xl'}`}>
-                {settings
-                  ? (language === 'ta' ? settings.why_choose_us_title_ta : settings.why_choose_us_title_en)
-                  : t('landing.why.title')}
-              </h3>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 md:gap-8 mt-6 md:mt-8">
-                <div>
-                  <div className="text-3xl md:text-4xl font-bold text-blue-500 mb-2">
-                    {settings ? (language === 'ta' ? settings.stat1_value_ta : settings.stat1_value_en) : '10,000+'}
-                  </div>
-                  <div className="text-slate-600 dark:text-slate-300 text-sm md:text-base">
-                    {settings ? (language === 'ta' ? settings.stat1_label_ta : settings.stat1_label_en) : t('landing.stats.books')}
-                  </div>
-                </div>
-                <div>
-                  <div className="text-3xl md:text-4xl font-bold text-green-500 mb-2">
-                    {settings ? (language === 'ta' ? settings.stat2_value_ta : settings.stat2_value_en) : t('landing.why.free.title')}
-                  </div>
-                  <div className="text-slate-600 dark:text-slate-300 text-sm md:text-base">
-                    {settings ? (language === 'ta' ? settings.stat2_label_ta : settings.stat2_label_en) : t('landing.stats.free')}
-                  </div>
-                </div>
-                <div>
-                  <div className="text-3xl md:text-4xl font-bold text-orange-500 mb-2">
-                    {settings ? (language === 'ta' ? settings.stat3_value_ta : settings.stat3_value_en) : '24/7'}
-                  </div>
-                  <div className="text-slate-600 dark:text-slate-300 text-sm md:text-base">
-                    {settings ? (language === 'ta' ? settings.stat3_label_ta : settings.stat3_label_en) : t('landing.stats.access')}
-                  </div>
+        {(settings?.show_why_choose_us ?? true) && (() => {
+          const colorMap: Record<string, string> = {
+            blue: 'text-blue-500', green: 'text-green-500', orange: 'text-orange-500',
+            red: 'text-red-500', teal: 'text-teal-500', amber: 'text-amber-500',
+          };
+          const stats: WhyChooseStat[] = settings?.why_choose_us_stats ?? [
+            { value_en: '10,000+', value_ta: '10,000+', label_en: t('landing.stats.books'), label_ta: t('landing.stats.books'), color: 'blue' },
+            { value_en: t('landing.why.free.title'), value_ta: t('landing.why.free.title'), label_en: t('landing.stats.free'), label_ta: t('landing.stats.free'), color: 'green' },
+            { value_en: '24/7', value_ta: '24/7', label_en: t('landing.stats.access'), label_ta: t('landing.stats.access'), color: 'orange' },
+          ];
+          const colCount = Math.min(stats.length, 6);
+          const gridClass = colCount <= 1 ? 'grid-cols-1' : colCount === 2 ? 'grid-cols-1 sm:grid-cols-2' : colCount === 3 ? 'grid-cols-1 sm:grid-cols-3' : colCount === 4 ? 'grid-cols-2 sm:grid-cols-4' : 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-5';
+          return (
+            <div className="mt-12 md:mt-16 lg:mt-20 text-center">
+              <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-6 md:p-8 lg:p-12 max-w-4xl mx-auto">
+                <h3 className={`font-bold text-slate-800 dark:text-slate-100 mb-4 ${language === 'ta' ? 'text-xl md:text-2xl' : 'text-2xl md:text-3xl'}`}>
+                  {settings
+                    ? (language === 'ta' ? settings.why_choose_us_title_ta : settings.why_choose_us_title_en)
+                    : t('landing.why.title')}
+                </h3>
+                <div className={`grid ${gridClass} gap-6 md:gap-8 mt-6 md:mt-8`}>
+                  {stats.map((stat, i) => (
+                    <div key={i}>
+                      <div className={`text-3xl md:text-4xl font-bold mb-2 ${colorMap[stat.color] ?? 'text-blue-500'}`}>
+                        {language === 'ta' ? stat.value_ta : stat.value_en}
+                      </div>
+                      <div className="text-slate-600 dark:text-slate-300 text-sm md:text-base">
+                        {language === 'ta' ? stat.label_ta : stat.label_en}
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
-          </div>
-        )}
+          );
+        })()}
       </div>
     </div>
   );

@@ -2,6 +2,14 @@ import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import { Save, Plus, Trash2, GripVertical } from 'lucide-react';
 
+interface WhyChooseStat {
+  value_en: string;
+  value_ta: string;
+  label_en: string;
+  label_ta: string;
+  color: string;
+}
+
 interface HomePageSettings {
   id: string;
   show_physical_books_card: boolean;
@@ -27,18 +35,7 @@ interface HomePageSettings {
   show_why_choose_us: boolean;
   why_choose_us_title_en: string;
   why_choose_us_title_ta: string;
-  stat1_value_en: string;
-  stat1_value_ta: string;
-  stat1_label_en: string;
-  stat1_label_ta: string;
-  stat2_value_en: string;
-  stat2_value_ta: string;
-  stat2_label_en: string;
-  stat2_label_ta: string;
-  stat3_value_en: string;
-  stat3_value_ta: string;
-  stat3_label_en: string;
-  stat3_label_ta: string;
+  why_choose_us_stats: WhyChooseStat[];
 }
 
 interface Book {
@@ -68,6 +65,12 @@ export default function HomePageSettingsManagement() {
     loadAvailableBooks();
   }, []);
 
+  const defaultStats: WhyChooseStat[] = [
+    { value_en: '10,000+', value_ta: '10,000+', label_en: 'Books Available', label_ta: 'புத்தகங்கள் கிடைக்கின்றன', color: 'blue' },
+    { value_en: 'Free', value_ta: 'இலவசம்', label_en: 'Tamil E-Books & Audiobooks', label_ta: 'தமிழ் மின்னூல்கள் மற்றும் ஆடியோ புத்தகங்கள்', color: 'green' },
+    { value_en: '24/7', value_ta: '24/7', label_en: 'Always Available', label_ta: 'எப்போதும் கிடைக்கும்', color: 'orange' },
+  ];
+
   const loadSettings = async () => {
     const { data } = await supabase
       .from('homepage_settings')
@@ -75,7 +78,10 @@ export default function HomePageSettingsManagement() {
       .single();
 
     if (data) {
-      setSettings(data);
+      setSettings({
+        ...data,
+        why_choose_us_stats: data.why_choose_us_stats ?? defaultStats,
+      });
     }
   };
 
@@ -136,18 +142,7 @@ export default function HomePageSettingsManagement() {
         show_why_choose_us: settings.show_why_choose_us,
         why_choose_us_title_en: settings.why_choose_us_title_en,
         why_choose_us_title_ta: settings.why_choose_us_title_ta,
-        stat1_value_en: settings.stat1_value_en,
-        stat1_value_ta: settings.stat1_value_ta,
-        stat1_label_en: settings.stat1_label_en,
-        stat1_label_ta: settings.stat1_label_ta,
-        stat2_value_en: settings.stat2_value_en,
-        stat2_value_ta: settings.stat2_value_ta,
-        stat2_label_en: settings.stat2_label_en,
-        stat2_label_ta: settings.stat2_label_ta,
-        stat3_value_en: settings.stat3_value_en,
-        stat3_value_ta: settings.stat3_value_ta,
-        stat3_label_en: settings.stat3_label_en,
-        stat3_label_ta: settings.stat3_label_ta,
+        why_choose_us_stats: settings.why_choose_us_stats,
         updated_at: new Date().toISOString(),
       })
       .eq('id', settings.id);
@@ -490,95 +485,101 @@ export default function HomePageSettingsManagement() {
             </div>
           </div>
 
-          <div className="border-l-4 border-blue-500 pl-4 space-y-3">
-            <p className="font-semibold text-slate-700">Stat 1 (Blue)</p>
-            <div className="grid md:grid-cols-2 gap-3">
-              <div>
-                <label className="block text-xs font-medium text-slate-600 mb-1">Value (English)</label>
-                <input type="text" value={settings.stat1_value_en}
-                  onChange={(e) => setSettings({ ...settings, stat1_value_en: e.target.value })}
-                  className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500" />
-              </div>
-              <div>
-                <label className="block text-xs font-medium text-slate-600 mb-1">Value (Tamil)</label>
-                <input type="text" value={settings.stat1_value_ta}
-                  onChange={(e) => setSettings({ ...settings, stat1_value_ta: e.target.value })}
-                  className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500" />
-              </div>
-              <div>
-                <label className="block text-xs font-medium text-slate-600 mb-1">Label (English)</label>
-                <input type="text" value={settings.stat1_label_en}
-                  onChange={(e) => setSettings({ ...settings, stat1_label_en: e.target.value })}
-                  className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500" />
-              </div>
-              <div>
-                <label className="block text-xs font-medium text-slate-600 mb-1">Label (Tamil)</label>
-                <input type="text" value={settings.stat1_label_ta}
-                  onChange={(e) => setSettings({ ...settings, stat1_label_ta: e.target.value })}
-                  className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500" />
-              </div>
-            </div>
-          </div>
+          {(() => {
+            const STAT_COLORS = ['blue', 'green', 'orange', 'red', 'teal', 'amber'];
+            const borderColorMap: Record<string, string> = {
+              blue: 'border-blue-500', green: 'border-green-500', orange: 'border-orange-500',
+              red: 'border-red-500', teal: 'border-teal-500', amber: 'border-amber-500',
+            };
+            const ringColorMap: Record<string, string> = {
+              blue: 'focus:ring-blue-500', green: 'focus:ring-green-500', orange: 'focus:ring-orange-500',
+              red: 'focus:ring-red-500', teal: 'focus:ring-teal-500', amber: 'focus:ring-amber-500',
+            };
+            const stats = settings.why_choose_us_stats ?? [];
 
-          <div className="border-l-4 border-green-500 pl-4 space-y-3">
-            <p className="font-semibold text-slate-700">Stat 2 (Green)</p>
-            <div className="grid md:grid-cols-2 gap-3">
-              <div>
-                <label className="block text-xs font-medium text-slate-600 mb-1">Value (English)</label>
-                <input type="text" value={settings.stat2_value_en}
-                  onChange={(e) => setSettings({ ...settings, stat2_value_en: e.target.value })}
-                  className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-green-500" />
-              </div>
-              <div>
-                <label className="block text-xs font-medium text-slate-600 mb-1">Value (Tamil)</label>
-                <input type="text" value={settings.stat2_value_ta}
-                  onChange={(e) => setSettings({ ...settings, stat2_value_ta: e.target.value })}
-                  className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-green-500" />
-              </div>
-              <div>
-                <label className="block text-xs font-medium text-slate-600 mb-1">Label (English)</label>
-                <input type="text" value={settings.stat2_label_en}
-                  onChange={(e) => setSettings({ ...settings, stat2_label_en: e.target.value })}
-                  className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-green-500" />
-              </div>
-              <div>
-                <label className="block text-xs font-medium text-slate-600 mb-1">Label (Tamil)</label>
-                <input type="text" value={settings.stat2_label_ta}
-                  onChange={(e) => setSettings({ ...settings, stat2_label_ta: e.target.value })}
-                  className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-green-500" />
-              </div>
-            </div>
-          </div>
+            const updateStat = (i: number, field: keyof WhyChooseStat, value: string) => {
+              const updated = stats.map((s, idx) => idx === i ? { ...s, [field]: value } : s);
+              setSettings({ ...settings, why_choose_us_stats: updated });
+            };
 
-          <div className="border-l-4 border-orange-500 pl-4 space-y-3">
-            <p className="font-semibold text-slate-700">Stat 3 (Orange)</p>
-            <div className="grid md:grid-cols-2 gap-3">
-              <div>
-                <label className="block text-xs font-medium text-slate-600 mb-1">Value (English)</label>
-                <input type="text" value={settings.stat3_value_en}
-                  onChange={(e) => setSettings({ ...settings, stat3_value_en: e.target.value })}
-                  className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-orange-500" />
+            const removeStat = (i: number) => {
+              setSettings({ ...settings, why_choose_us_stats: stats.filter((_, idx) => idx !== i) });
+            };
+
+            const addStat = () => {
+              const nextColor = STAT_COLORS[stats.length % STAT_COLORS.length];
+              const newStat: WhyChooseStat = { value_en: '', value_ta: '', label_en: '', label_ta: '', color: nextColor };
+              setSettings({ ...settings, why_choose_us_stats: [...stats, newStat] });
+            };
+
+            return (
+              <div className="space-y-4">
+                {stats.map((stat, i) => {
+                  const borderClass = borderColorMap[stat.color] ?? 'border-blue-500';
+                  const ringClass = ringColorMap[stat.color] ?? 'focus:ring-blue-500';
+                  return (
+                    <div key={i} className={`border-l-4 ${borderClass} pl-4 space-y-3`}>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          <p className="font-semibold text-slate-700">Point {i + 1}</p>
+                          <select
+                            value={stat.color}
+                            onChange={(e) => updateStat(i, 'color', e.target.value)}
+                            className="text-xs px-2 py-1 border border-slate-300 rounded focus:outline-none"
+                          >
+                            {STAT_COLORS.map(c => <option key={c} value={c}>{c.charAt(0).toUpperCase() + c.slice(1)}</option>)}
+                          </select>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => removeStat(i)}
+                          className="p-1 text-red-500 hover:bg-red-50 rounded"
+                          title="Remove this point"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </button>
+                      </div>
+                      <div className="grid md:grid-cols-2 gap-3">
+                        <div>
+                          <label className="block text-xs font-medium text-slate-600 mb-1">Value (English)</label>
+                          <input type="text" value={stat.value_en}
+                            onChange={(e) => updateStat(i, 'value_en', e.target.value)}
+                            className={`w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 ${ringClass}`} />
+                        </div>
+                        <div>
+                          <label className="block text-xs font-medium text-slate-600 mb-1">Value (Tamil)</label>
+                          <input type="text" value={stat.value_ta}
+                            onChange={(e) => updateStat(i, 'value_ta', e.target.value)}
+                            className={`w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 ${ringClass}`} />
+                        </div>
+                        <div>
+                          <label className="block text-xs font-medium text-slate-600 mb-1">Label (English)</label>
+                          <input type="text" value={stat.label_en}
+                            onChange={(e) => updateStat(i, 'label_en', e.target.value)}
+                            className={`w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 ${ringClass}`} />
+                        </div>
+                        <div>
+                          <label className="block text-xs font-medium text-slate-600 mb-1">Label (Tamil)</label>
+                          <input type="text" value={stat.label_ta}
+                            onChange={(e) => updateStat(i, 'label_ta', e.target.value)}
+                            className={`w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 ${ringClass}`} />
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+
+                <button
+                  type="button"
+                  onClick={addStat}
+                  className="flex items-center gap-2 px-4 py-2 border-2 border-dashed border-slate-300 text-slate-600 rounded-lg hover:border-slate-400 hover:text-slate-800 transition w-full justify-center"
+                >
+                  <Plus className="h-4 w-4" />
+                  Add Point
+                </button>
               </div>
-              <div>
-                <label className="block text-xs font-medium text-slate-600 mb-1">Value (Tamil)</label>
-                <input type="text" value={settings.stat3_value_ta}
-                  onChange={(e) => setSettings({ ...settings, stat3_value_ta: e.target.value })}
-                  className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-orange-500" />
-              </div>
-              <div>
-                <label className="block text-xs font-medium text-slate-600 mb-1">Label (English)</label>
-                <input type="text" value={settings.stat3_label_en}
-                  onChange={(e) => setSettings({ ...settings, stat3_label_en: e.target.value })}
-                  className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-orange-500" />
-              </div>
-              <div>
-                <label className="block text-xs font-medium text-slate-600 mb-1">Label (Tamil)</label>
-                <input type="text" value={settings.stat3_label_ta}
-                  onChange={(e) => setSettings({ ...settings, stat3_label_ta: e.target.value })}
-                  className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-orange-500" />
-              </div>
-            </div>
-          </div>
+            );
+          })()}
 
           <button
             onClick={saveSettings}
