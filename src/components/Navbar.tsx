@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, useCallback, type ReactNode } from 'react';
-import { BookOpen, Headphones, ShoppingBag, FileText, Info, Mail, Settings, Menu, X, Heart, PenLine, ChevronDown, BookMarked, Image } from 'lucide-react';
+import { BookOpen, Headphones, ShoppingBag, FileText, Info, Mail, Settings, Menu, X, Heart, PenLine, ChevronDown, BookMarked, Image, Lightbulb } from 'lucide-react';
 import { useTranslation } from '../lib/translations';
 import LanguageSwitcher from './LanguageSwitcher';
 import FontSizeSwitcher from './FontSizeSwitcher';
@@ -162,9 +162,9 @@ export default function Navbar({ currentView, onViewChange }: NavbarProps) {
 
   const aboutIconMap: Record<string, ReactNode> = {
     about_us: <Info className="h-4 w-4" />,
-    kaniyam: <BookMarked className="h-4 w-4" />,
+    kaniyam: <span className="h-4 w-4 inline-flex items-center justify-center text-sm font-bold leading-none" style={{ fontFamily: 'serif' }}>க</span>,
     freetamilebooks: <BookOpen className="h-4 w-4" />,
-    nutpagam: <BookOpen className="h-4 w-4" />,
+    nutpagam: <Lightbulb className="h-4 w-4" />,
     printhink: <FileText className="h-4 w-4" />,
   };
 

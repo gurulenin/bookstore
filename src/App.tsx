@@ -15,6 +15,7 @@ import BookDetailModal from './components/BookDetailModal';
 import HtmlReaderModal from './components/HtmlReaderModal';
 import PublishPage from './components/PublishPage';
 import ContributePage, { type ContributeSubView } from './components/ContributePage';
+import WhatsAppFloat from './components/WhatsAppFloat';
 
 type View = 'home' | 'books' | 'ebooks' | 'audiobooks' | 'featured' | 'contribute' | 'contribute_ebooks' | 'contribute_covers' | 'contribute_audiobooks' | 'donate' | 'blog' | 'about' | 'about_us' | 'kaniyam' | 'freetamilebooks' | 'nutpagam' | 'printhink' | 'contact' | 'admin' | 'publish' | string;
 
@@ -406,6 +407,7 @@ function App() {
       </main>
 
       <Footer />
+      <WhatsAppFloat />
     </div>
   );
 }

@@ -13,6 +13,8 @@ interface SiteSettings {
   contact_email: string | null;
   contact_phone: string | null;
   whatsapp_number: string | null;
+  whatsapp_float_number: string | null;
+  whatsapp_float_enabled: boolean;
   payment_qr_code_url: string | null;
   payment_instructions: string | null;
   facebook_url: string | null;
@@ -56,6 +58,8 @@ export default function SiteSettingsManagement() {
         contact_email: settings.contact_email,
         contact_phone: settings.contact_phone,
         whatsapp_number: settings.whatsapp_number,
+        whatsapp_float_number: settings.whatsapp_float_number,
+        whatsapp_float_enabled: settings.whatsapp_float_enabled,
         payment_qr_code_url: settings.payment_qr_code_url,
         payment_instructions: settings.payment_instructions,
         facebook_url: settings.facebook_url,
@@ -210,6 +214,48 @@ export default function SiteSettingsManagement() {
             />
             <p className="text-sm text-slate-500 mt-1">
               This number will receive order notifications via WhatsApp
+            </p>
+          </div>
+        </div>
+
+        <div className="bg-white rounded-xl shadow-lg p-6 space-y-6">
+          <h3 className="text-xl font-bold text-slate-800 border-b pb-3">WhatsApp Floating Button</h3>
+          <p className="text-sm text-slate-500">
+            Show a floating WhatsApp button on the site so visitors can contact you directly. Enter the number with country code (e.g. 919876543210).
+          </p>
+
+          <div className="flex items-center space-x-3">
+            <button
+              type="button"
+              onClick={() => setSettings({ ...settings, whatsapp_float_enabled: !settings.whatsapp_float_enabled })}
+              className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none ${
+                settings.whatsapp_float_enabled ? 'bg-green-500' : 'bg-slate-300'
+              }`}
+            >
+              <span
+                className={`inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform ${
+                  settings.whatsapp_float_enabled ? 'translate-x-6' : 'translate-x-1'
+                }`}
+              />
+            </button>
+            <span className="text-sm font-medium text-slate-700">
+              {settings.whatsapp_float_enabled ? 'Enabled — button is visible on site' : 'Disabled — button is hidden'}
+            </span>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-slate-700 mb-2">
+              WhatsApp Number (with country code, digits only)
+            </label>
+            <input
+              type="tel"
+              value={settings.whatsapp_float_number || ''}
+              onChange={(e) => setSettings({ ...settings, whatsapp_float_number: e.target.value })}
+              className="w-full px-4 py-2 rounded-lg border border-slate-300 focus:border-slate-500 focus:outline-none"
+              placeholder="919876543210"
+            />
+            <p className="text-sm text-slate-500 mt-1">
+              Example: 919876543210 (91 = India country code, followed by 10-digit mobile number)
             </p>
           </div>
         </div>
