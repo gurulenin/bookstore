@@ -24,6 +24,7 @@ interface MenuSetting {
 
 interface SiteSettings {
   site_name: string | null;
+  logo_url: string | null;
 }
 
 const BOOKS_SUBKEYS = new Set(['books', 'ebooks', 'audiobooks']);
@@ -42,6 +43,7 @@ export default function Navbar({ currentView, onViewChange }: NavbarProps) {
   const [mobileAboutOpen, setMobileAboutOpen] = useState(false);
   const [menus, setMenus] = useState<MenuSetting[]>([]);
   const [siteName, setSiteName] = useState<string>('BookHub');
+  const [logoUrl, setLogoUrl] = useState<string | null>(null);
   const desktopSettingsRef = useRef<HTMLDivElement>(null);
   const mobileSettingsRef = useRef<HTMLDivElement>(null);
   const booksDropdownRef = useRef<HTMLDivElement>(null);
@@ -86,10 +88,13 @@ export default function Navbar({ currentView, onViewChange }: NavbarProps) {
   const loadSiteName = async () => {
     const { data } = await supabase
       .from('site_settings')
-      .select('site_name')
+      .select('site_name, logo_url')
       .maybeSingle();
     if (data?.site_name) {
       setSiteName(data.site_name);
+    }
+    if (data?.logo_url) {
+      setLogoUrl(data.logo_url);
     }
   };
 
@@ -203,7 +208,15 @@ export default function Navbar({ currentView, onViewChange }: NavbarProps) {
             onClick={handleLogoClick}
             className="flex items-center space-x-2 text-xl md:text-2xl font-bold text-slate-800 dark:text-slate-100 hover:text-slate-600 dark:hover:text-slate-300 transition"
           >
-            <BookOpen className="h-6 w-6 md:h-8 md:w-8" />
+            {logoUrl ? (
+              <img
+                src={logoUrl}
+                alt="Logo"
+                className="h-6 w-6 md:h-8 md:w-8 object-contain"
+              />
+            ) : (
+              <BookOpen className="h-6 w-6 md:h-8 md:w-8" />
+            )}
             <span>{siteName}</span>
           </button>
 
